@@ -1,0 +1,186 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Light theme colors - improved accessibility */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 94%;
+    --muted-foreground: 215.4 16.3% 40%;
+
+    --accent: 210 40% 94%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 85%;
+    --input: 214.3 31.8% 88%;
+    --ring: 215 20.2% 65.1%;
+
+    /* Developer tool specific colors */
+    --dev-primary: 199 89% 48%;
+    --dev-primary-foreground: 210 40% 98%;
+    --dev-secondary: 217.9 10.6% 50%;
+    --dev-success: 142 76% 36%;
+    --dev-success-foreground: 210 40% 98%;
+    --dev-warning: 38 92% 50%;
+    --dev-warning-foreground: 222.2 47.4% 11.2%;
+    --dev-error: 0 84.2% 60.2%;
+    --dev-error-foreground: 210 40% 98%;
+
+    /* Gradients - improved contrast */
+    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%), hsl(217 91% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(210 40% 94%), hsl(214.3 31.8% 88%));
+    --gradient-accent: linear-gradient(135deg, hsl(199 89% 48% / 0.1), hsl(217 91% 60% / 0.1));
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(199 89% 48% / 0.3);
+    --shadow-glow: 0 0 40px hsl(199 89% 48% / 0.2);
+    --shadow-card: 0 4px 6px -1px hsl(214.3 31.8% 85% / 0.15), 0 2px 4px -1px hsl(214.3 31.8% 85% / 0.1);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark theme colors */
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 212.7 26.8% 83.9%;
+
+    /* Dark theme gradients */
+    --gradient-secondary: linear-gradient(135deg, hsl(215 27.9% 16.9%), hsl(224 71% 4%));
+    --shadow-card: 0 4px 6px -1px hsl(224 71% 4% / 0.1), 0 2px 4px -1px hsl(224 71% 4% / 0.06);
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background: hsl(var(--background));
+  }
+
+  /* Custom animations and effects */
+  .dev-gradient {
+    background: var(--gradient-primary);
+  }
+
+  .dev-card {
+    background: hsl(var(--card));
+    box-shadow: var(--shadow-card);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .dev-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .tool-card {
+    background: var(--gradient-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  /* Terminal-specific styles */
+  .terminal-input {
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+  }
+
+  .command-suggestion {
+    @apply cursor-pointer transition-colors duration-200;
+  }
+
+  .command-suggestion:hover {
+    @apply bg-dev-primary/10 text-dev-primary;
+  }
+
+  /* Text truncation utilities */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Fade in animation */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+}
