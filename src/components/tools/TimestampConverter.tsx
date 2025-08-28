@@ -7,6 +7,7 @@ import { Copy, Clock, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format, fromUnixTime, getUnixTime, parseISO } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface TimestampConverterProps {
   initialContent?: string;
@@ -207,27 +208,6 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
               Convert Epoch to Human Readable
             </Button>
 
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-dev-primary">Examples</h4>
-              <div className="space-y-2">
-                {examples.timestamps.map(({ value, desc }) => (
-                  <div key={value} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                    <div>
-                      <div className="text-sm font-medium text-foreground">{desc}</div>
-                      <div className="text-sm text-muted-foreground font-mono">{value}</div>
-                    </div>
-                    <Button
-                      onClick={() => setTimestamp(value)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {Object.keys(fromTimestampResults).length > 0 && (
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold text-dev-primary">Epoch to Date Results</h4>
@@ -262,27 +242,6 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
               <Clock className="h-4 w-4 mr-2" />
               Convert to Epoch/Unix Timestamp
             </Button>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-dev-primary">Examples</h4>
-              <div className="space-y-2">
-                {examples.dates.map(({ value, desc }) => (
-                  <div key={value} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                    <div>
-                      <div className="text-sm font-medium text-foreground">{desc}</div>
-                      <div className="text-sm text-muted-foreground font-mono">{value}</div>
-                    </div>
-                    <Button
-                      onClick={() => setDateTime(value)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {Object.keys(toTimestampResults).length > 0 && (
               <div className="space-y-3">
@@ -407,6 +366,61 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
           </div>
         )}
       </CardContent>
+
+      {/* Examples section moved outside CardContent */}
+      <div className="border-t border-border/50 px-6 py-4">
+        <Collapsible defaultOpen={false} className="w-full">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start">
+              Examples
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 mt-2">
+            <Tabs defaultValue="timestamps" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="timestamps">Timestamp Examples</TabsTrigger>
+                <TabsTrigger value="dates">Date Examples</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="timestamps" className="space-y-2 mt-2">
+                {examples.timestamps.map(({ value, desc }) => (
+                  <div key={value} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                    <div>
+                      <div className="font-mono text-sm text-foreground">{value}</div>
+                      <div className="text-xs text-muted-foreground">{desc}</div>
+                    </div>
+                    <Button
+                      onClick={() => setTimestamp(value)}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      Use
+                    </Button>
+                  </div>
+                ))}
+              </TabsContent>
+              
+              <TabsContent value="dates" className="space-y-2 mt-2">
+                {examples.dates.map(({ value, desc }) => (
+                  <div key={value} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                    <div>
+                      <div className="font-mono text-sm text-foreground">{value}</div>
+                      <div className="text-xs text-muted-foreground">{desc}</div>
+                    </div>
+                    <Button
+                      onClick={() => setDateTime(value)}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      Use
+                    </Button>
+                  </div>
+                ))}
+              </TabsContent>
+            </Tabs>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
     </Card>
   );
 }

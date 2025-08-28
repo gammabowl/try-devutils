@@ -37,14 +37,6 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
     }
   }, [initialContent, action]);
 
-  const examples = [
-    { text: "Hello World", desc: "Simple greeting" },
-    { text: "password123", desc: "Common password" },
-    { text: "The quick brown fox jumps over the lazy dog", desc: "Pangram sentence" },
-    { text: "Lorem ipsum dolor sit amet", desc: "Lorem ipsum text" },
-    { text: "user@example.com", desc: "Email address" },
-  ];
-
   const generateHashes = () => {
     if (!input.trim()) {
       setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
@@ -152,27 +144,6 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
             }}
             className="min-h-[120px] bg-muted/50 border-border/50"
           />
-        </div>
-
-        <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-dev-primary">Text Examples</h4>
-          <div className="space-y-2">
-            {examples.map((example, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-muted/20 rounded-md">
-                <div>
-                  <div className="text-sm text-foreground">{example.text}</div>
-                  <div className="text-xs text-muted-foreground">{example.desc}</div>
-                </div>
-                <Button
-                  onClick={() => setInput(example.text)}
-                  variant="ghost"
-                  size="sm"
-                >
-                  Use
-                </Button>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="flex gap-2">

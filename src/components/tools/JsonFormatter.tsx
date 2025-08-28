@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Braces, Copy, AlertCircle, CheckCircle, Minimize2, Maximize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -119,28 +120,6 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
           />
         </div>
 
-        <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-dev-primary">JSON Examples</h4>
-          <div className="space-y-2">
-            {examples.map((example, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-muted/20 rounded-md">
-                <div className="flex-1 min-w-0">
-                  <div className="font-mono text-sm text-foreground truncate">{example.json}</div>
-                  <div className="text-xs text-muted-foreground">{example.desc}</div>
-                </div>
-                <Button
-                  onClick={() => setInput(example.json)}
-                  variant="ghost"
-                  size="sm"
-                  className="ml-2 flex-shrink-0"
-                >
-                  Use
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="flex flex-wrap gap-2">
           <Button
             onClick={() => formatJson(false)}
@@ -220,6 +199,42 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
           </div>
         )}
       </CardContent>
+
+      {/* Examples section moved outside CardContent */}
+      <div className="border-t border-border/50 px-6 py-4">
+        <Collapsible defaultOpen={false} className="w-full">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start">
+              Examples
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 mt-2">
+            {examples.map((example, index) => (
+              <div 
+                key={index} 
+                className="flex items-center justify-between p-2 bg-muted rounded-md"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="font-mono text-sm text-foreground truncate">
+                    {example.json}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {example.desc}
+                  </div>
+                </div>
+                <Button
+                  onClick={() => setInput(example.json)}
+                  variant="ghost"
+                  size="sm"
+                  className="ml-2 flex-shrink-0"
+                >
+                  Use
+                </Button>
+              </div>
+            ))}
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
     </Card>
   );
 }

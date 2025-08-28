@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, Palette, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 
 interface ColorValues {
   hex: string;
@@ -249,10 +250,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                   value={inputColor}
                   onChange={(e) => {
                     setInputColor(e.target.value);
-                    // Auto-convert as user types
-                    if (e.target.value.trim()) {
-                      setTimeout(() => convertColor(e.target.value), 300);
-                    }
+                    setTimeout(() => convertColor(e.target.value), 300);
                   }}
                   className="flex-1 font-mono bg-muted/50 border-border/50"
                 />
@@ -268,31 +266,12 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
               </div>
             )}
 
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-dev-primary">Colour Values</h4>
-              <div className="space-y-2">
-                {Object.entries(colorValues).map(([format, value]) => (
-                  <div key={format} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="w-8 h-8 rounded border border-border/50"
-                        style={{ backgroundColor: format === 'hex' ? value : inputColor }}
-                      />
-                      <div>
-                        <div className="text-sm font-medium text-foreground uppercase">{format}</div>
-                        <div className="text-sm text-muted-foreground font-mono">{value}</div>
-                      </div>
-                    </div>
-                    <Button
-                      onClick={() => copyToClipboard(value)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-col gap-4">
+              <h4 className="text-sm font-semibold text-dev-primary">Color Preview</h4>
+              <div
+                className="h-24 rounded-md border border-border/50"
+                style={{ backgroundColor: colorValues.hex }}
+              />
             </div>
           </TabsContent>
           
@@ -323,6 +302,48 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
           </TabsContent>
         </Tabs>
       </CardContent>
+
+      {/* Color Values section moved outside CardContent */}
+      <div className="border-t border-border/50 px-6 py-4">
+        <Collapsible defaultOpen={false} className="w-full">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start">
+              Examples
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 mt-2">
+            {Object.entries(colorValues).map(([format, value]) => (
+              <div 
+                key={format} 
+                className="flex items-center justify-between p-2 bg-muted rounded-md"
+              >
+                <div className="flex items-center gap-3 flex-1">
+                  <div 
+                    className="w-8 h-8 rounded border border-border/50"
+                    style={{ backgroundColor: format === 'hex' ? value : inputColor }}
+                  />
+                  <div>
+                    <div className="text-sm font-medium text-foreground uppercase">
+                      {format}
+                    </div>
+                    <div className="text-sm text-muted-foreground font-mono">
+                      {value}
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => copyToClipboard(value)}
+                  variant="ghost"
+                  size="sm"
+                  className="ml-2 flex-shrink-0"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
     </Card>
   );
 }

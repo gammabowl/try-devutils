@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, FileText, ArrowUpDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface Base64ConverterProps {
   initialContent?: string;
@@ -112,45 +113,17 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
               <Textarea
                 placeholder="Enter text to encode..."
                 value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  // Auto-encode as user types
-                  if (e.target.value.trim()) {
-                    try {
-                      setError("");
-                      const encoded = btoa(unescape(encodeURIComponent(e.target.value)));
-                      setOutput(encoded);
-                    } catch (err) {
-                      setError("Failed to encode. Please check your input.");
-                      setOutput("");
-                    }
-                  } else {
-                    setOutput("");
-                    setError("");
-                  }
-                }}
+                onChange={(e) => setInput(e.target.value)}
                 className="min-h-[120px] bg-muted/50 border-border/50"
               />
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-dev-primary">Text Examples</h4>
-              <div className="space-y-2">
-                {examples.encode.map((example, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted/20 rounded-md">
-                    <div>
-                      <div className="text-sm text-foreground">{example.text}</div>
-                      <div className="text-xs text-muted-foreground">{example.desc}</div>
-                    </div>
-                    <Button
-                      onClick={() => setInput(example.text)}
-                      variant="ghost"
-                      size="sm"
-                    >
-                      Use
-                    </Button>
-                  </div>
-                ))}
+              <div className="mt-2">
+                <Button 
+                  onClick={encode}
+                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+                >
+                  <ArrowUpDown className="h-4 w-4 mr-1" />
+                  Encode
+                </Button>
               </div>
             </div>
           </TabsContent>
@@ -163,45 +136,17 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
               <Textarea
                 placeholder="Enter base64 string to decode..."
                 value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  // Auto-decode as user types
-                  if (e.target.value.trim()) {
-                    try {
-                      setError("");
-                      const decoded = decodeURIComponent(escape(atob(e.target.value)));
-                      setOutput(decoded);
-                    } catch (err) {
-                      setError("Failed to decode. Invalid base64 string.");
-                      setOutput("");
-                    }
-                  } else {
-                    setOutput("");
-                    setError("");
-                  }
-                }}
+                onChange={(e) => setInput(e.target.value)}
                 className="min-h-[120px] font-mono text-sm bg-muted/50 border-border/50"
               />
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-dev-primary">Base64 Examples</h4>
-              <div className="space-y-2">
-                {examples.decode.map((example, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted/20 rounded-md">
-                    <div>
-                      <div className="font-mono text-sm text-foreground">{example.text}</div>
-                      <div className="text-xs text-muted-foreground">{example.desc}</div>
-                    </div>
-                    <Button
-                      onClick={() => setInput(example.text)}
-                      variant="ghost"
-                      size="sm"
-                    >
-                      Use
-                    </Button>
-                  </div>
-                ))}
+              <div className="mt-2">
+                <Button 
+                  onClick={decode}
+                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+                >
+                  <ArrowUpDown className="h-4 w-4 mr-1" />
+                  Decode
+                </Button>
               </div>
             </div>
           </TabsContent>
@@ -235,6 +180,61 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
           </div>
         )}
       </CardContent>
+
+      {/* Examples section moved outside CardContent */}
+      <div className="border-t border-border/50 px-6 py-4">
+        <Collapsible defaultOpen={false} className="w-full">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start">
+              Examples
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 mt-2">
+            <Tabs defaultValue="encode" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="encode">Text Examples</TabsTrigger>
+                <TabsTrigger value="decode">Base64 Examples</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="encode" className="space-y-2 mt-2">
+                {examples.encode.map((example, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                    <div>
+                      <div className="text-sm text-foreground">{example.text}</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button
+                      onClick={() => setInput(example.text)}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      Use
+                    </Button>
+                  </div>
+                ))}
+              </TabsContent>
+              
+              <TabsContent value="decode" className="space-y-2 mt-2">
+                {examples.decode.map((example, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                    <div>
+                      <div className="font-mono text-sm text-foreground">{example.text}</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button
+                      onClick={() => setInput(example.text)}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      Use
+                    </Button>
+                  </div>
+                ))}
+              </TabsContent>
+            </Tabs>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
     </Card>
   );
 }
