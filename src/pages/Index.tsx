@@ -57,7 +57,7 @@ const Index = () => {
   const [showEscHint, setShowEscHint] = useState(false);
   const selectedToolData = tools.find((tool) => tool.id === selectedTool);
 
-  // Handle Escape key to close tool
+  // Handle ESC key to close tool
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -166,7 +166,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>All processing happens locally.</span>
+              <span>All processing happens locally</span>
               <span>•</span>
               <span>No tracking, not even analytics</span>
             </div>
