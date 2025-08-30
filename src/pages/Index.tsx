@@ -192,7 +192,7 @@ const Index = () => {
                       🎯 A side project
                     </span>
                     <span>
-                      by{' '}
+                    by{' '}
                       <a
                         href="https://x.com/gammabowl"
                         target="_blank"
