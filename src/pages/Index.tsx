@@ -189,10 +189,10 @@ const Index = () => {
                     </p>
                    <p className="text-xs text-muted-foreground flex items-center gap-2 pt-2">
                     <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full font-medium">
-                      🧪 Experimental
+                      🎯 A side project
                     </span>
                     <span>
-                      A side project — by{' '}
+                      by{' '}
                       <a
                         href="https://x.com/gammabowl"
                         target="_blank"
