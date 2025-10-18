@@ -185,7 +185,7 @@ const Index = () => {
                   </DialogHeader>
                   <div className="space-y-4 text-sm text-muted-foreground">
                     <p>
-                      Most developer tools websites are cluttered with ads and trackers. This project aims to provide quick to use essential utilities in a clean, distraction-free interface.
+                      Most developer tools websites are cluttered with ads and trackers. This project aims to provide quick to use essential utils in a clean, distraction-free interface.
                     </p>
                   </div>
                 </DialogContent>
