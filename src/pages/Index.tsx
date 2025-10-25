@@ -1,6 +1,6 @@
 import { JwtDecoder } from "@/components/tools/JwtDecoder";
 import { JsonFormatter } from "@/components/tools/JsonFormatter";
-import { UuidGenerator } from "@/components/tools/UuidGenerator";
+import { UuidGeneratorDecoder } from "@/components/tools/UuidGeneratorDecoder";
 import { Base64Converter } from "@/components/tools/Base64Converter";
 import { TimestampConverter } from "@/components/tools/TimestampConverter";
 import { TextDiff } from "@/components/tools/TextDiff";
@@ -42,7 +42,7 @@ const Index = () => {
   const tools = [
     { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: JwtDecoder, description: "Decode, Encode and validate JWT tokens" },
     { id: "json", label: "JSON Formatter", icon: Braces, component: JsonFormatter, description: "Format, validate and minify JSON" },
-    { id: "uuid", label: "UUID Generator", icon: FingerprintIcon, component: UuidGenerator, description: "Generate and validate UUIDs" },
+    { id: "uuid", label: "UUID Generator/Decoder", icon: FingerprintIcon, component: UuidGeneratorDecoder, description: "Generate, validate, decode UUIDs" },
     { id: "base64", label: "Base64 Converter", icon: BinaryIcon, component: Base64Converter, description: "Encode and decode Base64 strings" },
     { id: "timestamp", label: "Timestamp Converter", icon: Clock, component: TimestampConverter, description: "Convert Unix timestamps to dates" },
     { id: "diff", label: "Text Diff", icon: FileDiffIcon, component: TextDiff, description: "Compare texts and find differences" },
