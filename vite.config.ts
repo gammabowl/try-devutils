@@ -37,7 +37,6 @@ export default defineConfig(({ mode }) => ({
             "cronstrue",
             "diff",
             "js-yaml",
-            "jsonwebtoken",
             "uuid",
           ],
         },
