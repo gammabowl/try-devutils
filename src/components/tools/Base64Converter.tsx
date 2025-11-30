@@ -13,7 +13,7 @@ interface Base64ConverterProps {
   navigate?: (toolId: string | null) => void;
 }
 
-export function Base64Converter({ initialContent, action }: Base64ConverterProps) {
+export function Base64Converter({ initialContent, action, navigate }: Base64ConverterProps) {
   const [input, setInput] = useState(initialContent || "");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -102,9 +102,9 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
       <CardContent className="space-y-4">
         {/* Cross-link to Zlib compressor */}
         {navigate && (
-          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex items-center justify-between">
+          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex items-center justify-between animate-fade-in">
             <div className="text-xs text-muted-foreground">
-              Need compression? Try the zlib Base64 combined tool.
+              Need compression? Use the Zlib (deflate + Base64) tool.
             </div>
             <Button
               variant="outline"
@@ -112,38 +112,15 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
               onClick={() => navigate("zlib")}
               className="flex items-center gap-1"
             >
-              <span>Open Zlib</span>
+              <span>Zlib Compressor</span>
             </Button>
           </div>
         )}
-        <Tabs defaultValue="encode" className="w-full">
+        <Tabs defaultValue="decode" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="encode">Encode</TabsTrigger>
             <TabsTrigger value="decode">Decode</TabsTrigger>
+            <TabsTrigger value="encode">Encode</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="encode" className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-foreground">
-                Text to Encode
-              </label>
-              <Textarea
-                placeholder="Enter text to encode..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="w-full min-h-[120px] bg-muted/50 border-border/50"
-              />
-              <div className="mt-2">
-                <Button 
-                  onClick={encode}
-                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
-                >
-                  <ArrowUpDown className="h-4 w-4 mr-1" />
-                  Encode
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
           
           <TabsContent value="decode" className="space-y-4">
             <div>
@@ -163,6 +140,29 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
                 >
                   <ArrowUpDown className="h-4 w-4 mr-1" />
                   Decode
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="encode" className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Text to Encode
+              </label>
+              <Textarea
+                placeholder="Enter text to encode..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="w-full min-h-[120px] bg-muted/50 border-border/50"
+              />
+              <div className="mt-2">
+                <Button 
+                  onClick={encode}
+                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
+                >
+                  <ArrowUpDown className="h-4 w-4 mr-1" />
+                  Encode
                 </Button>
               </div>
             </div>

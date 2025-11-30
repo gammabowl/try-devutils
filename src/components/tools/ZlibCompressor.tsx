@@ -13,7 +13,7 @@ interface ZlibCompressorProps {
 export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [mode, setMode] = useState<"compress" | "decompress">("compress");
+  const [mode, setMode] = useState<"compress" | "decompress">("decompress");
   const [error, setError] = useState("");
   const [stats, setStats] = useState<{
     inputSize: number;
@@ -109,18 +109,18 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
         {/* Mode Selection */}
         <div className="flex gap-2">
           <Button
-            onClick={() => setMode("compress")}
-            variant={mode === "compress" ? "default" : "outline"}
-            size="sm"
-          >
-            Compress
-          </Button>
-          <Button
             onClick={() => setMode("decompress")}
             variant={mode === "decompress" ? "default" : "outline"}
             size="sm"
           >
             Decompress
+          </Button>
+          <Button
+            onClick={() => setMode("compress")}
+            variant={mode === "compress" ? "default" : "outline"}
+            size="sm"
+          >
+            Compress
           </Button>
         </div>
 
