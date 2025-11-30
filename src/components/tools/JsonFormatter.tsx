@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Braces, Copy, AlertCircle, CheckCircle, Minimize2, Maximize2 } from "lucide-react";
+import { Braces, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface JsonFormatterProps {
@@ -116,34 +116,32 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
               setInput(e.target.value);
               formatJson(isMinified);
             }}
-            className="min-h-[150px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
+            className="w-full min-h-[150px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mt-2">
           <Button
             onClick={() => formatJson(false)}
-            size="sm"
-            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
           >
-            <Maximize2 className="h-4 w-4 mr-1" />
+            <WandSparkles className="h-4 w-4 mr-1" />
             Format
           </Button>
-          
+
           <Button
             onClick={() => formatJson(true)}
-            size="sm"
-            variant="secondary"
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
           >
-            <Minimize2 className="h-4 w-4 mr-1" />
+            <Minimize className="h-4 w-4 mr-1" />
             Minify
           </Button>
 
           {output && (
             <Button
               onClick={copyToClipboard}
-              size="sm"
               variant="outline"
+              size="sm"
             >
               <Copy className="h-4 w-4 mr-1" />
               Copy
@@ -152,8 +150,8 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
 
           <Button
             onClick={clearAll}
-            size="sm"
             variant="outline"
+            size="sm"
           >
             Clear
           </Button>
@@ -224,7 +222,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
                 </div>
                 <Button
                   onClick={() => setInput(example.json)}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="ml-2 flex-shrink-0"
                 >

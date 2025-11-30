@@ -45,9 +45,9 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
           <pre className="text-sm font-mono whitespace-pre-wrap">
             {diffResult.map((part, index) => {
               const className = part.added 
-                ? "bg-green-500/20 text-green-700 dark:text-green-300" 
+                ? "bg-green-500/20 text-green-500 dark:text-green-400 dark:bg-green-950/30" 
                 : part.removed 
-                ? "bg-red-500/20 text-red-700 dark:text-red-300"
+                ? "bg-red-500/20 text-red-500 dark:text-red-400 dark:bg-red-950/30"
                 : "text-foreground";
               
               const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
@@ -111,7 +111,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
               placeholder="Enter original text..."
               value={leftText}
               onChange={(e) => setLeftText(e.target.value)}
-              className="min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
           
@@ -123,17 +123,17 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
               placeholder="Enter modified text..."
               value={rightText}
               onChange={(e) => setRightText(e.target.value)}
-              className="min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={calculateDiff} className="flex-1">
+          <Button onClick={calculateDiff} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <GitCompare className="h-4 w-4 mr-2" />
             Compare Texts
           </Button>
-          <Button onClick={clearAll} variant="outline">
+          <Button onClick={clearAll} variant="outline" size="sm">
             <RotateCcw className="h-4 w-4 mr-2" />
             Clear
           </Button>

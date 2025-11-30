@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Copy, Hash, RotateCcw } from "lucide-react";
+import { Copy, Hash, RotateCcw, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CryptoJS from "crypto-js";
 
@@ -142,12 +142,12 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
               }
             }}
-            className="min-h-[120px] bg-muted/50 border-border/50"
+            className="w-full min-h-[120px] bg-muted/50 border-border/50"
           />
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={generateHashes} className="flex-1">
+          <Button onClick={generateHashes} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <Hash className="h-4 w-4 mr-2" />
             Generate Hashes
           </Button>
@@ -203,19 +203,20 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 placeholder="Enter hash to verify against the text above..."
                 value={hashToVerify}
                 onChange={(e) => setHashToVerify(e.target.value)}
-                className="font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full font-mono text-sm bg-muted/50 border-border/50"
               />
             </div>
             
-            <Button onClick={verifyHash} variant="outline" className="w-full">
+            <Button onClick={verifyHash} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+              <CheckCircle className="h-4 w-4 mr-2" />
               Verify Hash
             </Button>
             
             {verificationResult && (
               <div className={`p-3 rounded-md text-sm font-medium ${
                 verificationResult.includes("✅") 
-                  ? "bg-green-500/10 text-green-700 dark:text-green-300" 
-                  : "bg-red-500/10 text-red-700 dark:text-red-300"
+                  ? "bg-green-500/10 text-green-600 dark:text-green-400 dark:bg-green-950/20" 
+                  : "bg-red-500/10 text-red-600 dark:text-red-400 dark:bg-red-950/20"
               }`}>
                 {verificationResult}
               </div>

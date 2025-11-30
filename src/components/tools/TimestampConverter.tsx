@@ -192,21 +192,25 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
 
           {/* Epoch to Date Tab */}
           <TabsContent value="from-timestamp" className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-foreground">
-                Epoch/Unix Timestamp (seconds or milliseconds)
-              </label>
-              <Input
-                placeholder="e.g., 1703516400 or 1703516400000"
-                value={timestamp}
-                onChange={(e) => setTimestamp(e.target.value)}
-                className="font-mono bg-muted/50 border-border/50"
-              />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+              <div className="w-full sm:flex-1 sm:min-w-0">
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Epoch/Unix Timestamp (seconds or milliseconds)
+                </label>
+                <Input
+                  placeholder="e.g., 1703516400 or 1703516400000"
+                  value={timestamp}
+                  onChange={(e) => setTimestamp(e.target.value)}
+                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                />
+              </div>
+              <div className="mt-3 sm:mt-0">
+                <Button onClick={convertFromTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Convert Epoch to Human Readable
+                </Button>
+              </div>
             </div>
-            <Button onClick={convertFromTimestamp} className="w-full">
-              <Calendar className="h-4 w-4 mr-2" />
-              Convert Epoch to Human Readable
-            </Button>
 
             {Object.keys(fromTimestampResults).length > 0 && (
               <div className="space-y-3">
@@ -227,21 +231,25 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
 
           {/* Date to Epoch Tab */}
           <TabsContent value="to-timestamp" className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-foreground">
-                Date/Time (ISO format)
-              </label>
-              <Input
-                placeholder="e.g., 2023-12-25T15:30:00"
-                value={dateTime}
-                onChange={(e) => setDateTime(e.target.value)}
-                className="font-mono bg-muted/50 border-border/50"
-              />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+              <div className="w-full sm:flex-1 sm:min-w-0">
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Date/Time (ISO format)
+                </label>
+                <Input
+                  placeholder="e.g., 2023-12-25T15:30:00"
+                  value={dateTime}
+                  onChange={(e) => setDateTime(e.target.value)}
+                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                />
+              </div>
+              <div className="mt-3 sm:mt-0">
+                <Button onClick={convertToTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+                  <Clock className="h-4 w-4 mr-2" />
+                  Convert to Epoch/Unix Timestamp
+                </Button>
+              </div>
             </div>
-            <Button onClick={convertToTimestamp} className="w-full">
-              <Clock className="h-4 w-4 mr-2" />
-              Convert to Epoch/Unix Timestamp
-            </Button>
 
             {Object.keys(toTimestampResults).length > 0 && (
               <div className="space-y-3">
@@ -262,10 +270,12 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
 
           {/* Current Time Tab */}
           <TabsContent value="current" className="space-y-4">
-            <Button onClick={getCurrentTimestamp} className="w-full">
-              <Clock className="h-4 w-4 mr-2" />
-              Get Current Timestamp
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button onClick={getCurrentTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+                <Clock className="h-4 w-4 mr-2" />
+                Get Current Timestamp
+              </Button>
+            </div>
 
             {Object.keys(currentTimestampResults).length > 0 && (
               <div className="space-y-3">
@@ -291,11 +301,11 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                 Enter Value for Conversion
               </label>
               <Input
-                placeholder="e.g., 120"
-                value={conversionValue}
-                onChange={(e) => setConversionValue(e.target.value)}
-                className="font-mono bg-muted/50 border-border/50"
-              />
+                  placeholder="e.g., 120"
+                  value={conversionValue}
+                  onChange={(e) => setConversionValue(e.target.value)}
+                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                />
             </div>
 
             <div className="flex gap-4">
@@ -337,7 +347,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                   convertUnits(parseFloat(conversionValue), fromUnit, toUnit);
                 }
               }}
-              className="w-full mt-4"
+              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
             >
               Convert
             </Button>
@@ -391,7 +401,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                     </div>
                     <Button
                       onClick={() => setTimestamp(value)}
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                     >
                       Use
@@ -409,7 +419,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                     </div>
                     <Button
                       onClick={() => setDateTime(value)}
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                     >
                       Use

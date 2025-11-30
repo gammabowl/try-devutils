@@ -34,30 +34,32 @@ All colors MUST be HSL.
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 85%;
-    --input: 214.3 31.8% 88%;
-    --ring: 215 20.2% 65.1%;
+    /* Global border/input tuning for crisper UI */
+    --border: 214 20% 92%; /* lighter, subtle panel borders */
+    --input: 215 18% 96%; /* very light input backgrounds/borders */
+    --ring: 215 18% 85%;
 
     /* Developer tool specific colors */
-    --dev-primary: 199 89% 48%;
+    /* Tool accent palette (improved contrast & cohesion) */
+    --dev-primary: 214 90% 50%; /* vivid blue */
     --dev-primary-foreground: 210 40% 98%;
-    --dev-secondary: 217.9 10.6% 50%;
-    --dev-success: 142 76% 36%;
+    --dev-secondary: 187 85% 45%; /* teal accent */
+    --dev-success: 145 65% 30%;
     --dev-success-foreground: 210 40% 98%;
-    --dev-warning: 38 92% 50%;
+    --dev-warning: 34 100% 50%;
     --dev-warning-foreground: 222.2 47.4% 11.2%;
-    --dev-error: 0 84.2% 60.2%;
+    --dev-error: 0 78% 50%;
     --dev-error-foreground: 210 40% 98%;
 
     /* Gradients - improved contrast */
-    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%), hsl(217 91% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(210 40% 94%), hsl(214.3 31.8% 88%));
-    --gradient-accent: linear-gradient(135deg, hsl(199 89% 48% / 0.1), hsl(217 91% 60% / 0.1));
+    --gradient-primary: linear-gradient(135deg, hsl(214 90% 50%), hsl(197 85% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 100% / 0.95), hsl(214 20% 96% / 0.98));
+    --gradient-accent: linear-gradient(135deg, hsl(214 90% 50% / 0.08), hsl(197 85% 45% / 0.06));
 
     /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(199 89% 48% / 0.3);
-    --shadow-glow: 0 0 40px hsl(199 89% 48% / 0.2);
-    --shadow-card: 0 4px 6px -1px hsl(214.3 31.8% 85% / 0.15), 0 2px 4px -1px hsl(214.3 31.8% 85% / 0.1);
+    --shadow-elegant: 0 10px 30px -10px hsl(214 90% 50% / 0.18);
+    --shadow-glow: 0 0 36px hsl(214 90% 50% / 0.12);
+    --shadow-card: 0 6px 18px -8px hsl(214 20% 10% / 0.06), 0 2px 6px -2px hsl(214 20% 10% / 0.04);
 
     --radius: 0.75rem;
 
@@ -88,31 +90,47 @@ All colors MUST be HSL.
     --secondary: 215 27.9% 16.9%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 215 27.9% 16.9%;
+    --muted: 215 27.9% 20%;
     --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 215 27.9% 16.9%;
+    --accent: 215 27.9% 20%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
+    --border: 215 27.9% 20%;
+    --input: 215 27.9% 18%;
     --ring: 212.7 26.8% 83.9%;
 
-    /* Dark theme gradients */
-    --gradient-secondary: linear-gradient(135deg, hsl(215 27.9% 16.9%), hsl(224 71% 4%));
-    --shadow-card: 0 4px 6px -1px hsl(224 71% 4% / 0.1), 0 2px 4px -1px hsl(224 71% 4% / 0.06);
+    /* Dark theme developer token colors */
+    --dev-primary: 214 90% 60%; /* slightly brighter for dark mode */
+    --dev-primary-foreground: 224 71% 4%;
+    --dev-secondary: 187 85% 55%; /* slightly brighter teal */
+    --dev-success: 145 70% 45%; /* brighter green */
+    --dev-success-foreground: 224 71% 4%;
+    --dev-warning: 34 100% 60%; /* brighter warning */
+    --dev-warning-foreground: 224 71% 4%;
+    --dev-error: 0 85% 60%; /* brighter error */
+    --dev-error-foreground: 224 71% 4%;
+
+    /* Dark theme gradients - improved depth */
+    --gradient-primary: linear-gradient(135deg, hsl(214 90% 60%), hsl(197 85% 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(215 27.9% 18%), hsl(224 71% 8%));
+    --gradient-accent: linear-gradient(135deg, hsl(214 90% 60% / 0.12), hsl(197 85% 55% / 0.08));
+    
+    --shadow-elegant: 0 10px 30px -10px hsl(214 90% 60% / 0.2);
+    --shadow-glow: 0 0 36px hsl(214 90% 60% / 0.15);
+    --shadow-card: 0 4px 6px -1px hsl(224 71% 4% / 0.3), 0 2px 4px -1px hsl(224 71% 4% / 0.2);
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-primary: 214 90% 60%;
+    --sidebar-primary-foreground: 224 71% 4%;
+    --sidebar-accent: 240 3.7% 20%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-border: 240 3.7% 18%;
+    --sidebar-ring: 214 90% 60%;
   }
 }
 

@@ -62,7 +62,7 @@ export function MarkdownPreview() {
               value={markdown}
               onChange={(e) => setMarkdown(e.target.value)}
               placeholder="Enter markdown here..."
-              className="min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
 

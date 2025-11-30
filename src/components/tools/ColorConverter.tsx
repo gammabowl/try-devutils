@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Palette, RotateCcw } from "lucide-react";
+import { Copy, Palette, RotateCcw, Pipette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 
@@ -252,9 +252,10 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                     setInputColor(e.target.value);
                     setTimeout(() => convertColor(e.target.value), 300);
                   }}
-                  className="flex-1 font-mono bg-muted/50 border-border/50"
+                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
                 />
-                <Button onClick={() => convertColor(inputColor)}>
+                <Button onClick={() => convertColor(inputColor)} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+                  <Pipette className="h-4 w-4 mr-2" />
                   Convert
                 </Button>
               </div>
@@ -267,7 +268,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
             )}
 
             <div className="flex flex-col gap-4">
-              <h4 className="text-sm font-semibold text-dev-primary">Color Preview</h4>
+              <h4 className="text-sm font-semibold text-dev-primary">Colour Preview</h4>
               <div
                 className="h-24 rounded-md border border-border/50"
                 style={{ backgroundColor: colorValues.hex }}
@@ -333,7 +334,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                 </div>
                 <Button
                   onClick={() => copyToClipboard(value)}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="ml-2 flex-shrink-0"
                 >

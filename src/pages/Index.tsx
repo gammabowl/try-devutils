@@ -8,6 +8,7 @@ import { CronParser } from "@/components/tools/CronParser";
 import { ColorConverter } from "@/components/tools/ColorConverter";
 import { HashGenerator } from "@/components/tools/HashGenerator";
 import { YamlValidator } from "@/components/tools/YamlValidator";
+import { StringAnalyser } from "@/components/tools/StringAnalyser";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +33,8 @@ import {
   BinaryIcon,
   FileDiffIcon,
   FingerprintIcon,
-  FileKeyIcon
+  FileKeyIcon,
+  Type
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -40,17 +42,18 @@ import { MarkdownPreview } from "@/components/tools/MarkdownPreview";
 
 const Index = () => {
   const tools = [
-    { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: JwtDecoder, description: "Decode, Encode and validate JWT tokens", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" },
+    { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: JwtDecoder, description: "Decode, Encode and validate JWT tokens", color: "from-indigo-500 to-indigo-600", textColor: "text-indigo-600", bgColor: "bg-indigo-500/10" },
     { id: "json", label: "JSON Formatter", icon: Braces, component: JsonFormatter, description: "Format, validate and minify JSON", color: "from-amber-500 to-orange-600", textColor: "text-amber-600", bgColor: "bg-amber-500/10" },
-    { id: "uuid", label: "UUID Generator/Decoder", icon: FingerprintIcon, component: UuidGeneratorDecoder, description: "Generate, validate, decode UUIDs", color: "from-blue-500 to-cyan-600", textColor: "text-blue-600", bgColor: "bg-blue-500/10" },
-    { id: "base64", label: "Base64 Converter", icon: BinaryIcon, component: Base64Converter, description: "Encode and decode Base64 strings", color: "from-pink-500 to-pink-600", textColor: "text-pink-600", bgColor: "bg-pink-500/10" },
-    { id: "timestamp", label: "Timestamp Converter", icon: Clock, component: TimestampConverter, description: "Convert Unix timestamps to dates", color: "from-green-500 to-emerald-600", textColor: "text-green-600", bgColor: "bg-green-500/10" },
+    { id: "uuid", label: "UUID Generator/Decoder", icon: FingerprintIcon, component: UuidGeneratorDecoder, description: "Generate, validate, decode UUIDs", color: "from-cyan-500 to-blue-600", textColor: "text-cyan-600", bgColor: "bg-cyan-500/10" },
+    { id: "base64", label: "Base64 Converter", icon: BinaryIcon, component: Base64Converter, description: "Encode and decode Base64 strings", color: "from-rose-500 to-red-600", textColor: "text-rose-600", bgColor: "bg-rose-500/10" },
+    { id: "timestamp", label: "Timestamp Converter", icon: Clock, component: TimestampConverter, description: "Convert Unix timestamps to dates", color: "from-teal-500 to-teal-600", textColor: "text-teal-600", bgColor: "bg-teal-500/10" },
     { id: "diff", label: "Text Diff", icon: FileDiffIcon, component: TextDiff, description: "Compare texts and find differences", color: "from-red-500 to-red-600", textColor: "text-red-600", bgColor: "bg-red-500/10" },
-    { id: "cron", label: "Cron Parser", icon: Calendar, component: CronParser, description: "Parse and explain cron expressions", color: "from-indigo-500 to-blue-600", textColor: "text-indigo-600", bgColor: "bg-indigo-500/10" },
+    { id: "cron", label: "Cron Parser", icon: Calendar, component: CronParser, description: "Parse and explain cron expressions", color: "from-sky-500 to-blue-600", textColor: "text-sky-600", bgColor: "bg-sky-500/10" },
     { id: "color", label: "Colour Converter", icon: Palette, component: ColorConverter, description: "Convert between colour formats", color: "from-fuchsia-500 to-pink-600", textColor: "text-fuchsia-600", bgColor: "bg-fuchsia-500/10" },
-    { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-cyan-500 to-teal-600", textColor: "text-cyan-600", bgColor: "bg-cyan-500/10" },
-    { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-green-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
-    { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-amber-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" }
+    { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-emerald-500 to-green-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
+    { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-lime-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
+    { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
+    { id: "string", label: "String Analyser", icon: Type, component: StringAnalyser, description: "Analyse text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" }
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -125,30 +128,34 @@ const Index = () => {
                 );
               })}
             </div>
-
-            {/* ESC Key Hint - Bottom of grid */}
-            <div className="flex items-center gap-2 p-3 bg-dev-primary/10 border border-dev-primary/30 rounded-lg">
-              <kbd className="px-2 py-1 text-sm font-semibold text-foreground bg-dev-primary/20 rounded border border-dev-primary/40">
-                ESC
-              </kbd>
-              <span className="text-sm text-foreground">Press on keyboard anytime to come back to this grid from any tool</span>
-            </div>
           </div>
         ) : (
           // --- SELECTED TOOL ---
-          <div className="relative max-w-6xl mx-auto">
+          <div className="space-y-6">
+            {/* ESC Key Hint - Top of tool */}
+            <div className="flex justify-center pb-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-dev-primary/8 border border-dev-primary/25 hover:bg-dev-primary/12 hover:border-dev-primary/40 transition-all duration-200">
+                <kbd className="px-2 py-0.5 text-xs font-semibold text-dev-primary bg-dev-primary/15 rounded">
+                  ESC
+                </kbd>
+                <span className="text-xs text-muted-foreground font-medium">to return to the grid</span>
+              </div>
+            </div>
+            
             {/* Tool Component */}
-            {selectedToolData && <selectedToolData.component />}
+            <div className="relative max-w-6xl mx-auto">
+              {selectedToolData && <selectedToolData.component />}
 
-            {/* Close Icon */}
-            <div className="absolute top-2 right-2 flex items-center space-x-2 z-10">
-              <button
-                onClick={() => setSelectedTool(null)}
-                className="p-2 rounded-full bg-white/30 hover:bg-white/50 shadow-lg transition-all duration-200 transform hover:scale-110"
-                aria-label="Close Tool"
-              >
-                <X className="h-6 w-6 text-foreground" />
-              </button>
+              {/* Close Icon */}
+              <div className="absolute top-2 right-2 flex items-center space-x-2 z-10">
+                <button
+                  onClick={() => setSelectedTool(null)}
+                  className="p-2 rounded-full bg-white/30 hover:bg-white/50 shadow-lg transition-all duration-200 transform hover:scale-110"
+                  aria-label="Close Tool"
+                >
+                  <X className="h-6 w-6 text-foreground" />
+                </button>
+              </div>
             </div>
           </div>
         )}

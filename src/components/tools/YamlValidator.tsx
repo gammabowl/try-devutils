@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Copy, FileText, CheckCircle, AlertCircle, RotateCcw } from "lucide-react";
+import { Copy, FileText, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import * as yaml from "js-yaml";
 
@@ -161,17 +161,18 @@ settings:
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-2 mb-4">
-          <Button onClick={validateYaml} className="flex-1">
+          <Button onClick={validateYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <CheckCircle className="h-4 w-4 mr-2" />
             Validate YAML
           </Button>
-          <Button onClick={loadExample} variant="outline">
-            Example
-          </Button>
-          <Button onClick={formatYaml} variant="outline">
+          <Button onClick={formatYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            <Wand2 className="h-4 w-4 mr-2" />
             Format
           </Button>
-          <Button onClick={clearAll} variant="outline">
+          <Button onClick={loadExample} variant="outline" size="sm">
+            Example
+          </Button>
+          <Button onClick={clearAll} variant="outline" size="sm">
             <RotateCcw className="h-4 w-4 mr-2" />
             Clear
           </Button>
@@ -240,7 +241,7 @@ settings:
                     setError("");
                   }
                 }}
-                className="min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
               />
               <Button
                 onClick={() => copyToClipboard(yamlInput, "YAML")}
@@ -276,7 +277,7 @@ settings:
                 value={jsonOutput}
                 onChange={(e) => setJsonOutput(e.target.value)}
                 readOnly={!jsonOutput || isValid === true}
-                className="min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
+                className="w-full min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
               />
               <Button
                 onClick={() => copyToClipboard(jsonOutput, "JSON")}

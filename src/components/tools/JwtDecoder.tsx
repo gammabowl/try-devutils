@@ -264,7 +264,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 <Textarea
                   value={headerInput}
                   onChange={(e) => setHeaderInput(e.target.value)}
-                  className="min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
+                  className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
                 />
               </div>
 
@@ -277,7 +277,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 <Textarea
                   value={payloadInput}
                   onChange={(e) => setPayloadInput(e.target.value)}
-                  className="min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
+                  className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
                 />
               </div>
 
@@ -292,10 +292,10 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                     type="text"
                     value={secret}
                     onChange={(e) => setSecret(e.target.value)}
-                    className="flex-1 px-3 py-2 text-sm bg-background border-2 border-input focus:border-ring rounded-md font-mono"
+                    className="w-full sm:max-w-[520px] px-3 py-2 text-sm bg-background border-2 border-input focus:border-ring rounded-md font-mono"
                     placeholder="Enter your secret"
                   />
-                  <Button onClick={encodeJWT} className="px-6">
+                  <Button onClick={encodeJWT} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-6">
                     Encode
                   </Button>
                 </div>
@@ -308,10 +308,9 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 <h3 className="text-lg font-semibold text-foreground">JSON WEB TOKEN</h3>
                 {token && (
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     onClick={() => copyToClipboard(token)}
-                    className="h-8 px-3"
                   >
                     <Copy className="h-3 w-3 mr-1" />
                     Copy
@@ -323,7 +322,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 <Textarea
                   value={token}
                   readOnly
-                  className="h-[460px] font-mono text-sm bg-background border-2 border-input resize-none"
+                  className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input resize-none"
                   placeholder="Your encoded JWT will appear here..."
                 />
               </div>
@@ -379,24 +378,22 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                   <div className="flex gap-2">
                     {token && (
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => copyToClipboard(token)}
-                        className="h-8 px-3"
                       >
                         <Copy className="h-3 w-3 mr-1" />
                         Copy
                       </Button>
                     )}
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() => {
                         setToken("");
                         setDecoded(null);
                         setError("");
                       }}
-                      className="h-8 px-3"
                     >
                       Clear
                     </Button>
@@ -409,7 +406,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                     setToken(e.target.value);
                     decodeJWT(e.target.value);
                   }}
-                  className="h-[460px] font-mono text-sm bg-background border-2 border-input focus:border-ring resize-none"
+                  className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input focus:border-ring resize-none"
                 />
               </div>
 
@@ -455,10 +452,9 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                         DECODED HEADER
                       </h4>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => copyToClipboard(formatJson(decoded.header))}
-                        className="h-7 px-2 text-xs"
                       >
                         <Copy className="h-3 w-3 mr-1" />
                         Copy
@@ -504,10 +500,9 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                         DECODED PAYLOAD
                       </h4>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => copyToClipboard(formatJson(decoded.payload))}
-                        className="h-7 px-2 text-xs"
                       >
                         <Copy className="h-3 w-3 mr-1" />
                         Copy
