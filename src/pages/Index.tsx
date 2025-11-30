@@ -8,7 +8,7 @@ import { CronParser } from "@/components/tools/CronParser";
 import { ColorConverter } from "@/components/tools/ColorConverter";
 import { HashGenerator } from "@/components/tools/HashGenerator";
 import { YamlValidator } from "@/components/tools/YamlValidator";
-import { StringAnalyzer } from "@/components/tools/StringAnalyzer";
+import { StringAnalyser } from "@/components/tools/StringAnalyser";
 import {
   Dialog,
   DialogContent,
@@ -53,7 +53,7 @@ const Index = () => {
     { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-emerald-500 to-green-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
     { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-lime-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
     { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
-    { id: "string", label: "String Analyzer", icon: Type, component: StringAnalyzer, description: "Analyze text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" }
+    { id: "string", label: "String Analyser", icon: Type, component: StringAnalyser, description: "Analyse text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" }
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);

@@ -268,7 +268,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
             )}
 
             <div className="flex flex-col gap-4">
-              <h4 className="text-sm font-semibold text-dev-primary">Color Preview</h4>
+              <h4 className="text-sm font-semibold text-dev-primary">Colour Preview</h4>
               <div
                 className="h-24 rounded-md border border-border/50"
                 style={{ backgroundColor: colorValues.hex }}

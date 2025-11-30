@@ -6,7 +6,7 @@ import { Copy, RotateCcw, Type } from "lucide-react";
 import { length, charCount, wordCount, lineCount, toLowerCase, toUpperCase } from "@/lib/stringUtils";
 import { toast } from "sonner";
 
-export function StringAnalyzer() {
+export function StringAnalyser() {
   const [input, setInput] = useState("");
   const [displayText, setDisplayText] = useState("");
 
@@ -43,7 +43,7 @@ export function StringAnalyzer() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
           <Type className="h-5 w-5 text-dev-primary" />
-          String Analyzer
+          String Analyser
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -67,7 +67,7 @@ export function StringAnalyzer() {
             <div className="text-2xl font-bold text-dev-primary">{stats.length}</div>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-xs text-muted-foreground font-medium mb-1">Unique Chars</div>
+            <div className="text-xs text-muted-foreground font-medium mb-1">Unique Characters</div>
             <div className="text-2xl font-bold text-dev-secondary">{stats.charCount}</div>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
@@ -120,7 +120,7 @@ export function StringAnalyzer() {
         {/* Info */}
         <div className="text-xs text-muted-foreground space-y-1 pt-2">
           <div><strong>Length:</strong> Total number of characters (Unicode code points)</div>
-          <div><strong>Unique Chars:</strong> Count of distinct characters</div>
+          <div><strong>Unique Characters:</strong> Count of distinct characters</div>
           <div><strong>Words:</strong> Count of space-separated words</div>
           <div><strong>Lines:</strong> Count of line breaks</div>
         </div>
