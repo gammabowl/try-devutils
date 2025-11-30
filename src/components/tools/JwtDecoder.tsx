@@ -164,6 +164,23 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
     return descriptions[claim] || "Custom claim";
   };
 
+  const getPayloadHeight = () => {
+    if (!decoded?.payload) return "max-h-32";
+    const payloadJson = formatJson(decoded.payload);
+    const lines = payloadJson.split('\n').length;
+    const claimsCount = Object.keys(decoded.payload).length;
+    
+    // For claims table: each claim takes ~2 lines, header takes 1 line
+    // Calculate based on total content size
+    const estimatedHeight = Math.min(claimsCount * 8 + 40, 500);
+    
+    if (estimatedHeight < 100) return "max-h-32";
+    if (estimatedHeight < 200) return "max-h-48";
+    if (estimatedHeight < 300) return "max-h-64";
+    if (estimatedHeight < 400) return "max-h-80";
+    return "max-h-screen";
+  };
+
   const encodeJWT = () => {
     try {
       const header = JSON.parse(headerInput);
@@ -233,7 +250,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
       <CardContent className="space-y-6">
         {/* Encoder Section */}
         {isEncoding ? (
-          <div className="grid lg:grid-cols-2 gap-6 min-h-[600px]">
+          <div className="grid lg:grid-cols-2 gap-6 min-h-[540px]">
             {/* Left Side - Input Fields */}
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-foreground">Create JWT</h3>
@@ -306,7 +323,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 <Textarea
                   value={token}
                   readOnly
-                  className="h-[440px] font-mono text-sm bg-background border-2 border-input resize-none"
+                  className="h-[460px] font-mono text-sm bg-background border-2 border-input resize-none"
                   placeholder="Your encoded JWT will appear here..."
                 />
               </div>
@@ -334,7 +351,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
           </div>
         ) : (
           /* Decoder Section */
-          <div className="grid lg:grid-cols-2 gap-6 min-h-[600px]">
+          <div className="grid lg:grid-cols-2 gap-6 min-h-[540px] items-stretch">
             {/* Left Side - JWT Input */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -392,7 +409,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                     setToken(e.target.value);
                     decodeJWT(e.target.value);
                   }}
-                  className="h-[440px] font-mono text-sm bg-background border-2 border-input focus:border-ring resize-none"
+                  className="h-[460px] font-mono text-sm bg-background border-2 border-input focus:border-ring resize-none"
                 />
               </div>
 
@@ -426,12 +443,12 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
 
             {/* Right Side - Decoded Sections */}
             {decoded && (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-foreground">Decoded JWT</h3>
                 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Header */}
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-semibold flex items-center gap-2">
                         <div className="w-3 h-3 bg-red-500 rounded"></div>
@@ -441,7 +458,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                         variant="ghost"
                         size="sm"
                         onClick={() => copyToClipboard(formatJson(decoded.header))}
-                        className="h-8 px-3"
+                        className="h-7 px-2 text-xs"
                       >
                         <Copy className="h-3 w-3 mr-1" />
                         Copy
@@ -453,24 +470,24 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                         <TabsTrigger value="json" className="text-xs py-1">JSON</TabsTrigger>
                         <TabsTrigger value="claims" className="text-xs py-1">CLAIMS TABLE</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="json" className="mt-3">
-                        <pre className="bg-background border-2 border-input p-4 rounded-lg text-sm overflow-auto max-h-40">
+                      <TabsContent value="json" className="mt-2">
+                        <pre className="bg-background border border-input p-2 rounded text-xs overflow-auto max-h-32">
                           {formatJson(decoded.header)}
                         </pre>
                       </TabsContent>
-                      <TabsContent value="claims" className="mt-3">
-                        <div className="bg-background border-2 border-input rounded-lg overflow-hidden">
-                          <div className="grid grid-cols-3 gap-4 p-3 font-semibold text-xs border-b border-border bg-muted/50">
+                      <TabsContent value="claims" className="mt-2">
+                        <div className="bg-background border border-input rounded overflow-hidden">
+                          <div className="grid grid-cols-3 gap-2 p-2 font-semibold text-xs border-b border-border bg-muted/50">
                             <div className="text-red-600">CLAIM</div>
                             <div className="text-foreground">VALUE</div>
-                            <div className="text-muted-foreground">DESCRIPTION</div>
+                            <div className="text-muted-foreground text-right pr-2">DESC</div>
                           </div>
-                          <div className="divide-y divide-red-500/20">
+                          <div className="divide-y divide-red-500/20 max-h-32 overflow-y-auto">
                             {formatClaims(decoded.header).map((claim, index) => (
-                              <div key={index} className="grid grid-cols-3 gap-4 p-3">
-                                <div className="font-mono text-xs text-red-600 break-words">{claim.claim}</div>
-                                <div className="font-mono text-xs text-foreground break-words">{claim.value}</div>
-                                <div className="text-xs text-muted-foreground break-words">{claim.description}</div>
+                              <div key={index} className="grid grid-cols-3 gap-2 p-2 text-xs">
+                                <div className="font-mono text-red-600 truncate">{claim.claim}</div>
+                                <div className="font-mono text-foreground truncate">{claim.value}</div>
+                                <div className="text-muted-foreground text-right truncate text-right pr-2">{claim.description.substring(0, 20)}</div>
                               </div>
                             ))}
                           </div>
@@ -480,7 +497,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                   </div>
 
                   {/* Payload */}
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-semibold flex items-center gap-2">
                         <div className="w-3 h-3 bg-purple-500 rounded"></div>
@@ -490,7 +507,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                         variant="ghost"
                         size="sm"
                         onClick={() => copyToClipboard(formatJson(decoded.payload))}
-                        className="h-8 px-3"
+                        className="h-7 px-2 text-xs"
                       >
                         <Copy className="h-3 w-3 mr-1" />
                         Copy
@@ -502,24 +519,26 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                         <TabsTrigger value="json" className="text-xs py-1">JSON</TabsTrigger>
                         <TabsTrigger value="claims" className="text-xs py-1">CLAIMS TABLE</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="json" className="mt-3">
-                        <pre className="bg-background border-2 border-input p-4 rounded-lg text-sm overflow-auto max-h-40">
+
+                      <TabsContent value="json" className="mt-2">
+                        <pre className="bg-background border border-input p-2 rounded text-xs">
                           {formatJson(decoded.payload)}
                         </pre>
                       </TabsContent>
-                      <TabsContent value="claims" className="mt-3">
-                        <div className="bg-background border-2 border-input rounded-lg overflow-hidden">
-                          <div className="grid grid-cols-3 gap-4 p-3 font-semibold text-xs border-b border-border bg-muted/50">
+
+                      <TabsContent value="claims" className="mt-2">
+                        <div className="bg-background border border-input rounded overflow-hidden">
+                          <div className="grid grid-cols-3 gap-2 p-2 font-semibold text-xs border-b border-border bg-muted/50">
                             <div className="text-purple-600">CLAIM</div>
                             <div className="text-foreground">VALUE</div>
-                            <div className="text-muted-foreground">DESCRIPTION</div>
+                            <div className="text-muted-foreground text-right pr-2">DESC</div>
                           </div>
                           <div className="divide-y divide-purple-500/20">
                             {formatClaims(decoded.payload).map((claim, index) => (
-                              <div key={index} className="grid grid-cols-3 gap-4 p-3">
-                                <div className="font-mono text-xs text-purple-600 break-words">{claim.claim}</div>
-                                <div className="font-mono text-xs text-foreground break-words">{claim.value}</div>
-                                <div className="text-xs text-muted-foreground break-words">{claim.description}</div>
+                              <div key={index} className="grid grid-cols-3 gap-2 p-2 text-xs">
+                                <div className="font-mono text-purple-600 truncate">{claim.claim}</div>
+                                <div className="font-mono text-foreground truncate">{claim.value}</div>
+                                <div className="text-muted-foreground text-right truncate text-right pr-2">{claim.description.substring(0, 20)}</div>
                               </div>
                             ))}
                           </div>
@@ -529,7 +548,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                   </div>
 
                   {/* Signature Verification */}
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-semibold flex items-center gap-2">
                         <div className="w-3 h-3 bg-cyan-500 rounded"></div>
@@ -537,7 +556,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                       </h4>
                     </div>
                     
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <div className="flex gap-2">
                         <input
                           type="text"

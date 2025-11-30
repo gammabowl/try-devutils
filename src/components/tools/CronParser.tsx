@@ -58,21 +58,128 @@ export function CronParser({ initialContent, action }: CronParserProps) {
     }
   };
 
-  const calculateNextRuns = () => {
-    // Simple next run calculation for common patterns
-    // In a real app, you might use a more sophisticated cron parser
-    const runs: string[] = [];
-    const now = new Date();
-    
-    try {
-      // This is a simplified implementation
-      // For production, consider using node-cron or similar
-      for (let i = 0; i < 5; i++) {
-        const nextRun = new Date(now.getTime() + (i + 1) * 60 * 60 * 1000); // Sample: next hours
-        runs.push(nextRun.toLocaleString());
+  const parseCronExpression = (expression: string) => {
+    const parts = expression.trim().split(/\s+/);
+    if (parts.length !== 5 && parts.length !== 6) {
+      throw new Error("Cron expression must have 5 or 6 fields");
+    }
+
+    const [minute, hour, dayOfMonth, month, dayOfWeek, ...secondsPart] = parts;
+    return {
+      minute: parseField(minute, 0, 59),
+      hour: parseField(hour, 0, 23),
+      dayOfMonth: parseField(dayOfMonth, 1, 31),
+      month: parseField(month, 1, 12),
+      dayOfWeek: parseField(dayOfWeek, 0, 6),
+      seconds: secondsPart.length > 0 ? parseField(secondsPart[0], 0, 59) : [0],
+    };
+  };
+
+  const parseField = (field: string, min: number, max: number): number[] => {
+    const values: Set<number> = new Set();
+
+    if (field === "*") {
+      for (let i = min; i <= max; i++) {
+        values.add(i);
       }
+      return Array.from(values).sort((a, b) => a - b);
+    }
+
+    const parts = field.split(",");
+    for (const part of parts) {
+      if (part.includes("/")) {
+        // Handle step values like "*/5"
+        const [range, step] = part.split("/");
+        const stepNum = parseInt(step, 10);
+        let rangeMin = min;
+        let rangeMax = max;
+
+        if (range !== "*") {
+          const [rmin, rmax] = range.includes("-")
+            ? range.split("-").map(Number)
+            : [parseInt(range, 10), parseInt(range, 10)];
+          rangeMin = rmin;
+          rangeMax = rmax;
+        }
+
+        for (let i = rangeMin; i <= rangeMax; i += stepNum) {
+          values.add(i);
+        }
+      } else if (part.includes("-")) {
+        // Handle ranges like "1-5"
+        const [start, end] = part.split("-").map(Number);
+        for (let i = start; i <= end; i++) {
+          values.add(i);
+        }
+      } else {
+        // Single value
+        values.add(parseInt(part, 10));
+      }
+    }
+
+    return Array.from(values)
+      .filter((v) => v >= min && v <= max)
+      .sort((a, b) => a - b);
+  };
+
+  const matchesCron = (date: Date, parsed: any): boolean => {
+    const minute = date.getMinutes();
+    const hour = date.getHours();
+    const dayOfMonth = date.getDate();
+    const month = date.getMonth() + 1; // 0-indexed
+    const dayOfWeek = date.getDay();
+    const seconds = date.getSeconds();
+
+    const minuteMatch = parsed.minute.includes(minute);
+    const hourMatch = parsed.hour.includes(hour);
+    const secondsMatch = parsed.seconds.includes(seconds);
+    const monthMatch = parsed.month.includes(month);
+
+    // Day matching: if either day-of-month or day-of-week is restricted, both must match
+    const dayOfMonthRestricted = !parsed.dayOfMonth.includes(dayOfMonth);
+    const dayOfWeekRestricted = !parsed.dayOfWeek.includes(dayOfWeek);
+
+    let dayMatch = false;
+    if (parsed.dayOfMonth.length === 31 && parsed.dayOfWeek.length === 7) {
+      dayMatch = true;
+    } else if (parsed.dayOfMonth.length === 31) {
+      dayMatch = parsed.dayOfWeek.includes(dayOfWeek);
+    } else if (parsed.dayOfWeek.length === 7) {
+      dayMatch = parsed.dayOfMonth.includes(dayOfMonth);
+    } else {
+      dayMatch =
+        parsed.dayOfMonth.includes(dayOfMonth) ||
+        parsed.dayOfWeek.includes(dayOfWeek);
+    }
+
+    return minuteMatch && hourMatch && secondsMatch && monthMatch && dayMatch;
+  };
+
+  const calculateNextRuns = () => {
+    try {
+      const parsed = parseCronExpression(cronExpression);
+      const runs: string[] = [];
+      let current = new Date();
+      
+      // Start from next minute to avoid current minute
+      current.setSeconds(0);
+      current.setMilliseconds(0);
+      current = new Date(current.getTime() + 60000);
+
+      while (runs.length < 5 && current.getFullYear() <= new Date().getFullYear() + 4) {
+        if (matchesCron(current, parsed)) {
+          runs.push(current.toLocaleString());
+        }
+        current = new Date(current.getTime() + 60000); // Add 1 minute
+      }
+
+      if (runs.length === 0) {
+        throw new Error("No matching times found in the next 4 years");
+      }
+
       setNextRuns(runs);
     } catch (err) {
+      setError("Failed to calculate next runs for this cron expression.");
       setNextRuns([]);
     }
   };
@@ -104,8 +211,28 @@ export function CronParser({ initialContent, action }: CronParserProps) {
         });
         setDescription(humanReadable);
         setError("");
+        
+        // Calculate next runs
+        const parsed = parseCronExpression(cron);
+        const runs: string[] = [];
+        let current = new Date();
+        
+        // Start from next minute to avoid current minute
+        current.setSeconds(0);
+        current.setMilliseconds(0);
+        current = new Date(current.getTime() + 60000);
+
+        while (runs.length < 5 && current.getFullYear() <= new Date().getFullYear() + 4) {
+          if (matchesCron(current, parsed)) {
+            runs.push(current.toLocaleString());
+          }
+          current = new Date(current.getTime() + 60000); // Add 1 minute
+        }
+
+        setNextRuns(runs);
       } catch (err) {
         setError("Failed to parse example");
+        setNextRuns([]);
       }
     }, 0);
   };

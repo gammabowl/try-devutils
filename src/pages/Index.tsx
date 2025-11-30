@@ -40,21 +40,20 @@ import { MarkdownPreview } from "@/components/tools/MarkdownPreview";
 
 const Index = () => {
   const tools = [
-    { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: JwtDecoder, description: "Decode, Encode and validate JWT tokens" },
-    { id: "json", label: "JSON Formatter", icon: Braces, component: JsonFormatter, description: "Format, validate and minify JSON" },
-    { id: "uuid", label: "UUID Generator/Decoder", icon: FingerprintIcon, component: UuidGeneratorDecoder, description: "Generate, validate, decode UUIDs" },
-    { id: "base64", label: "Base64 Converter", icon: BinaryIcon, component: Base64Converter, description: "Encode and decode Base64 strings" },
-    { id: "timestamp", label: "Timestamp Converter", icon: Clock, component: TimestampConverter, description: "Convert Unix timestamps to dates" },
-    { id: "diff", label: "Text Diff", icon: FileDiffIcon, component: TextDiff, description: "Compare texts and find differences" },
-    { id: "cron", label: "Cron Parser", icon: Calendar, component: CronParser, description: "Parse and explain cron expressions" },
-    { id: "color", label: "Colour Converter", icon: Palette, component: ColorConverter, description: "Convert between colour formats" },
-    { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes" },
-    { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML" },
-    { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown" }
+    { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: JwtDecoder, description: "Decode, Encode and validate JWT tokens", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" },
+    { id: "json", label: "JSON Formatter", icon: Braces, component: JsonFormatter, description: "Format, validate and minify JSON", color: "from-amber-500 to-orange-600", textColor: "text-amber-600", bgColor: "bg-amber-500/10" },
+    { id: "uuid", label: "UUID Generator/Decoder", icon: FingerprintIcon, component: UuidGeneratorDecoder, description: "Generate, validate, decode UUIDs", color: "from-blue-500 to-cyan-600", textColor: "text-blue-600", bgColor: "bg-blue-500/10" },
+    { id: "base64", label: "Base64 Converter", icon: BinaryIcon, component: Base64Converter, description: "Encode and decode Base64 strings", color: "from-pink-500 to-pink-600", textColor: "text-pink-600", bgColor: "bg-pink-500/10" },
+    { id: "timestamp", label: "Timestamp Converter", icon: Clock, component: TimestampConverter, description: "Convert Unix timestamps to dates", color: "from-green-500 to-emerald-600", textColor: "text-green-600", bgColor: "bg-green-500/10" },
+    { id: "diff", label: "Text Diff", icon: FileDiffIcon, component: TextDiff, description: "Compare texts and find differences", color: "from-red-500 to-red-600", textColor: "text-red-600", bgColor: "bg-red-500/10" },
+    { id: "cron", label: "Cron Parser", icon: Calendar, component: CronParser, description: "Parse and explain cron expressions", color: "from-indigo-500 to-blue-600", textColor: "text-indigo-600", bgColor: "bg-indigo-500/10" },
+    { id: "color", label: "Colour Converter", icon: Palette, component: ColorConverter, description: "Convert between colour formats", color: "from-fuchsia-500 to-pink-600", textColor: "text-fuchsia-600", bgColor: "bg-fuchsia-500/10" },
+    { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-cyan-500 to-teal-600", textColor: "text-cyan-600", bgColor: "bg-cyan-500/10" },
+    { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-green-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
+    { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-amber-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" }
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const [showEscHint, setShowEscHint] = useState(false);
   const selectedToolData = tools.find((tool) => tool.id === selectedTool);
 
   // Handle ESC key to close tool
@@ -67,15 +66,6 @@ const Index = () => {
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
-
-  // Show ESC hint when tool opens
-  useEffect(() => {
-    if (selectedTool) {
-      setShowEscHint(true);
-      const timer = setTimeout(() => setShowEscHint(false), 5000); // hide after 5 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [selectedTool]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,17 +113,25 @@ const Index = () => {
                     className="group cursor-pointer p-6 bg-card/50 border border-border/50 rounded-lg hover:bg-card/80 hover:border-dev-primary/50 transition-all duration-200 hover:shadow-md hover:scale-105"
                   >
                     <div className="flex flex-col items-center text-center space-y-3">
-                      <div className="p-3 rounded-lg bg-dev-primary/10 group-hover:bg-dev-primary/20 transition-colors">
-                        <IconComponent className="h-8 w-8 text-dev-primary" />
+                      <div className={`p-3 rounded-lg ${tool.bgColor} group-hover:shadow-lg group-hover:shadow-current transition-all`}>
+                        <IconComponent className={`h-8 w-8 ${tool.textColor}`} />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-foreground group-hover:text-dev-primary transition-colors">{tool.label}</h3>
+                        <h3 className="font-semibold text-foreground group-hover:text-foreground transition-colors">{tool.label}</h3>
                         <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
                       </div>
                     </div>
                   </div>
                 );
               })}
+            </div>
+
+            {/* ESC Key Hint - Bottom of grid */}
+            <div className="flex items-center gap-2 p-3 bg-dev-primary/10 border border-dev-primary/30 rounded-lg">
+              <kbd className="px-2 py-1 text-sm font-semibold text-foreground bg-dev-primary/20 rounded border border-dev-primary/40">
+                ESC
+              </kbd>
+              <span className="text-sm text-foreground">Press on keyboard anytime to come back to this grid from any tool</span>
             </div>
           </div>
         ) : (
@@ -142,13 +140,8 @@ const Index = () => {
             {/* Tool Component */}
             {selectedToolData && <selectedToolData.component />}
 
-            {/* Close Icon + optional ESC Hint */}
+            {/* Close Icon */}
             <div className="absolute top-2 right-2 flex items-center space-x-2 z-10">
-              {showEscHint && (
-                <span className="text-xs text-muted-foreground bg-background/70 px-2 py-1 rounded-md shadow-sm whitespace-nowrap">
-                  Press ESC to exit
-                </span>
-              )}
               <button
                 onClick={() => setSelectedTool(null)}
                 className="p-2 rounded-full bg-white/30 hover:bg-white/50 shadow-lg transition-all duration-200 transform hover:scale-110"
