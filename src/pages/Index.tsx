@@ -8,6 +8,7 @@ import { CronParser } from "@/components/tools/CronParser";
 import { ColorConverter } from "@/components/tools/ColorConverter";
 import { HashGenerator } from "@/components/tools/HashGenerator";
 import { YamlValidator } from "@/components/tools/YamlValidator";
+import { StringAnalyzer } from "@/components/tools/StringAnalyzer";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +33,8 @@ import {
   BinaryIcon,
   FileDiffIcon,
   FingerprintIcon,
-  FileKeyIcon
+  FileKeyIcon,
+  Type
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -50,7 +52,8 @@ const Index = () => {
     { id: "color", label: "Colour Converter", icon: Palette, component: ColorConverter, description: "Convert between colour formats", color: "from-fuchsia-500 to-pink-600", textColor: "text-fuchsia-600", bgColor: "bg-fuchsia-500/10" },
     { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-cyan-500 to-teal-600", textColor: "text-cyan-600", bgColor: "bg-cyan-500/10" },
     { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-green-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
-    { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-amber-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" }
+    { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-amber-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
+    { id: "string", label: "String Analyzer", icon: Type, component: StringAnalyzer, description: "Analyze text stats and convert case", color: "from-purple-500 to-violet-600", textColor: "text-purple-600", bgColor: "bg-purple-500/10" }
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
