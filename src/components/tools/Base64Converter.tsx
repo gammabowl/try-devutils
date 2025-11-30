@@ -10,6 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 interface Base64ConverterProps {
   initialContent?: string;
   action?: string;
+  navigate?: (toolId: string | null) => void;
 }
 
 export function Base64Converter({ initialContent, action }: Base64ConverterProps) {
@@ -99,6 +100,22 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Cross-link to Zlib compressor */}
+        {navigate && (
+          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex items-center justify-between">
+            <div className="text-xs text-muted-foreground">
+              Need compression? Try the zlib Base64 combined tool.
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("zlib")}
+              className="flex items-center gap-1"
+            >
+              <span>Open Zlib</span>
+            </Button>
+          </div>
+        )}
         <Tabs defaultValue="encode" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="encode">Encode</TabsTrigger>

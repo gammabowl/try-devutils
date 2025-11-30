@@ -9,6 +9,7 @@ import { ColorConverter } from "@/components/tools/ColorConverter";
 import { HashGenerator } from "@/components/tools/HashGenerator";
 import { YamlValidator } from "@/components/tools/YamlValidator";
 import { StringAnalyser } from "@/components/tools/StringAnalyser";
+import { ZlibCompressor } from "@/components/tools/ZlibCompressor";
 import {
   Dialog,
   DialogContent,
@@ -19,22 +20,21 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Sparkles,
-  KeyRound,
+  FileKeyIcon,
   Braces,
-  Hash,
+  FingerprintIcon,
+  BinaryIcon,
   Clock,
+  FileDiffIcon,
   Calendar,
   Palette,
-  Shield,
+  Hash,
   FileCode,
-  Info,
-  X,
   FileText,
-  BinaryIcon,
-  FileDiffIcon,
-  FingerprintIcon,
-  FileKeyIcon,
-  Type
+  Type,
+  Zap,
+  Info,
+  X
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -53,7 +53,8 @@ const Index = () => {
     { id: "hash", label: "Hash Generator", icon: Hash, component: HashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-emerald-500 to-green-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
     { id: "yaml", label: "YAML Validator", icon: FileCode, component: YamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-lime-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
     { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
-    { id: "string", label: "String Analyser", icon: Type, component: StringAnalyser, description: "Analyse text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" }
+    { id: "string", label: "String Analyser", icon: Type, component: StringAnalyser, description: "Analyse text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" },
+    { id: "zlib", label: "Zlib Compressor", icon: Zap, component: ZlibCompressor, description: "Compress & decompress (zlib + Base64)", color: "from-stone-500 to-stone-600", textColor: "text-stone-600", bgColor: "bg-stone-500/10" }
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -144,7 +145,15 @@ const Index = () => {
             
             {/* Tool Component */}
             <div className="relative max-w-6xl mx-auto">
-              {selectedToolData && <selectedToolData.component />}
+              {selectedToolData && (
+                selectedTool === "base64" ? (
+                  <Base64Converter navigate={setSelectedTool} />
+                ) : selectedTool === "zlib" ? (
+                  <ZlibCompressor navigate={setSelectedTool} />
+                ) : (
+                  <selectedToolData.component />
+                )
+              )}
 
               {/* Close Icon */}
               <div className="absolute top-2 right-2 flex items-center space-x-2 z-10">
