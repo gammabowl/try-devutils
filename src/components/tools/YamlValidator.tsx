@@ -161,17 +161,17 @@ settings:
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-2 mb-4">
-          <Button onClick={validateYaml} className="flex-1">
+          <Button onClick={validateYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <CheckCircle className="h-4 w-4 mr-2" />
             Validate YAML
           </Button>
-          <Button onClick={loadExample} variant="outline">
+          <Button onClick={loadExample} variant="outline" size="sm">
             Example
           </Button>
-          <Button onClick={formatYaml} variant="outline">
+          <Button onClick={formatYaml} variant="outline" size="sm">
             Format
           </Button>
-          <Button onClick={clearAll} variant="outline">
+          <Button onClick={clearAll} variant="outline" size="sm">
             <RotateCcw className="h-4 w-4 mr-2" />
             Clear
           </Button>
@@ -240,7 +240,7 @@ settings:
                     setError("");
                   }
                 }}
-                className="min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
               />
               <Button
                 onClick={() => copyToClipboard(yamlInput, "YAML")}
@@ -276,7 +276,7 @@ settings:
                 value={jsonOutput}
                 onChange={(e) => setJsonOutput(e.target.value)}
                 readOnly={!jsonOutput || isValid === true}
-                className="min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
+                className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
               />
               <Button
                 onClick={() => copyToClipboard(jsonOutput, "JSON")}

@@ -238,7 +238,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                           <div className="flex-shrink-0">
                             <Button
                               onClick={() => copyToClipboard(uuid.value)}
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
                             >
                               <Copy className="h-4 w-4" />
@@ -263,7 +263,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                       
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         {decoded && (
-                          <Button onClick={() => copyDecodedToClipboard(decoded)} variant="ghost" size="sm">
+                          <Button onClick={() => copyDecodedToClipboard(decoded)} variant="outline" size="sm">
                             <Copy className="h-4 w-4" />
                           </Button>
                         )}
@@ -298,7 +298,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                 placeholder="Enter UUID to validate..."
                 value={validationInput}
                 onChange={(e) => setValidationInput(e.target.value)}
-                className="font-mono bg-muted/50 border-border/50"
+                className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
               />
               {isValidUuid !== null && (
                 <Badge 

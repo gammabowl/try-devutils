@@ -142,12 +142,12 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
               }
             }}
-            className="min-h-[120px] bg-muted/50 border-border/50"
+            className="w-full sm:max-w-[720px] min-h-[120px] bg-muted/50 border-border/50"
           />
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={generateHashes} className="flex-1">
+          <Button onClick={generateHashes} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <Hash className="h-4 w-4 mr-2" />
             Generate Hashes
           </Button>
@@ -203,7 +203,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 placeholder="Enter hash to verify against the text above..."
                 value={hashToVerify}
                 onChange={(e) => setHashToVerify(e.target.value)}
-                className="font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full sm:max-w-[520px] font-mono text-sm bg-muted/50 border-border/50"
               />
             </div>
             

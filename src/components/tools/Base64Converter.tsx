@@ -114,7 +114,7 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
                 placeholder="Enter text to encode..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="min-h-[120px] bg-muted/50 border-border/50"
+                className="w-full sm:max-w-[720px] min-h-[120px] bg-muted/50 border-border/50"
               />
               <div className="mt-2">
                 <Button 
@@ -137,7 +137,7 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
                 placeholder="Enter base64 string to decode..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="min-h-[120px] font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-muted/50 border-border/50"
               />
               <div className="mt-2">
                 <Button 
@@ -172,10 +172,10 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
                 </Button>
               </div>
             </div>
-            <Textarea
+              <Textarea
               value={output}
               readOnly
-              className="min-h-[120px] font-mono text-sm bg-muted/30 border-border/50"
+              className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-muted/30 border-border/50"
             />
           </div>
         )}
@@ -205,7 +205,7 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
                     </div>
                     <Button
                       onClick={() => setInput(example.text)}
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                     >
                       Use
@@ -223,7 +223,7 @@ export function Base64Converter({ initialContent, action }: Base64ConverterProps
                     </div>
                     <Button
                       onClick={() => setInput(example.text)}
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                     >
                       Use

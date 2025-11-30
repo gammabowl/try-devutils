@@ -125,30 +125,34 @@ const Index = () => {
                 );
               })}
             </div>
-
-            {/* ESC Key Hint - Bottom of grid */}
-            <div className="flex items-center gap-2 p-3 bg-dev-primary/10 border border-dev-primary/30 rounded-lg">
-              <kbd className="px-2 py-1 text-sm font-semibold text-foreground bg-dev-primary/20 rounded border border-dev-primary/40">
-                ESC
-              </kbd>
-              <span className="text-sm text-foreground">Press on keyboard anytime to come back to this grid from any tool</span>
-            </div>
           </div>
         ) : (
           // --- SELECTED TOOL ---
-          <div className="relative max-w-6xl mx-auto">
+          <div className="space-y-6">
+            {/* ESC Key Hint - Top of tool */}
+            <div className="flex justify-center pb-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-dev-primary/8 border border-dev-primary/25 hover:bg-dev-primary/12 hover:border-dev-primary/40 transition-all duration-200">
+                <kbd className="px-2 py-0.5 text-xs font-semibold text-dev-primary bg-dev-primary/15 rounded">
+                  ESC
+                </kbd>
+                <span className="text-xs text-muted-foreground font-medium">to return to the grid</span>
+              </div>
+            </div>
+            
             {/* Tool Component */}
-            {selectedToolData && <selectedToolData.component />}
+            <div className="relative max-w-6xl mx-auto">
+              {selectedToolData && <selectedToolData.component />}
 
-            {/* Close Icon */}
-            <div className="absolute top-2 right-2 flex items-center space-x-2 z-10">
-              <button
-                onClick={() => setSelectedTool(null)}
-                className="p-2 rounded-full bg-white/30 hover:bg-white/50 shadow-lg transition-all duration-200 transform hover:scale-110"
-                aria-label="Close Tool"
-              >
-                <X className="h-6 w-6 text-foreground" />
-              </button>
+              {/* Close Icon */}
+              <div className="absolute top-2 right-2 flex items-center space-x-2 z-10">
+                <button
+                  onClick={() => setSelectedTool(null)}
+                  className="p-2 rounded-full bg-white/30 hover:bg-white/50 shadow-lg transition-all duration-200 transform hover:scale-110"
+                  aria-label="Close Tool"
+                >
+                  <X className="h-6 w-6 text-foreground" />
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -116,24 +116,23 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
               setInput(e.target.value);
               formatJson(isMinified);
             }}
-            className="min-h-[150px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
+            className="w-full sm:max-w-[720px] min-h-[150px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mt-2">
           <Button
             onClick={() => formatJson(false)}
-            size="sm"
             className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
           >
             <Maximize2 className="h-4 w-4 mr-1" />
             Format
           </Button>
-          
+
           <Button
             onClick={() => formatJson(true)}
+            variant="outline"
             size="sm"
-            variant="secondary"
           >
             <Minimize2 className="h-4 w-4 mr-1" />
             Minify
@@ -142,8 +141,8 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
           {output && (
             <Button
               onClick={copyToClipboard}
-              size="sm"
               variant="outline"
+              size="sm"
             >
               <Copy className="h-4 w-4 mr-1" />
               Copy
@@ -152,8 +151,8 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
 
           <Button
             onClick={clearAll}
-            size="sm"
             variant="outline"
+            size="sm"
           >
             Clear
           </Button>
@@ -224,7 +223,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
                 </div>
                 <Button
                   onClick={() => setInput(example.json)}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="ml-2 flex-shrink-0"
                 >

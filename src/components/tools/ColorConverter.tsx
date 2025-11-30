@@ -252,9 +252,9 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                     setInputColor(e.target.value);
                     setTimeout(() => convertColor(e.target.value), 300);
                   }}
-                  className="flex-1 font-mono bg-muted/50 border-border/50"
+                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
                 />
-                <Button onClick={() => convertColor(inputColor)}>
+                <Button onClick={() => convertColor(inputColor)} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
                   Convert
                 </Button>
               </div>
@@ -333,7 +333,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                 </div>
                 <Button
                   onClick={() => copyToClipboard(value)}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="ml-2 flex-shrink-0"
                 >

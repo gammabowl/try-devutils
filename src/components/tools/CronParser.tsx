@@ -246,25 +246,29 @@ export function CronParser({ initialContent, action }: CronParserProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-foreground">
-            Cron Expression
-          </label>
-          <Input
-            placeholder="Enter cron expression (e.g., * * * * *)"
-            value={cronExpression}
-            onChange={(e) => setCronExpression(e.target.value)}
-            className="font-mono bg-muted/50 border-border/50"
-          />
-        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+          <div className="w-full sm:flex-1 sm:min-w-0">
+            <label className="block text-sm font-medium mb-2 text-foreground">
+              Cron Expression
+            </label>
+            <Input
+              placeholder="Enter cron expression (e.g., * * * * *)"
+              value={cronExpression}
+              onChange={(e) => setCronExpression(e.target.value)}
+              className="w-full sm:max-w-[640px] font-mono bg-muted/50 border-border/50"
+            />
+          </div>
 
-        <Button 
-          onClick={parseCron}
-          className="w-full bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
-        >
-          <Clock className="h-4 w-4 mr-2" />
-          Parse Expression
-        </Button>
+          <div className="mt-3 sm:mt-0">
+            <Button
+              onClick={parseCron}
+              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              Parse Expression
+            </Button>
+          </div>
+        </div>
 
         {error && (
           <div className="text-destructive text-sm font-medium">
@@ -323,7 +327,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
                 </div>
                 <Button
                   onClick={() => loadExample(example.cron)}
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="ml-2 flex-shrink-0"
                 >
