@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Braces, Copy, AlertCircle, CheckCircle, Minimize2, Maximize2 } from "lucide-react";
+import { Braces, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface JsonFormatterProps {
@@ -123,18 +123,17 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
         <div className="flex flex-wrap gap-2 mt-2">
           <Button
             onClick={() => formatJson(false)}
-            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
           >
-            <Maximize2 className="h-4 w-4 mr-1" />
+            <WandSparkles className="h-4 w-4 mr-1" />
             Format
           </Button>
 
           <Button
             onClick={() => formatJson(true)}
-            variant="outline"
-            size="sm"
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
           >
-            <Minimize2 className="h-4 w-4 mr-1" />
+            <Minimize className="h-4 w-4 mr-1" />
             Minify
           </Button>
 

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Palette, RotateCcw } from "lucide-react";
+import { Copy, Palette, RotateCcw, Pipette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 
@@ -254,7 +254,8 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                   }}
                   className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
                 />
-                <Button onClick={() => convertColor(inputColor)} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+                <Button onClick={() => convertColor(inputColor)} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+                  <Pipette className="h-4 w-4 mr-2" />
                   Convert
                 </Button>
               </div>

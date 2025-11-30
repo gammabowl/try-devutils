@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Copy, FileText, CheckCircle, AlertCircle, RotateCcw } from "lucide-react";
+import { Copy, FileText, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import * as yaml from "js-yaml";
 
@@ -165,11 +165,12 @@ settings:
             <CheckCircle className="h-4 w-4 mr-2" />
             Validate YAML
           </Button>
+          <Button onClick={formatYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            <Wand2 className="h-4 w-4 mr-2" />
+            Format
+          </Button>
           <Button onClick={loadExample} variant="outline" size="sm">
             Example
-          </Button>
-          <Button onClick={formatYaml} variant="outline" size="sm">
-            Format
           </Button>
           <Button onClick={clearAll} variant="outline" size="sm">
             <RotateCcw className="h-4 w-4 mr-2" />

@@ -176,7 +176,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={() => generateUuid('v4', count)}
-              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
               Generate UUID v4
@@ -184,7 +184,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
             
             <Button
               onClick={() => generateUuid('v1', count)}
-              variant="secondary"
+              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
               Generate UUID v1

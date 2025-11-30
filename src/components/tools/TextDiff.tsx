@@ -45,9 +45,9 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
           <pre className="text-sm font-mono whitespace-pre-wrap">
             {diffResult.map((part, index) => {
               const className = part.added 
-                ? "bg-green-500/20 text-green-700 dark:text-green-300" 
+                ? "bg-green-500/20 text-green-500 dark:text-green-400 dark:bg-green-950/30" 
                 : part.removed 
-                ? "bg-red-500/20 text-red-700 dark:text-red-300"
+                ? "bg-red-500/20 text-red-500 dark:text-red-400 dark:bg-red-950/30"
                 : "text-foreground";
               
               const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
