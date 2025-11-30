@@ -42,6 +42,14 @@ export default defineConfig(({ mode }) => ({
           ],
         },
       },
+      onwarn(warning, warn) {
+        // Suppress "Module externalized for browser compatibility" warnings
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE' || 
+            (warning.message && warning.message.includes('externalized for browser compatibility'))) {
+          return;
+        }
+        warn(warning);
+      },
     },
     chunkSizeWarningLimit: 1000,
   },
