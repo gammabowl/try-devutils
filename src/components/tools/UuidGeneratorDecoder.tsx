@@ -298,7 +298,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                 placeholder="Enter UUID to validate..."
                 value={validationInput}
                 onChange={(e) => setValidationInput(e.target.value)}
-                className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                className="w-full font-mono bg-muted/50 border-border/50"
               />
               {isValidUuid !== null && (
                 <Badge 

@@ -111,7 +111,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
               placeholder="Enter original text..."
               value={leftText}
               onChange={(e) => setLeftText(e.target.value)}
-              className="w-full sm:max-w-[720px] min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
           
@@ -123,7 +123,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
               placeholder="Enter modified text..."
               value={rightText}
               onChange={(e) => setRightText(e.target.value)}
-              className="w-full sm:max-w-[720px] min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
         </div>

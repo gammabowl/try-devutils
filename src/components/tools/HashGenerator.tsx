@@ -142,7 +142,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
               }
             }}
-            className="w-full sm:max-w-[720px] min-h-[120px] bg-muted/50 border-border/50"
+            className="w-full min-h-[120px] bg-muted/50 border-border/50"
           />
         </div>
 
@@ -203,7 +203,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 placeholder="Enter hash to verify against the text above..."
                 value={hashToVerify}
                 onChange={(e) => setHashToVerify(e.target.value)}
-                className="w-full sm:max-w-[520px] font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full font-mono text-sm bg-muted/50 border-border/50"
               />
             </div>
             

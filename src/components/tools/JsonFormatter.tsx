@@ -116,7 +116,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
               setInput(e.target.value);
               formatJson(isMinified);
             }}
-            className="w-full sm:max-w-[720px] min-h-[150px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
+            className="w-full min-h-[150px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
           />
         </div>
 

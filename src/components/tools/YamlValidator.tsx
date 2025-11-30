@@ -240,7 +240,7 @@ settings:
                     setError("");
                   }
                 }}
-                className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
+                className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
               />
               <Button
                 onClick={() => copyToClipboard(yamlInput, "YAML")}
@@ -276,7 +276,7 @@ settings:
                 value={jsonOutput}
                 onChange={(e) => setJsonOutput(e.target.value)}
                 readOnly={!jsonOutput || isValid === true}
-                className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
+                className="w-full min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
               />
               <Button
                 onClick={() => copyToClipboard(jsonOutput, "JSON")}
