@@ -60,6 +60,53 @@ export function toUpperCase(str: string): string {
   return str.toUpperCase()
 }
 
+/**
+ * Convert string to camelCase.
+ * Splits on spaces, underscores, hyphens, and capitalizes first letter of each word except the first.
+ */
+export function toCamelCase(str: string): string {
+  if (!str) return ""
+  const words = str
+    .trim()
+    .split(/[\s_-]+/)
+    .filter(word => word.length > 0)
+  
+  if (words.length === 0) return ""
+  
+  return words
+    .map((word, index) => {
+      const lower = word.toLowerCase()
+      return index === 0 ? lower : lower.charAt(0).toUpperCase() + lower.slice(1)
+    })
+    .join("")
+}
+
+/**
+ * Convert string to snake_case.
+ * Splits on spaces, hyphens, and camelCase boundaries, joins with underscores.
+ */
+export function toSnakeCase(str: string): string {
+  if (!str) return ""
+  return str
+    .trim()
+    .replace(/([a-z])([A-Z])/g, "$1_$2") // camelCase boundaries
+    .replace(/[\s-]+/g, "_") // spaces and hyphens to underscores
+    .toLowerCase()
+}
+
+/**
+ * Convert string to kebab-case.
+ * Splits on spaces, underscores, and camelCase boundaries, joins with hyphens.
+ */
+export function toKebabCase(str: string): string {
+  if (!str) return ""
+  return str
+    .trim()
+    .replace(/([a-z])([A-Z])/g, "$1-$2") // camelCase boundaries
+    .replace(/[\s_]+/g, "-") // spaces and underscores to hyphens
+    .toLowerCase()
+}
+
 export default {
   length,
   charCount,
@@ -67,4 +114,7 @@ export default {
   lineCount,
   toLowerCase,
   toUpperCase,
+  toCamelCase,
+  toSnakeCase,
+  toKebabCase,
 }

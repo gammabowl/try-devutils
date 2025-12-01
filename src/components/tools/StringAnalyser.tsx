@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Copy, RotateCcw, Type } from "lucide-react";
-import { length, charCount, wordCount, lineCount, toLowerCase, toUpperCase } from "@/lib/stringUtils";
+import { length, charCount, wordCount, lineCount, toLowerCase, toUpperCase, toCamelCase, toSnakeCase, toKebabCase } from "@/lib/stringUtils";
 import { toast } from "sonner";
 
 export function StringAnalyser() {
@@ -35,6 +35,21 @@ export function StringAnalyser() {
 
   const handleToUpperCase = () => {
     const result = toUpperCase(input);
+    setDisplayText(result);
+  };
+
+  const handleToCamelCase = () => {
+    const result = toCamelCase(input);
+    setDisplayText(result);
+  };
+
+  const handleToSnakeCase = () => {
+    const result = toSnakeCase(input);
+    setDisplayText(result);
+  };
+
+  const handleToKebabCase = () => {
+    const result = toKebabCase(input);
     setDisplayText(result);
   };
 
@@ -83,12 +98,21 @@ export function StringAnalyser() {
         {/* Case Conversion Buttons */}
         <div className="flex flex-wrap gap-2">
           <Button onClick={handleToLowerCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            Lowercase
+            lowercase
           </Button>
           <Button onClick={handleToUpperCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             UPPERCASE
           </Button>
-          <Button onClick={handleClear} variant="outline" size="sm" className="mr-auto">
+          <Button onClick={handleToCamelCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            camelCase
+          </Button>
+          <Button onClick={handleToSnakeCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            snake_case
+          </Button>
+          <Button onClick={handleToKebabCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            kebab-case
+          </Button>
+          <Button onClick={handleClear} variant="outline" size="sm" className="ml-auto">
             <RotateCcw className="h-4 w-4 mr-2" />
             Clear
           </Button>
