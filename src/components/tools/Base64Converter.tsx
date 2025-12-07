@@ -102,7 +102,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
       <CardContent className="space-y-4">
         {/* Cross-link to Zlib compressor */}
         {navigate && (
-          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex items-center justify-between animate-fade-in">
+          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
             <div className="text-xs text-muted-foreground">
               Need compression? Use the Zlib (deflate + Base64) tool.
             </div>
@@ -110,7 +110,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
               variant="outline"
               size="sm"
               onClick={() => navigate("zlib")}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 w-full sm:w-auto"
             >
               <span>Zlib Compressor</span>
             </Button>

@@ -222,7 +222,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
               />
             </div>
 
-            <div className="flex items-end gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
               <div className="flex-1">
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   Hash to Verify
@@ -234,7 +234,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                   className="font-mono text-sm bg-muted/50 border-border/50"
                 />
               </div>
-              <Button onClick={verifyHash} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+              <Button onClick={verifyHash} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto">
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Verify
               </Button>

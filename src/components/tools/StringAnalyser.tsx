@@ -112,7 +112,7 @@ export function StringAnalyser() {
           <Button onClick={handleToKebabCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             kebab-case
           </Button>
-          <Button onClick={handleClear} variant="outline" size="sm" className="ml-auto">
+          <Button onClick={handleClear} variant="outline" size="sm" className="sm:ml-auto">
             <RotateCcw className="h-4 w-4 mr-2" />
             Clear
           </Button>

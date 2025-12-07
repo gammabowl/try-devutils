@@ -235,7 +235,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
               <label className="block text-sm font-medium mb-2 text-foreground">
                 Colour Input
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input
                   type="color"
                   value={inputColor}
@@ -243,7 +243,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                     setInputColor(e.target.value);
                     convertColor(e.target.value);
                   }}
-                  className="w-16 h-10 p-1 bg-muted/50 border-border/50"
+                  className="w-full sm:w-16 h-10 p-1 bg-muted/50 border-border/50"
                 />
                 <Input
                   placeholder="Enter hex, rgb, or hsl..."
@@ -252,9 +252,9 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                     setInputColor(e.target.value);
                     setTimeout(() => convertColor(e.target.value), 300);
                   }}
-                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                  className="flex-1 font-mono bg-muted/50 border-border/50"
                 />
-                <Button onClick={() => convertColor(inputColor)} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+                <Button onClick={() => convertColor(inputColor)} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4 w-full sm:w-auto">
                   <Pipette className="h-4 w-4 mr-2" />
                   Convert
                 </Button>

@@ -246,7 +246,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-end gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-3">
           <div className="flex-1 max-w-md">
             <label className="block text-sm font-medium mb-2 text-foreground">
               Cron Expression
@@ -260,7 +260,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
           </div>
           <Button
             onClick={parseCron}
-            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
           >
             <Clock className="h-4 w-4 mr-2" />
             Parse

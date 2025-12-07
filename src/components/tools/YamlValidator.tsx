@@ -160,7 +160,7 @@ settings:
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4">
           <Button onClick={validateYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <CheckCircle className="h-4 w-4 mr-2" />
             Validate YAML

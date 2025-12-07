@@ -185,7 +185,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
 
           {/* Generator Tab */}
           <TabsContent value="generator" className="space-y-4 pt-4">
-            <div className="flex items-end gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
               <div className="flex-1 max-w-xs">
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   Quantity
@@ -199,29 +199,31 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                   className="bg-muted/50 border-border/50"
                 />
               </div>
-              <Button
-                onClick={() => generateUuid('v4', count)}
-                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Generate v4
-              </Button>
-              <Button
-                onClick={() => generateUuid('v1', count)}
-                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Generate v1
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button
+                  onClick={() => generateUuid('v4', count)}
+                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Generate v4
+                </Button>
+                <Button
+                  onClick={() => generateUuid('v1', count)}
+                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Generate v1
+                </Button>
+              </div>
             </div>
 
             {uuids.length > 0 && (
               <>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <label className="text-sm font-medium text-foreground">
                     Generated UUIDs ({uuids.length})
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button onClick={copyAllUuids} variant="outline" size="sm">
                       <Copy className="h-4 w-4 mr-1" />
                       Copy All

@@ -177,10 +177,10 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       </CardHeader>
       <CardContent className="space-y-6">
         <Tabs defaultValue="from-timestamp" className="w-full" onValueChange={setActiveMainTab}>
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="from-timestamp">Epoch → Date</TabsTrigger>
-            <TabsTrigger value="to-timestamp">Date → Epoch</TabsTrigger>
-            <TabsTrigger value="unit-conversion">Units</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 h-auto">
+            <TabsTrigger value="from-timestamp" className="text-xs sm:text-sm">Epoch → Date</TabsTrigger>
+            <TabsTrigger value="to-timestamp" className="text-xs sm:text-sm">Date → Epoch</TabsTrigger>
+            <TabsTrigger value="unit-conversion" className="text-xs sm:text-sm">Units</TabsTrigger>
           </TabsList>
 
           {/* Epoch to Date Tab */}
@@ -200,7 +200,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                 Use Current Time
               </Button>
             </div>
-            <div className="flex items-end gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
               <div className="flex-1 max-w-md">
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   Unix Timestamp
@@ -212,7 +212,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                   className="font-mono bg-muted/50 border-border/50"
                 />
               </div>
-              <Button onClick={convertFromTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+              <Button onClick={convertFromTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto">
                 <Calendar className="h-4 w-4 mr-2" />
                 Convert
               </Button>

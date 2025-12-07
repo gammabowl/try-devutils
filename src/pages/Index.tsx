@@ -175,12 +175,12 @@ const Index = () => {
       <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm mt-16">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2 text-sm text-muted-foreground">
               <span>All processing happens locally</span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span>No tracking, not even analytics</span>
             </div>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
               <span>🚫 Ad-free</span>
               <span>⚡ Lightning fast</span>
               <Dialog>
@@ -195,7 +195,7 @@ const Index = () => {
                   </DialogHeader>
                   <div className="space-y-4 text-sm text-muted-foreground">
                     <p>
-                      Most developer tools websites are cluttered with ads and trackers. This project aims to provide quick to use essential utils in a clean, distraction-free interface.
+                      Most developer utils websites are cluttered with ads and trackers. This project aims to provide quick to use essential utils in a clean, distraction-free interface.
                     </p>
                     <p className="text-xs">
                       Crafted by{" "}

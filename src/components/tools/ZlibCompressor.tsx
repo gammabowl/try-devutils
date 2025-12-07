@@ -93,7 +93,7 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
       <CardContent className="space-y-6">
         {/* Cross-link to Base64 tool */}
         {navigate && (
-          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex items-center justify-between">
+          <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="text-xs text-muted-foreground">
               Working with plain encoding? Switch to Base64 tool.
             </div>
@@ -101,7 +101,7 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
               variant="outline"
               size="sm"
               onClick={() => navigate("base64")}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 w-full sm:w-auto"
             >
               <span>Base64 Tool</span>
             </Button>
