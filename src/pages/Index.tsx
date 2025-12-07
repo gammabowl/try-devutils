@@ -197,6 +197,20 @@ const Index = () => {
                     <p>
                       Most developer tools websites are cluttered with ads and trackers. This project aims to provide quick to use essential utils in a clean, distraction-free interface.
                     </p>
+                    <p className="text-xs">
+                      Crafted by{" "}
+                      <a
+                        href="http://x.com/gammabowl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-dev-primary hover:underline"
+                      >
+                        @gammabowl
+                      </a>
+                    </p>
+                    <p className="text-xs">
+                      <span className="italic">Built with the assistance of AI</span> 🤖✨
+                    </p>
                   </div>
                 </DialogContent>
               </Dialog>
