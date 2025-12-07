@@ -27,7 +27,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
   const [token, setToken] = useState(initialContent || sampleToken);
   const [decoded, setDecoded] = useState<DecodedToken | null>(null);
   const [error, setError] = useState("");
-  const [isEncoding, setIsEncoding] = useState(false);
+  const [activeTab, setActiveTab] = useState("decoder");
   const [headerInput, setHeaderInput] = useState('{\n  "alg": "HS256",\n  "typ": "JWT"\n}');
   const [payloadInput, setPayloadInput] = useState('{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": 1516239022\n}');
   const [secret, setSecret] = useState("your-256-bit-secret");
@@ -195,7 +195,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
       const encodedToken = `${encodedHeader}.${encodedPayload}.${signature}`;
       setToken(encodedToken);
       decodeJWT(encodedToken);
-      setIsEncoding(false);
+      setActiveTab("decoder");
       toast({ description: "JWT encoded successfully!" });
     } catch (err) {
       toast({ description: "Invalid JSON in header or payload", variant: "destructive" });
@@ -220,137 +220,121 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
           <KeyRound className="h-5 w-5 text-dev-primary" />
-          JWT Token {isEncoding ? 'Encoder' : 'Decoder'}
+          JWT Token
         </CardTitle>
-        <div className="flex gap-2 mt-4">
-          <Button
-            variant={!isEncoding ? "default" : "outline"}
-            onClick={() => setIsEncoding(false)}
-            size="sm"
-          >
-            Decoder
-          </Button>
-          <Button
-            variant={isEncoding ? "default" : "outline"}
-            onClick={() => setIsEncoding(true)}
-            size="sm"
-          >
-            Encoder
-          </Button>
-          <Button
-            variant="outline"
-            onClick={loadSampleToken}
-            size="sm"
-            className="ml-auto"
-          >
-            Load Sample
-          </Button>
-        </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Encoder Section */}
-        {isEncoding ? (
-          <div className="grid lg:grid-cols-2 gap-6 min-h-[540px]">
-            {/* Left Side - Input Fields */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-foreground">Create JWT</h3>
-              
-              {/* Header */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold flex items-center gap-2">
-                  <div className="w-3 h-3 bg-red-500 rounded"></div>
-                  HEADER: ALGORITHM & TOKEN TYPE
-                </h4>
-                <Textarea
-                  value={headerInput}
-                  onChange={(e) => setHeaderInput(e.target.value)}
-                  className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
-                />
-              </div>
+        <Tabs defaultValue="decoder" className="w-full" onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="decoder">Decoder</TabsTrigger>
+            <TabsTrigger value="encoder">Encoder</TabsTrigger>
+          </TabsList>
 
-              {/* Payload */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold flex items-center gap-2">
-                  <div className="w-3 h-3 bg-purple-500 rounded"></div>
-                  PAYLOAD: DATA
-                </h4>
-                <Textarea
-                  value={payloadInput}
-                  onChange={(e) => setPayloadInput(e.target.value)}
-                  className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
-                />
-              </div>
-
-              {/* Secret */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold flex items-center gap-2">
-                  <div className="w-3 h-3 bg-cyan-500 rounded"></div>
-                  SIGN JWT: SECRET
-                </h4>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={secret}
-                    onChange={(e) => setSecret(e.target.value)}
-                    className="w-full sm:max-w-[520px] px-3 py-2 text-sm bg-background border-2 border-input focus:border-ring rounded-md font-mono"
-                    placeholder="Enter your secret"
+          {/* Encoder Tab */}
+          <TabsContent value="encoder" className="space-y-4 pt-4">
+            <div className="grid lg:grid-cols-2 gap-6 min-h-[540px] items-stretch">
+              {/* Left Side - Input Fields */}
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-foreground">Create JWT</h3>
+                
+                {/* Header */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded"></div>
+                    HEADER: ALGORITHM & TOKEN TYPE
+                  </h4>
+                  <Textarea
+                    value={headerInput}
+                    onChange={(e) => setHeaderInput(e.target.value)}
+                    className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
                   />
-                  <Button onClick={encodeJWT} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-6">
-                    Encode
-                  </Button>
                 </div>
-              </div>
-            </div>
 
-            {/* Right Side - Generated JWT */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">JSON WEB TOKEN</h3>
-                {token && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(token)}
-                  >
-                    <Copy className="h-3 w-3 mr-1" />
-                    Copy
-                  </Button>
-                )}
-              </div>
-              
-              <div className="space-y-3">
-                <Textarea
-                  value={token}
-                  readOnly
-                  className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input resize-none"
-                  placeholder="Your encoded JWT will appear here..."
-                />
-              </div>
+                {/* Payload */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold flex items-center gap-2">
+                    <div className="w-3 h-3 bg-purple-500 rounded"></div>
+                    PAYLOAD: DATA
+                  </h4>
+                  <Textarea
+                    value={payloadInput}
+                    onChange={(e) => setPayloadInput(e.target.value)}
+                    className="w-full sm:max-w-[720px] min-h-[120px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
+                  />
+                </div>
 
-              {/* Color-coded token parts preview */}
-              {token && token.split(".").length === 3 && (
-                <div className="p-4 bg-muted/20 rounded-lg border border-border/50">
-                  <div className="text-xs text-muted-foreground mb-2">Token Structure:</div>
-                  <div className="font-mono text-sm break-all">
-                    <span className="text-red-500 bg-red-500/10 px-1 rounded">
-                      {tokenParts.header}
-                    </span>
-                    <span className="text-muted-foreground">.</span>
-                    <span className="text-purple-500 bg-purple-500/10 px-1 rounded">
-                      {tokenParts.payload}
-                    </span>
-                    <span className="text-muted-foreground">.</span>
-                    <span className="text-cyan-500 bg-cyan-500/10 px-1 rounded">
-                      {tokenParts.signature}
-                    </span>
+                {/* Secret */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold flex items-center gap-2">
+                    <div className="w-3 h-3 bg-cyan-500 rounded"></div>
+                    SIGN JWT: SECRET
+                  </h4>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={secret}
+                      onChange={(e) => setSecret(e.target.value)}
+                      className="w-full sm:max-w-[520px] px-3 py-2 text-sm bg-background border-2 border-input focus:border-ring rounded-md font-mono"
+                      placeholder="Enter your secret"
+                    />
+                    <Button onClick={encodeJWT} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-6">
+                      Encode
+                    </Button>
                   </div>
                 </div>
-              )}
+              </div>
+
+              {/* Right Side - Generated JWT */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">JSON WEB TOKEN</h3>
+                  {token && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(token)}
+                    >
+                      <Copy className="h-3 w-3 mr-1" />
+                      Copy
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="space-y-3">
+                  <Textarea
+                    value={token}
+                    readOnly
+                    className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input resize-none"
+                    placeholder="Your encoded JWT will appear here..."
+                  />
+                </div>
+
+                {/* Color-coded token parts preview */}
+                {token && token.split(".").length === 3 && (
+                  <div className="p-4 bg-muted/20 rounded-lg border border-border/50">
+                    <div className="text-xs text-muted-foreground mb-2">Token Structure:</div>
+                    <div className="font-mono text-sm break-all">
+                      <span className="text-red-500 bg-red-500/10 px-1 rounded">
+                        {tokenParts.header}
+                      </span>
+                      <span className="text-muted-foreground">.</span>
+                      <span className="text-purple-500 bg-purple-500/10 px-1 rounded">
+                        {tokenParts.payload}
+                      </span>
+                      <span className="text-muted-foreground">.</span>
+                      <span className="text-cyan-500 bg-cyan-500/10 px-1 rounded">
+                        {tokenParts.signature}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ) : (
-          /* Decoder Section */
-          <div className="grid lg:grid-cols-2 gap-6 min-h-[540px] items-stretch">
+          </TabsContent>
+
+          {/* Decoder Tab */}
+          <TabsContent value="decoder" className="space-y-4 pt-4">
+            <div className="grid lg:grid-cols-2 gap-6 min-h-[540px] items-stretch">
             {/* Left Side - JWT Input */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -596,8 +580,9 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 </div>
               </div>
             )}
-          </div>
-        )}
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {error && (
           <Alert variant="destructive">

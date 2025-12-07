@@ -3,6 +3,7 @@ import { deflateSync, inflateSync, strToU8, strFromU8 } from "fflate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, RotateCcw, Zap } from "lucide-react";
 import { toast } from "sonner";
 
@@ -13,7 +14,7 @@ interface ZlibCompressorProps {
 export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [mode, setMode] = useState<"compress" | "decompress">("decompress");
+  const [activeTab, setActiveTab] = useState("decompress");
   const [error, setError] = useState("");
   const [stats, setStats] = useState<{
     inputSize: number;
@@ -89,7 +90,7 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
           Zlib Compressor
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         {/* Cross-link to Base64 tool */}
         {navigate && (
           <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex items-center justify-between">
@@ -106,116 +107,163 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
             </Button>
           </div>
         )}
-        {/* Mode Selection */}
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setMode("decompress")}
-            variant={mode === "decompress" ? "default" : "outline"}
-            size="sm"
-          >
-            Decompress
-          </Button>
-          <Button
-            onClick={() => setMode("compress")}
-            variant={mode === "compress" ? "default" : "outline"}
-            size="sm"
-          >
-            Compress
-          </Button>
-        </div>
 
-        {/* Input Section */}
-        <div>
-          <label className="block text-sm font-medium mb-2 text-foreground">
-            {mode === "compress" ? "Input Text" : "Compressed Data (Base64)"}
-          </label>
-          <Textarea
-            placeholder={mode === "compress" ? "Enter text to compress..." : "Enter Base64 compressed data..."}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="w-full min-h-[150px] font-mono text-sm bg-muted/50 border-border/50"
-          />
-        </div>
+        <Tabs defaultValue="decompress" className="w-full" onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="decompress">Decompress</TabsTrigger>
+            <TabsTrigger value="compress">Compress</TabsTrigger>
+          </TabsList>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={mode === "compress" ? compress : decompress}
-            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
-          >
-            <Zap className="h-4 w-4 mr-2" />
-            {mode === "compress" ? "Compress" : "Decompress"}
-          </Button>
-          <Button onClick={clearAll} variant="outline" size="sm" className="mr-auto">
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Clear
-          </Button>
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-md text-sm text-red-600 dark:text-red-400">
-            {error}
-          </div>
-        )}
-
-        {/* Statistics */}
-        {stats && (
-          <div className="grid grid-cols-3 gap-3">
-            <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-              <div className="text-xs text-muted-foreground font-medium mb-1">Input Size</div>
-              <div className="text-lg font-bold text-dev-primary">{stats.inputSize.toLocaleString()} B</div>
-            </div>
-            <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-              <div className="text-xs text-muted-foreground font-medium mb-1">Output Size</div>
-              <div className="text-lg font-bold text-dev-secondary">{stats.outputSize.toLocaleString()} B</div>
-            </div>
-            <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-              <div className="text-xs text-muted-foreground font-medium mb-1">
-                {mode === "compress" ? "Reduction" : "Expansion"}
-              </div>
-              <div className={`text-lg font-bold ${mode === "compress" && stats.ratio > 0 ? "text-dev-success" : "text-dev-warning"}`}>
-                {stats.ratio > 0 ? "+" : ""}{stats.ratio.toFixed(1)}%
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Output Section */}
-        {output && (
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-foreground">
-                {mode === "compress" ? "Compressed Output (Base64)" : "Decompressed Output"}
+          {/* Decompress Tab */}
+          <TabsContent value="decompress" className="space-y-4 pt-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Compressed Data (Base64)
               </label>
-              <Button
-                onClick={handleCopyToClipboard}
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Copy className="h-4 w-4 mr-1" />
-                Copy
-              </Button>
+              <Textarea
+                placeholder="Enter Base64 compressed data..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="w-full min-h-[150px] font-mono text-sm bg-muted/50 border-border/50"
+              />
             </div>
-            <div className="p-4 bg-muted/30 border border-border/50 rounded-lg font-mono text-sm text-foreground break-words max-h-64 overflow-auto">
-              {output}
-            </div>
-          </div>
-        )}
 
-        {/* Info */}
-        <div className="text-xs text-muted-foreground space-y-1 pt-2">
-          <div>
-            <strong>Compress:</strong> Reduces text size using zlib deflate algorithm, outputs Base64-encoded result
-          </div>
-          <div>
-            <strong>Decompress:</strong> Takes Base64-encoded zlib compressed data and returns original text
-          </div>
-          <div>
-            <strong>Best for:</strong> Large JSON, logs, or repeated text with high compression ratios
-          </div>
-        </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={decompress}
+                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Decompress
+              </Button>
+              <Button onClick={clearAll} variant="outline" size="sm" className="mr-auto">
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+              {output && (
+                <Button onClick={handleCopyToClipboard} variant="outline" size="sm">
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Output
+                </Button>
+              )}
+            </div>
+
+            {error && (
+              <div className="p-3 bg-destructive/10 text-destructive rounded-md border border-destructive/30 text-sm">
+                {error}
+              </div>
+            )}
+
+            {output && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Decompressed Text
+                </label>
+                <Textarea
+                  value={output}
+                  readOnly
+                  className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50"
+                />
+              </div>
+            )}
+
+            {stats && (
+              <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Input Size</div>
+                    <div className="text-lg font-semibold text-foreground">{stats.inputSize} bytes</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Output Size</div>
+                    <div className="text-lg font-semibold text-foreground">{stats.outputSize} bytes</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Expansion</div>
+                    <div className="text-lg font-semibold text-dev-primary">
+                      {stats.ratio > 0 ? "+" : ""}{stats.ratio}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Compress Tab */}
+          <TabsContent value="compress" className="space-y-4 pt-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Input Text
+              </label>
+              <Textarea
+                placeholder="Enter text to compress..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="w-full min-h-[150px] font-mono text-sm bg-muted/50 border-border/50"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={compress}
+                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Compress
+              </Button>
+              <Button onClick={clearAll} variant="outline" size="sm" className="mr-auto">
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+              {output && (
+                <Button onClick={handleCopyToClipboard} variant="outline" size="sm">
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Output
+                </Button>
+              )}
+            </div>
+
+            {error && (
+              <div className="p-3 bg-destructive/10 text-destructive rounded-md border border-destructive/30 text-sm">
+                {error}
+              </div>
+            )}
+
+            {output && (
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Compressed Output (Base64)
+                </label>
+                <Textarea
+                  value={output}
+                  readOnly
+                  className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50"
+                />
+              </div>
+            )}
+
+            {stats && (
+              <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Input Size</div>
+                    <div className="text-lg font-semibold text-foreground">{stats.inputSize} bytes</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Output Size</div>
+                    <div className="text-lg font-semibold text-foreground">{stats.outputSize} bytes</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Compression Ratio</div>
+                    <div className="text-lg font-semibold text-dev-primary">
+                      {stats.ratio > 0 ? "+" : ""}{stats.ratio}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

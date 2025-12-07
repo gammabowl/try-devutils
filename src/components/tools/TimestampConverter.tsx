@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Clock, Calendar } from "lucide-react";
+import { Copy, Clock, Calendar, ArrowLeftRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format, fromUnixTime, getUnixTime, parseISO } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,12 +15,13 @@ interface TimestampConverterProps {
 }
 
 export function TimestampConverter({ initialContent, action }: TimestampConverterProps) {
-  const [timestamp, setTimestamp] = useState(initialContent || "");
-  const [dateTime, setDateTime] = useState("");
+  const [timestamp, setTimestamp] = useState(initialContent || Date.now().toString());
+  const [dateTime, setDateTime] = useState(new Date().toISOString().slice(0, 19));
   const [conversionValue, setConversionValue] = useState("");
   const [fromUnit, setFromUnit] = useState("");
   const [toUnit, setToUnit] = useState("");
   const [error, setError] = useState("");
+  const [activeMainTab, setActiveMainTab] = useState("from-timestamp");
 
   // Separate state for results in each tab
   const [fromTimestampResults, setFromTimestampResults] = useState<Record<string, string>>({});
@@ -34,8 +35,12 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
     if (initialContent && action === "convert") {
       setTimestamp(initialContent);
       convertFromTimestamp();
+    } else {
+      // Auto-convert on initial load with default values
+      convertFromTimestamp();
+      convertToTimestamp();
     }
-  }, [initialContent, action]);
+  }, []);
 
   const examples = {
     timestamps: [
@@ -67,8 +72,8 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
         "Local Time": format(date, "yyyy-MM-dd HH:mm:ss"),
         "UTC Time": format(date, "yyyy-MM-dd HH:mm:ss 'UTC'"),
         "ISO 8601": date.toISOString(),
-        "Unix Timestamp (seconds)": Math.floor(date.getTime() / 1000).toString(),
-        "Unix Timestamp (milliseconds)": date.getTime().toString(),
+        "Unix (seconds)": Math.floor(date.getTime() / 1000).toString(),
+        "Unix (ms)": date.getTime().toString(),
         "Relative": getRelativeTime(date),
       });
     } catch (err) {
@@ -87,8 +92,8 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       }
 
       setToTimestampResults({
-        "Unix Timestamp (seconds)": getUnixTime(date).toString(),
-        "Unix Timestamp (milliseconds)": date.getTime().toString(),
+        "Unix (seconds)": getUnixTime(date).toString(),
+        "Unix (ms)": date.getTime().toString(),
         "ISO 8601": date.toISOString(),
         "Local Time": format(date, "yyyy-MM-dd HH:mm:ss"),
         "UTC Time": format(date, "yyyy-MM-dd HH:mm:ss 'UTC'"),
@@ -102,12 +107,17 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
   const getCurrentTimestamp = () => {
     const now = new Date();
     setCurrentTimestampResults({
-      "Current Unix Timestamp (seconds)": getUnixTime(now).toString(),
-      "Current Unix Timestamp (milliseconds)": now.getTime().toString(),
-      "Current ISO 8601": now.toISOString(),
-      "Current Local Time": format(now, "yyyy-MM-dd HH:mm:ss"),
-      "Current UTC Time": format(now, "yyyy-MM-dd HH:mm:ss 'UTC'"),
+      "Local Time": format(now, "yyyy-MM-dd HH:mm:ss"),
+      "UTC Time": format(now, "yyyy-MM-dd HH:mm:ss 'UTC'"),
+      "ISO 8601": now.toISOString(),
+      "Unix (seconds)": getUnixTime(now).toString(),
+      "Unix (ms)": now.getTime().toString(),
     });
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ description: "Copied to clipboard!" });
   };
 
   const getRelativeTime = (date: Date): string => {
@@ -128,22 +138,6 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       return `${diffHour} hours ago`;
     } else {
       return `${diffDay} days ago`;
-    }
-  };
-
-  const copyToClipboard = async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      toast({
-        title: "Copied!",
-        description: "Value copied to clipboard",
-      });
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: "Failed to copy to clipboard",
-        variant: "destructive",
-      });
     }
   };
 
@@ -181,46 +175,73 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
           Timestamp Converter
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <Tabs defaultValue="from-timestamp" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="from-timestamp">Epoch to Date</TabsTrigger>
-            <TabsTrigger value="to-timestamp">Date to Epoch</TabsTrigger>
-            <TabsTrigger value="current">Current Time</TabsTrigger>
-            <TabsTrigger value="unit-conversion">Unit Conversion</TabsTrigger>
+      <CardContent className="space-y-6">
+        <Tabs defaultValue="from-timestamp" className="w-full" onValueChange={setActiveMainTab}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="from-timestamp">Epoch → Date</TabsTrigger>
+            <TabsTrigger value="to-timestamp">Date → Epoch</TabsTrigger>
+            <TabsTrigger value="unit-conversion">Units</TabsTrigger>
           </TabsList>
 
           {/* Epoch to Date Tab */}
-          <TabsContent value="from-timestamp" className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-              <div className="w-full sm:flex-1 sm:min-w-0">
+          <TabsContent value="from-timestamp" className="space-y-4 pt-4">
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={() => {
+                  const now = Date.now();
+                  setTimestamp(now.toString());
+                  setTimeout(() => convertFromTimestamp(), 100);
+                }} 
+                variant="outline"
+                size="sm"
+                className="text-xs"
+              >
+                <Clock className="h-3.5 w-3.5 mr-1.5" />
+                Use Current Time
+              </Button>
+            </div>
+            <div className="flex items-end gap-3">
+              <div className="flex-1 max-w-md">
                 <label className="block text-sm font-medium mb-2 text-foreground">
-                  Epoch/Unix Timestamp (seconds or milliseconds)
+                  Unix Timestamp
                 </label>
                 <Input
-                  placeholder="e.g., 1703516400 or 1703516400000"
+                  placeholder="1703516400 or 1703516400000"
                   value={timestamp}
                   onChange={(e) => setTimestamp(e.target.value)}
-                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                  className="font-mono bg-muted/50 border-border/50"
                 />
               </div>
-              <div className="mt-3 sm:mt-0">
-                <Button onClick={convertFromTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Convert Epoch to Human Readable
-                </Button>
-              </div>
+              <Button onClick={convertFromTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+                <Calendar className="h-4 w-4 mr-2" />
+                Convert
+              </Button>
             </div>
 
+            {error && (
+              <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-md border border-destructive/30 max-w-md">
+                {error}
+              </div>
+            )}
+
             {Object.keys(fromTimestampResults).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-dev-primary">Epoch to Date Results</h4>
-                <div className="space-y-2">
+              <div className="space-y-3 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {Object.entries(fromTimestampResults).map(([label, value]) => (
-                    <div key={label} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                      <div>
-                        <div className="text-sm font-medium text-foreground">{label}</div>
-                        <div className="text-sm text-muted-foreground font-mono">{value}</div>
+                    <div key={label} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-medium text-muted-foreground mb-1">{label}</div>
+                          <div className="text-sm text-foreground font-mono break-all">{value}</div>
+                        </div>
+                        <Button
+                          onClick={() => copyToClipboard(value)}
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -230,62 +251,67 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
           </TabsContent>
 
           {/* Date to Epoch Tab */}
-          <TabsContent value="to-timestamp" className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-              <div className="w-full sm:flex-1 sm:min-w-0">
-                <label className="block text-sm font-medium mb-2 text-foreground">
-                  Date/Time (ISO format)
-                </label>
-                <Input
-                  placeholder="e.g., 2023-12-25T15:30:00"
-                  value={dateTime}
-                  onChange={(e) => setDateTime(e.target.value)}
-                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
-                />
-              </div>
-              <div className="mt-3 sm:mt-0">
-                <Button onClick={convertToTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-                  <Clock className="h-4 w-4 mr-2" />
-                  Convert to Epoch/Unix Timestamp
-                </Button>
-              </div>
-            </div>
-
-            {Object.keys(toTimestampResults).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-dev-primary">Date to Epoch Results</h4>
-                <div className="space-y-2">
-                  {Object.entries(toTimestampResults).map(([label, value]) => (
-                    <div key={label} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                      <div>
-                        <div className="text-sm font-medium text-foreground">{label}</div>
-                        <div className="text-sm text-muted-foreground font-mono">{value}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Current Time Tab */}
-          <TabsContent value="current" className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Button onClick={getCurrentTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-                <Clock className="h-4 w-4 mr-2" />
-                Get Current Timestamp
+          <TabsContent value="to-timestamp" className="space-y-4 pt-4">
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={() => {
+                  const now = new Date();
+                  setDateTime(now.toISOString().slice(0, 19));
+                  setTimeout(() => convertToTimestamp(), 100);
+                }} 
+                variant="outline"
+                size="sm"
+                className="text-xs"
+              >
+                <Clock className="h-3.5 w-3.5 mr-1.5" />
+                Use Current Time
               </Button>
             </div>
+            <div className="space-y-1.5">
+              <div className="flex items-end gap-3">
+                <div className="flex-1 max-w-md">
+                  <label className="block text-sm font-medium mb-2 text-foreground">
+                    Date & Time
+                  </label>
+                  <Input
+                    placeholder="2023-12-25T15:30:00"
+                    value={dateTime}
+                    onChange={(e) => setDateTime(e.target.value)}
+                    className="font-mono bg-muted/50 border-border/50"
+                  />
+                </div>
+                <Button onClick={convertToTimestamp} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+                  <Clock className="h-4 w-4 mr-2" />
+                  Convert
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">ISO 8601: YYYY-MM-DDTHH:mm:ss</p>
+            </div>
 
-            {Object.keys(currentTimestampResults).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-dev-primary">Current Timestamp Results</h4>
-                <div className="space-y-2">
-                  {Object.entries(currentTimestampResults).map(([label, value]) => (
-                    <div key={label} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                      <div>
-                        <div className="text-sm font-medium text-foreground">{label}</div>
-                        <div className="text-sm text-muted-foreground font-mono">{value}</div>
+            {error && (
+              <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-md border border-destructive/30 max-w-md">
+                {error}
+              </div>
+            )}
+
+            {Object.keys(toTimestampResults).length > 0 && (
+              <div className="space-y-3 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {Object.entries(toTimestampResults).map(([label, value]) => (
+                    <div key={label} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-medium text-muted-foreground mb-1">{label}</div>
+                          <div className="text-sm text-foreground font-mono break-all">{value}</div>
+                        </div>
+                        <Button
+                          onClick={() => copyToClipboard(value)}
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -295,86 +321,78 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
           </TabsContent>
 
           {/* Unit Conversion Tab */}
-          <TabsContent value="unit-conversion" className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-foreground">
-                Enter Value for Conversion
-              </label>
-              <Input
-                  placeholder="e.g., 120"
+          <TabsContent value="unit-conversion" className="space-y-4 pt-4">
+            <div className="max-w-2xl space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Value
+                </label>
+                <Input
+                  placeholder="120"
                   value={conversionValue}
                   onChange={(e) => setConversionValue(e.target.value)}
-                  className="w-full sm:max-w-[520px] font-mono bg-muted/50 border-border/50"
+                  className="max-w-xs font-mono bg-muted/50 border-border/50"
                 />
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-1/2">
-                <label className="block text-sm font-medium mb-2 text-foreground">From</label>
-                <Select value={fromUnit} onValueChange={(value) => setFromUnit(value)}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {unitOptions.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
-              <div className="w-1/2">
-                <label className="block text-sm font-medium mb-2 text-foreground">To</label>
-                <Select value={toUnit} onValueChange={(value) => setToUnit(value)}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {unitOptions.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
 
-            <Button
-              onClick={() => {
-                if (!isNaN(parseFloat(conversionValue)) && fromUnit && toUnit) {
-                  convertUnits(parseFloat(conversionValue), fromUnit, toUnit);
-                }
-              }}
-              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
-            >
-              Convert
-            </Button>
+              <div className="grid grid-cols-2 gap-4 max-w-md">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-foreground">From</label>
+                  <Select value={fromUnit} onValueChange={(value) => setFromUnit(value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {unitOptions.map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-foreground">To</label>
+                  <Select value={toUnit} onValueChange={(value) => setToUnit(value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {unitOptions.map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => {
+                  if (!isNaN(parseFloat(conversionValue)) && fromUnit && toUnit) {
+                    convertUnits(parseFloat(conversionValue), fromUnit, toUnit);
+                  }
+                }}
+                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+              >
+                <ArrowLeftRight className="h-4 w-4 mr-2" />
+                Convert Units
+              </Button>
+            </div>
 
             {Object.keys(unitConversionResults).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-dev-primary">Unit Conversion Results</h4>
-                <div className="space-y-2">
-                  {Object.entries(unitConversionResults).map(([label, value]) => (
-                    <div key={label} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                      <div>
-                        <div className="text-sm font-medium text-foreground">{label}</div>
-                        <div className="text-sm text-muted-foreground font-mono">{value}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="space-y-3 pt-2">
+                {Object.entries(unitConversionResults).map(([label, value]) => (
+                  <div key={label} className="p-5 bg-gradient-to-br from-dev-primary/5 to-dev-secondary/5 rounded-lg border border-dev-primary/20 max-w-md">
+                    <div className="text-sm text-muted-foreground mb-2">{label}</div>
+                    <div className="text-3xl font-bold text-dev-primary font-mono">{value}</div>
+                  </div>
+                ))}
               </div>
             )}
           </TabsContent>
         </Tabs>
-
-        {error && (
-          <div className="text-destructive text-sm font-medium">
-            {error}
-          </div>
-        )}
       </CardContent>
 
       {/* Examples section moved outside CardContent */}
@@ -386,10 +404,14 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2 mt-2">
-            <Tabs defaultValue="timestamps" className="w-full">
+            <Tabs 
+              defaultValue={activeMainTab === "to-timestamp" ? "dates" : "timestamps"} 
+              key={activeMainTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="timestamps">Timestamp Examples</TabsTrigger>
                 <TabsTrigger value="dates">Date Examples</TabsTrigger>
+                <TabsTrigger value="timestamps">Timestamp Examples</TabsTrigger>
               </TabsList>
               
               <TabsContent value="timestamps" className="space-y-2 mt-2">

@@ -77,7 +77,7 @@ const Index = () => {
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
+            <a href="https://www.devtools.tf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <div className="p-2 rounded-lg dev-gradient">
                 <img src="/logo.png" alt="DevTools Suite Logo" className="h-6 w-6" />
               </div>
@@ -85,7 +85,7 @@ const Index = () => {
                 <h1 className="text-2xl font-bold text-foreground">DevTools</h1>
                 <p className="text-sm text-muted-foreground">Essential developer utilities</p>
               </div>
-            </div>
+            </a>
             <div className="ml-auto flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-dev-primary animate-pulse" />

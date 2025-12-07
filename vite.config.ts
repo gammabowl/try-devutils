@@ -18,6 +18,22 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log statements
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+      },
+      mangle: {
+        toplevel: true, // Mangle top-level variable names
+        safari10: true,
+      },
+      format: {
+        comments: false, // Remove all comments
+      },
+    },
+    sourcemap: false, // Don't generate source maps (they reveal original code)
     rollupOptions: {
       output: {
         manualChunks: {

@@ -186,7 +186,7 @@ settings:
               </label>
               <div className="flex items-center gap-2">
                 {isValid !== null && (
-                  <Badge variant={isValid ? "default" : "destructive"}>
+                  <Badge className={isValid ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-red-500/10 text-red-600 border-red-500/20"}>
                     {isValid ? (
                       <>
                         <CheckCircle className="h-3 w-3 mr-1" />

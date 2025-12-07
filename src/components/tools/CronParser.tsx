@@ -245,33 +245,30 @@ export function CronParser({ initialContent, action }: CronParserProps) {
           Cron Expression Parser
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-          <div className="w-full sm:flex-1 sm:min-w-0">
+      <CardContent className="space-y-6">
+        <div className="flex items-end gap-3">
+          <div className="flex-1 max-w-md">
             <label className="block text-sm font-medium mb-2 text-foreground">
               Cron Expression
             </label>
             <Input
-              placeholder="Enter cron expression (e.g., * * * * *)"
+              placeholder="* * * * *"
               value={cronExpression}
               onChange={(e) => setCronExpression(e.target.value)}
-              className="w-full sm:max-w-[640px] font-mono bg-muted/50 border-border/50"
+              className="font-mono bg-muted/50 border-border/50"
             />
           </div>
-
-          <div className="mt-3 sm:mt-0">
-            <Button
-              onClick={parseCron}
-              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
-            >
-              <Clock className="h-4 w-4 mr-2" />
-              Parse Expression
-            </Button>
-          </div>
+          <Button
+            onClick={parseCron}
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+          >
+            <Clock className="h-4 w-4 mr-2" />
+            Parse
+          </Button>
         </div>
 
         {error && (
-          <div className="text-destructive text-sm font-medium">
+          <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-md border border-destructive/30 max-w-md">
             {error}
           </div>
         )}

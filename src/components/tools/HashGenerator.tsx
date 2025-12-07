@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Copy, Hash, RotateCcw, CheckCircle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Copy, Hash, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 import CryptoJS from "crypto-js";
 
 interface HashResult {
@@ -120,116 +122,144 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
           Hash Generator
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-foreground">
-            Text to Hash
-          </label>
-          <Textarea
-            placeholder="Enter text to generate hashes..."
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              // Auto-generate hashes as user types
-              if (e.target.value.trim()) {
-                setHashes({
-                  md5: CryptoJS.MD5(e.target.value).toString(),
-                  sha1: CryptoJS.SHA1(e.target.value).toString(),
-                  sha256: CryptoJS.SHA256(e.target.value).toString(),
-                  sha512: CryptoJS.SHA512(e.target.value).toString()
-                });
-              } else {
-                setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
-              }
-            }}
-            className="w-full min-h-[120px] bg-muted/50 border-border/50"
-          />
-        </div>
+      <CardContent className="space-y-6">
+        <Tabs defaultValue="generator" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="generator">Generator</TabsTrigger>
+            <TabsTrigger value="verifier">Verifier</TabsTrigger>
+          </TabsList>
 
-        <div className="flex gap-2">
-          <Button onClick={generateHashes} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            <Hash className="h-4 w-4 mr-2" />
-            Generate Hashes
-          </Button>
-          <Button onClick={clearAll} variant="outline">
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Clear
-          </Button>
-        </div>
+          {/* Generator Tab */}
+          <TabsContent value="generator" className="space-y-4 pt-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Text to Hash
+              </label>
+              <Textarea
+                placeholder="Enter text to generate hashes..."
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  // Auto-generate hashes as user types
+                  if (e.target.value.trim()) {
+                    setHashes({
+                      md5: CryptoJS.MD5(e.target.value).toString(),
+                      sha1: CryptoJS.SHA1(e.target.value).toString(),
+                      sha256: CryptoJS.SHA256(e.target.value).toString(),
+                      sha512: CryptoJS.SHA512(e.target.value).toString()
+                    });
+                  } else {
+                    setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
+                  }
+                }}
+                className="w-full min-h-[120px] bg-muted/50 border-border/50 font-mono text-sm"
+              />
+            </div>
 
-        {(hashes.md5 || hashes.sha1 || hashes.sha256 || hashes.sha512) && (
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-dev-primary">Generated Hashes</h4>
-            <div className="space-y-3">
-              {hashAlgorithms.map((algo) => {
-                const hashValue = hashes[algo.key];
-                if (!hashValue) return null;
-                
-                return (
-                  <div key={algo.key} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm font-medium text-foreground">{algo.name}</span>
-                        <span className="text-xs text-muted-foreground ml-2">{algo.description}</span>
+            <div className="flex gap-2">
+              <Button onClick={generateHashes} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+                <Hash className="h-4 w-4 mr-2" />
+                Generate Hashes
+              </Button>
+              <Button onClick={clearAll} variant="outline">
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            </div>
+
+            {(hashes.md5 || hashes.sha1 || hashes.sha256 || hashes.sha512) && (
+              <div className="space-y-3 pt-2">
+                {hashAlgorithms.map((algo) => {
+                  const hashValue = hashes[algo.key];
+                  if (!hashValue) return null;
+                  
+                  return (
+                    <div key={algo.key} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group">
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="font-semibold">
+                            {algo.name}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{algo.description}</span>
+                        </div>
+                        <Button
+                          onClick={() => copyToClipboard(hashValue)}
+                          variant="ghost"
+                          size="sm"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </Button>
                       </div>
-                      <Button
-                        onClick={() => copyToClipboard(hashValue)}
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="p-3 bg-muted/30 rounded-md border border-border/50">
-                      <code className="text-xs font-mono text-foreground break-all">
+                      <code className="text-xs font-mono text-foreground break-all block">
                         {hashValue}
                       </code>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <div className="border-t border-border/50 pt-4">
-          <h4 className="text-sm font-semibold text-dev-primary mb-3">Hash Verification</h4>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-foreground">
-                Hash to Verify
-              </label>
-              <Input
-                placeholder="Enter hash to verify against the text above..."
-                value={hashToVerify}
-                onChange={(e) => setHashToVerify(e.target.value)}
-                className="w-full font-mono text-sm bg-muted/50 border-border/50"
-              />
-            </div>
-            
-            <Button onClick={verifyHash} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Verify Hash
-            </Button>
-            
-            {verificationResult && (
-              <div className={`p-3 rounded-md text-sm font-medium ${
-                verificationResult.includes("✅") 
-                  ? "bg-green-500/10 text-green-600 dark:text-green-400 dark:bg-green-950/20" 
-                  : "bg-red-500/10 text-red-600 dark:text-red-400 dark:bg-red-950/20"
-              }`}>
-                {verificationResult}
+                  );
+                })}
               </div>
             )}
-          </div>
-        </div>
 
-        <div className="text-xs text-muted-foreground space-y-1">
-          <div><strong>MD5:</strong> Fast but not secure for passwords</div>
-          <div><strong>SHA1:</strong> Deprecated for security applications</div>
-          <div><strong>SHA256:</strong> Current standard for most applications</div>
-          <div><strong>SHA512:</strong> Highest security, larger output</div>
-        </div>
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-1">
+              <div><strong>MD5:</strong> Fast but not secure for passwords (128-bit)</div>
+              <div><strong>SHA1:</strong> Deprecated for security applications (160-bit)</div>
+              <div><strong>SHA256:</strong> Current standard for most applications (256-bit)</div>
+              <div><strong>SHA512:</strong> Highest security, larger output (512-bit)</div>
+            </div>
+          </TabsContent>
+
+          {/* Verifier Tab */}
+          <TabsContent value="verifier" className="space-y-4 pt-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Original Text
+              </label>
+              <Textarea
+                placeholder="Enter the original text..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="w-full min-h-[100px] bg-muted/50 border-border/50 font-mono text-sm"
+              />
+            </div>
+
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Hash to Verify
+                </label>
+                <Input
+                  placeholder="Enter hash to verify..."
+                  value={hashToVerify}
+                  onChange={(e) => setHashToVerify(e.target.value)}
+                  className="font-mono text-sm bg-muted/50 border-border/50"
+                />
+              </div>
+              <Button onClick={verifyHash} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Verify
+              </Button>
+            </div>
+            
+            {verificationResult && (
+              <div className={`p-4 rounded-lg border text-sm font-medium flex items-start gap-2 ${
+                verificationResult.includes("✅") 
+                  ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" 
+                  : "bg-red-500/10 text-red-600 border-red-500/20"
+              }`}>
+                {verificationResult.includes("✅") ? (
+                  <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                )}
+                <span>{verificationResult.replace("✅ ", "").replace("❌ ", "")}</span>
+              </div>
+            )}
+
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground">
+              <strong>Note:</strong> Enter the original text and a hash value to verify if they match. The verifier will check against all supported algorithms (MD5, SHA1, SHA256, SHA512).
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

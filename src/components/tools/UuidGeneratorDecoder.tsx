@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Hash, Copy, RefreshCw, Trash2, Search } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Hash, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4, v1 as uuidv1 } from "uuid";
 
@@ -85,6 +86,23 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     });
   };
 
+  const downloadUuids = () => {
+    const allValues = uuids.map(uuid => uuid.value).join('\n');
+    const blob = new Blob([allValues], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `uuids-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({
+      title: "Downloaded!",
+      description: `${uuids.length} UUIDs downloaded`,
+    });
+  };
+
   const clearAll = () => {
     setUuids([]);
     toast({
@@ -151,187 +169,208 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
   const decodedValidation = isValidUuid ? decodeUuidV1(validationInput) : null;
 
   return (
-    <div className="space-y-6">
-      {/* Generator Section */}
-      <Card className="tool-card">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Hash className="h-5 w-5 text-dev-primary" />
-            UUID Generator
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              min="1"
-              max="100"
-              value={count}
-              onChange={(e) => setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
-              className="w-20 bg-muted/50 border-border/50"
-            />
-            <span className="text-sm text-muted-foreground">UUIDs to generate</span>
-          </div>
+    <Card className="tool-card">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-foreground">
+          <Hash className="h-5 w-5 text-dev-primary" />
+          UUID Generator & Validator/Decoder
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <Tabs defaultValue="generator" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="generator">Generator</TabsTrigger>
+            <TabsTrigger value="validator">Validator / Decoder</TabsTrigger>
+          </TabsList>
 
-          <div className="flex flex-wrap gap-2">
-            <Button
-              onClick={() => generateUuid('v4', count)}
-              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
-            >
-              <RefreshCw className="h-4 w-4 mr-1" />
-              Generate UUID v4
-            </Button>
-            
-            <Button
-              onClick={() => generateUuid('v1', count)}
-              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
-            >
-              <RefreshCw className="h-4 w-4 mr-1" />
-              Generate UUID v1
-            </Button>
+          {/* Generator Tab */}
+          <TabsContent value="generator" className="space-y-4 pt-4">
+            <div className="flex items-end gap-3">
+              <div className="flex-1 max-w-xs">
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Quantity
+                </label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={count}
+                  onChange={(e) => setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
+                  className="bg-muted/50 border-border/50"
+                />
+              </div>
+              <Button
+                onClick={() => generateUuid('v4', count)}
+                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Generate v4
+              </Button>
+              <Button
+                onClick={() => generateUuid('v1', count)}
+                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Generate v1
+              </Button>
+            </div>
 
             {uuids.length > 0 && (
               <>
-                <Button
-                  onClick={copyAllUuids}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Copy className="h-4 w-4 mr-1" />
-                  Copy All
-                </Button>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-foreground">
+                    Generated UUIDs ({uuids.length})
+                  </label>
+                  <div className="flex gap-2">
+                    <Button onClick={copyAllUuids} variant="outline" size="sm">
+                      <Copy className="h-4 w-4 mr-1" />
+                      Copy All
+                    </Button>
+                    <Button onClick={downloadUuids} variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-1" />
+                      Download
+                    </Button>
+                    <Button onClick={clearAll} variant="outline" size="sm">
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Clear
+                    </Button>
+                  </div>
+                </div>
                 
-                <Button
-                  onClick={clearAll}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  Clear
-                </Button>
-              </>
-            )}
-          </div>
-
-          {/* Generated UUIDs List */}
-          {uuids.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-foreground">
-                  Generated UUIDs ({uuids.length})
-                </label>
-              </div>
-              
-              <div className="space-y-2 max-h-[300px] overflow-auto">
-                {uuids.map((uuid) => {
-                  const decoded = uuid.version === 'v1' ? decodeUuidV1(uuid.value) : null;
-                  return (
-                    <div
-                      key={uuid.id}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/30 group hover:border-dev-primary/50 transition-colors"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <div className="font-mono text-sm text-foreground break-all min-w-0">
-                            {uuid.value}
+                <div className="space-y-2 max-h-[400px] overflow-auto pr-2">
+                  {uuids.map((uuid) => {
+                    const decoded = uuid.version === 'v1' ? decodeUuidV1(uuid.value) : null;
+                    return (
+                      <div
+                        key={uuid.id}
+                        className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="font-mono text-sm text-foreground break-all">
+                              {uuid.value}
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <Badge variant="outline" className="text-xs">
+                                {uuid.version}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">
+                                {uuid.timestamp}
+                              </span>
+                            </div>
+                            {decoded && (
+                              <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                                <div><span className="font-medium">Timestamp:</span> {decoded.date.toISOString()}</div>
+                                <div><span className="font-medium">Clock Seq:</span> {decoded.clockSeq} • <span className="font-medium">Node:</span> {decoded.node}</div>
+                                <div><span className="font-medium">Variant:</span> {decoded.variant}</div>
+                              </div>
+                            )}
                           </div>
-                          <div className="flex-shrink-0">
-                            <Button
-                              onClick={() => copyToClipboard(uuid.value)}
-                              variant="outline"
-                              size="sm"
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-xs">
-                            {uuid.version}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {uuid.timestamp}
-                          </span>
-                        </div>
-                        {decoded && (
-                          <div className="mt-2 text-xs font-mono text-muted-foreground">
-                            <div>Timestamp: {decoded.date.toUTCString()}</div>
-                            <div>Clock Seq: {decoded.clockSeq} • Node: {decoded.node}</div>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {decoded && (
-                          <Button onClick={() => copyDecodedToClipboard(decoded)} variant="outline" size="sm">
+                          
+                          <Button
+                            onClick={() => copyToClipboard(uuid.value)}
+                            variant="ghost"
+                            size="sm"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
                             <Copy className="h-4 w-4" />
                           </Button>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-1">
+              <div><strong>UUID v4:</strong> Random/pseudo-random generation (most common)</div>
+              <div><strong>UUID v1:</strong> Time-based with MAC address and clock sequence</div>
             </div>
-          )}
+          </TabsContent>
 
-          {/* Generator Info */}
-          <div className="text-xs text-muted-foreground space-y-1">
-            <p><strong>UUID v1:</strong> Time-based, includes MAC address</p>
-            <p><strong>UUID v4:</strong> Random/pseudo-random generation</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Validator Section */}
-      <Card className="tool-card">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Search className="h-5 w-5 text-dev-primary" />
-            UUID Validator & Decoder
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Enter UUID to validate..."
-                value={validationInput}
-                onChange={(e) => setValidationInput(e.target.value)}
-                className="w-full font-mono bg-muted/50 border-border/50"
-              />
+          {/* Validator Tab */}
+          <TabsContent value="validator" className="space-y-4 pt-4">
+            <div className="flex items-end gap-3">
+              <div className="flex-1 max-w-md">
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  UUID to Validate
+                </label>
+                <Input
+                  placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000"
+                  value={validationInput}
+                  onChange={(e) => setValidationInput(e.target.value)}
+                  className="font-mono bg-muted/50 border-border/50"
+                />
+              </div>
               {isValidUuid !== null && (
                 <Badge 
                   className={isValidUuid 
-                    ? "bg-dev-success text-dev-success-foreground" 
-                    : "bg-dev-error text-dev-error-foreground"
+                    ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 h-10 px-3" 
+                    : "bg-red-500/10 text-red-600 border-red-500/20 h-10 px-3"
                   }
                 >
-                  {isValidUuid ? "Valid" : "Invalid"}
+                  {isValidUuid ? (
+                    <>
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Valid
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="h-3 w-3 mr-1" />
+                      Invalid
+                    </>
+                  )}
                 </Badge>
               )}
             </div>
+
             {decodedValidation && (
-              <div className="mt-2 text-sm font-mono text-muted-foreground flex items-start justify-between">
-                <div>
-                  <div>Timestamp: {decodedValidation.dateString} ({decodedValidation.date.toISOString()})</div>
-                  <div>Clock Sequence: {decodedValidation.clockSeq}</div>
-                  <div>Node: {decodedValidation.node}</div>
-                  <div>Variant: {decodedValidation.variant}</div>
-                </div>
-                <div className="ml-4">
+              <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-semibold text-foreground">Decoded Information (v1 UUID)</h4>
                   <Button onClick={() => copyDecodedToClipboard(decodedValidation)} size="sm" variant="outline">
-                    <Copy className="h-4 w-4 mr-1" />
-                    Copy decoded
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
                   </Button>
+                </div>
+                <div className="space-y-2 text-sm font-mono">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Timestamp:</span>
+                    <span className="text-foreground">{decodedValidation.date.toISOString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Date:</span>
+                    <span className="text-foreground">{decodedValidation.dateString}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Clock Sequence:</span>
+                    <span className="text-foreground">{decodedValidation.clockSeq}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Node (MAC):</span>
+                    <span className="text-foreground">{decodedValidation.node}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Variant:</span>
+                    <span className="text-foreground">{decodedValidation.variant}</span>
+                  </div>
                 </div>
               </div>
             )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+
+            {isValidUuid === false && (
+              <div className="p-3 bg-destructive/10 text-destructive rounded-md border border-destructive/30 text-sm">
+                Invalid UUID format. Please enter a valid UUID.
+              </div>
+            )}
+
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground">
+              <strong>Note:</strong> Only v1 UUIDs contain decodable timestamp information. v4 UUIDs are randomly generated and cannot be decoded.
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 }
-
-export default UuidGeneratorDecoder;
