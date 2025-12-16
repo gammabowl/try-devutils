@@ -209,7 +209,7 @@ const Index = () => {
                       </a>
                     </p>
                     <p className="text-xs">
-                      <span className="italic">Built with the assistance of AI</span> 🤖✨
+                      <span className="italic">Assisted by Copilot</span> 🤖✨
                     </p>
                   </div>
                 </DialogContent>
