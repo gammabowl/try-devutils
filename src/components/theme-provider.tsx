@@ -35,6 +35,25 @@ export function ThemeProvider({
 
     root.classList.remove("light", "dark")
 
+    // Function to update favicon
+    const updateFavicon = () => {
+      const favicon = document.getElementById('favicon') as HTMLLinkElement
+      if (favicon) {
+        // Remove existing favicon
+        favicon.remove()
+        
+        // Create new favicon with cache-busting timestamp
+        const newFavicon = document.createElement('link')
+        newFavicon.id = 'favicon'
+        newFavicon.rel = 'icon'
+        newFavicon.type = 'image/png'
+        newFavicon.href = '/favicon.png?v=' + Date.now()
+        
+        // Add to head
+        document.head.appendChild(newFavicon)
+      }
+    }
+
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
         .matches
@@ -42,10 +61,12 @@ export function ThemeProvider({
         : "light"
 
       root.classList.add(systemTheme)
+      updateFavicon()
       return
     }
 
     root.classList.add(theme)
+    updateFavicon()
   }, [theme])
 
   const value = {

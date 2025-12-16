@@ -2,12 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Favicon for light mode (dark icon) -->
-    <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: light)" />
-    <!-- Favicon for dark mode (light icon) -->
-    <link rel="icon" type="image/png" href="/favicon-light.png" media="(prefers-color-scheme: dark)" />
-    <!-- Fallback favicon -->
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" />
+    <link rel="icon" id="favicon" type="image/png" href="/favicon.png" />
+    <script>
+      // Set favicon immediately based on stored theme
+      (function() {
+        const stored = localStorage.getItem('ui-theme');
+        const theme = stored || 'light';
+        const favicon = document.getElementById('favicon');
+        
+        function updateFavicon(currentTheme) {
+          let effectiveTheme = currentTheme;
+          if (currentTheme === 'system') {
+            effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          // Use favicon.png for all themes
+          favicon.href = '/favicon.png';
+        }
+        
+        updateFavicon(theme);
+        
+        // Listen for system theme changes if using system theme
+        if (theme === 'system') {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            updateFavicon('system');
+          });
+        }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevTools - Essential Developer Utilities</title>
     <meta name="description" content="Developer tools for JWT decoding, encoding, JSON formatting, validation, and UUID generation, Base64 converter, Timestamp converter, Text diff, Cron parser, Colour converter, Hash generator, Yaml validator. All processing happens locally in your browser." />
