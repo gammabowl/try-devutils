@@ -6,15 +6,18 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Hash, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5 } from "uuid";
+import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5, v6 as uuidv6, v7 as uuidv7 } from "uuid";
 
-interface DecodedV1 {
+interface DecodedUuid {
+  version: number;
   date: Date;
   dateString: string;
-  node: string;
-  clockSeq: number;
+  node?: string;
+  clockSeq?: number;
   variant: string;
-  timestamp100ns: bigint;
+  timestamp?: bigint;
+  timestampMs?: number;
+  randomData?: string;
 }
 
 interface GeneratedUuid {
@@ -81,11 +84,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
           break;
         case 'v6':
           // UUID v6 is time-ordered version of v1 (reordered timestamp fields)
-          value = generateUuidV6();
+          value = uuidv6();
           break;
         case 'v7':
           // UUID v7 uses Unix timestamp
-          value = generateUuidV7();
+          value = uuidv7();
           break;
         default:
           value = uuidv4();
@@ -107,42 +110,6 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     });
   };
 
-  // Helper function to generate UUID v6 (time-ordered variant of v1)
-  const generateUuidV6 = (): string => {
-    const v1uuid = uuidv1();
-    const parts = v1uuid.split('-');
-    // Reorder timestamp fields: time_high-time_mid-time_low-clock_seq-node
-    // v1: time_low-time_mid-time_hi_version-clock_seq-node
-    // v6: time_hi_version-time_mid-time_low-clock_seq-node (reordered for time-sorting)
-    const timeHi = parts[2].substring(0, 3);
-    const version = '6';
-    const timeMid = parts[1];
-    const timeLow = parts[0];
-    return `${timeHi}${timeMid.substring(0, 1)}-${timeMid.substring(1)}-${version}${timeLow.substring(1, 4)}-${timeLow.substring(4)}-${parts[3]}-${parts[4]}`;
-  };
-
-  // Helper function to generate UUID v7 (Unix timestamp-based)
-  const generateUuidV7 = (): string => {
-    const timestamp = Date.now();
-    const timestampHex = timestamp.toString(16).padStart(12, '0');
-    
-    // 48 bits timestamp + 4 bits version + 12 bits random
-    // 2 bits variant + 62 bits random
-    const randomBytes = new Uint8Array(10);
-    crypto.getRandomValues(randomBytes);
-    
-    const version = '7';
-    const rand1 = Array.from(randomBytes.slice(0, 2))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-    const rand2 = ((randomBytes[2] & 0x3f) | 0x80).toString(16).padStart(2, '0');
-    const rand3 = Array.from(randomBytes.slice(3))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-    
-    return `${timestampHex.substring(0, 8)}-${timestampHex.substring(8, 12)}-${version}${rand1.substring(0, 3)}-${rand2}${rand1.substring(3, 4)}-${rand3}`;
-  };
-
   const copyToClipboard = async (value: string) => {
     await navigator.clipboard.writeText(value);
     toast({
@@ -151,9 +118,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     });
   };
 
-  const copyDecodedToClipboard = async (decoded: DecodedV1 | null) => {
+  const copyDecodedToClipboard = async (decoded: DecodedUuid | null) => {
     if (!decoded) return;
-    const text = `Timestamp: ${decoded.date.toISOString()}\nClock Sequence: ${decoded.clockSeq}\nNode: ${decoded.node}\nVariant: ${decoded.variant}`;
+    let text = `Version: ${decoded.version}\nTimestamp: ${decoded.date.toISOString()}\nVariant: ${decoded.variant}`;
+    if (decoded.clockSeq !== undefined) text += `\nClock Sequence: ${decoded.clockSeq}`;
+    if (decoded.node) text += `\nNode: ${decoded.node}`;
     await navigator.clipboard.writeText(text);
     toast({ title: "Copied!", description: "Decoded UUID copied to clipboard" });
   };
@@ -193,11 +162,33 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
   };
 
   const validateUuid = (uuid: string) => {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidRegex.test(uuid);
   };
 
-  const decodeUuidV1 = (uuid: string): DecodedV1 | null => {
+  const getUuidVersion = (uuid: string): number | null => {
+    const match = uuid.match(/^[0-9a-f]{8}-[0-9a-f]{4}-([1-7])[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+    if (!match) return null;
+    return parseInt(match[1], 16);
+  };
+
+  const decodeUuid = (uuid: string): DecodedUuid | null => {
+    const version = getUuidVersion(uuid);
+    if (!version) return null;
+
+    switch (version) {
+      case 1:
+        return decodeUuidV1(uuid);
+      case 6:
+        return decodeUuidV6(uuid);
+      case 7:
+        return decodeUuidV7(uuid);
+      default:
+        return null;
+    }
+  };
+
+  const decodeUuidV1 = (uuid: string): DecodedUuid | null => {
     const match = uuid.match(/^([0-9a-f]{8})-([0-9a-f]{4})-([1-5][0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/i);
     if (!match) return null;
 
@@ -237,17 +228,110 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     const nodeFormatted = node.match(/.{1,2}/g)?.join(":") ?? node;
 
     return {
+      version: 1,
       date,
       dateString: date.toUTCString(),
       node: nodeFormatted,
       clockSeq: clockSeqVal,
       variant,
-      timestamp100ns,
+      timestamp: timestamp100ns,
+    };
+  };
+
+  const decodeUuidV6 = (uuid: string): DecodedUuid | null => {
+    const match = uuid.match(/^([0-9a-f]{8})-([0-9a-f]{4})-([6][0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/i);
+    if (!match) return null;
+
+    const [, seg1, seg2, seg3, clock_seq, node] = match;
+
+    // UUID v6 format: reordered from v1
+    // seg1 (8): time_hi(3) + time_mid(4) + time_low_start(1)
+    // seg2 (4): time_low_continue(4)
+    // seg3 (4): version(1) + time_low_end(3)
+    
+    // Reconstruct the original v1 timestamp components
+    const timeHi = seg1.substring(0, 3); // First 3 chars
+    const timeMid = seg1.substring(3, 7); // Next 4 chars
+    const timeLowPart1 = seg1.substring(7, 8); // Last char of seg1
+    const timeLowPart2 = seg2; // All 4 chars of seg2
+    const timeLowPart3 = seg3.substring(1); // Last 3 chars of seg3 (skip version)
+    
+    // Reconstruct as full time_low (8 hex chars)
+    const fullTimeLow = timeLowPart1 + timeLowPart2 + timeLowPart3;
+    
+    const tl = parseInt(fullTimeLow, 16) >>> 0; // 32-bit
+    const tm = parseInt(timeMid, 16) & 0xffff; // 16-bit
+    const th = parseInt(timeHi, 16) & 0xfff; // 12-bit
+
+    // Build 60-bit timestamp
+    const timestamp100ns = (BigInt(th) << 48n) | (BigInt(tm) << 32n) | BigInt(tl);
+
+    // UUID timestamp counts 100-ns intervals since 1582-10-15
+    const msSinceUuidEpoch = Number(timestamp100ns / 10000n);
+    const uuidEpochMs = Date.UTC(1582, 9, 15);
+    const unixMs = msSinceUuidEpoch + uuidEpochMs;
+    const date = new Date(unixMs);
+
+    // clock sequence
+    const csHi = parseInt(clock_seq.slice(0, 2), 16) & 0xff;
+    const csLo = parseInt(clock_seq.slice(2, 4), 16) & 0xff;
+    const clockSeqVal = ((csHi & 0x3f) << 8) | csLo;
+
+    // variant
+    let variant = "unknown";
+    if ((csHi & 0x80) === 0x00) variant = "NCS";
+    else if ((csHi & 0xc0) === 0x80) variant = "RFC 4122";
+    else if ((csHi & 0xe0) === 0xc0) variant = "Microsoft";
+    else if ((csHi & 0xe0) === 0xe0) variant = "Future";
+
+    const nodeFormatted = node.match(/.{1,2}/g)?.join(":") ?? node;
+
+    return {
+      version: 6,
+      date,
+      dateString: date.toUTCString(),
+      node: nodeFormatted,
+      clockSeq: clockSeqVal,
+      variant,
+      timestamp: timestamp100ns,
+    };
+  };
+
+  const decodeUuidV7 = (uuid: string): DecodedUuid | null => {
+    const match = uuid.match(/^([0-9a-f]{8})-([0-9a-f]{4})-([7][0-9a-f]{3})-([0-9a-f]{4})-([0-9a-f]{12})$/i);
+    if (!match) return null;
+
+    const [, time_high, time_low, version_and_rand, variant_and_rand, rand] = match;
+
+    // UUID v7 has 48-bit Unix timestamp in milliseconds
+    // Combine the 32-bit high and 16-bit low parts correctly
+    const timestampMs = parseInt(time_high + time_low, 16);
+    const date = new Date(timestampMs);
+
+    // Extract variant bits from the 4th segment
+    const variantByte = parseInt(variant_and_rand.slice(0, 2), 16) & 0xff;
+    
+    let variant = "unknown";
+    if ((variantByte & 0x80) === 0x00) variant = "NCS";
+    else if ((variantByte & 0xc0) === 0x80) variant = "RFC 4122";
+    else if ((variantByte & 0xe0) === 0xc0) variant = "Microsoft";
+    else if ((variantByte & 0xe0) === 0xe0) variant = "Future";
+
+    // Calculate random bits for display (everything after timestamp and version)
+    const randomBits = version_and_rand.substring(1) + variant_and_rand + rand;
+
+    return {
+      version: 7,
+      date,
+      dateString: date.toUTCString(),
+      variant,
+      timestampMs,
+      randomData: randomBits.toUpperCase(),
     };
   };
 
   const isValidUuid = validationInput ? validateUuid(validationInput) : null;
-  const decodedValidation = isValidUuid ? decodeUuidV1(validationInput) : null;
+  const decodedValidation = isValidUuid ? decodeUuid(validationInput) : null;
 
   return (
     <Card className="tool-card">
@@ -400,7 +484,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                 
                 <div className="space-y-2 max-h-[400px] overflow-auto pr-2">
                   {uuids.map((uuid) => {
-                    const decoded = uuid.version === 'v1' ? decodeUuidV1(uuid.value) : null;
+                    const decoded = ['v1', 'v6', 'v7'].includes(uuid.version) ? decodeUuid(uuid.value) : null;
                     return (
                       <div
                         key={uuid.id}
@@ -422,7 +506,15 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                             {decoded && (
                               <div className="mt-3 text-xs text-muted-foreground space-y-1">
                                 <div><span className="font-medium">Timestamp:</span> {decoded.date.toISOString()}</div>
-                                <div><span className="font-medium">Clock Seq:</span> {decoded.clockSeq} • <span className="font-medium">Node:</span> {decoded.node}</div>
+                                {decoded.timestampMs !== undefined && (
+                                  <div><span className="font-medium">Unix Timestamp (ms):</span> {decoded.timestampMs}</div>
+                                )}
+                                {decoded.randomData && (
+                                  <div><span className="font-medium">Random Data:</span> <span className="font-mono">{decoded.randomData.substring(0, 20)}...</span></div>
+                                )}
+                                {decoded.clockSeq !== undefined && decoded.node && (
+                                  <div><span className="font-medium">Clock Seq:</span> {decoded.clockSeq} • <span className="font-medium">Node:</span> {decoded.node}</div>
+                                )}
                                 <div><span className="font-medium">Variant:</span> {decoded.variant}</div>
                               </div>
                             )}
@@ -469,31 +561,38 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                 />
               </div>
               {isValidUuid !== null && (
-                <Badge 
-                  className={isValidUuid 
-                    ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 h-10 px-3" 
-                    : "bg-red-500/10 text-red-600 border-red-500/20 h-10 px-3"
-                  }
-                >
-                  {isValidUuid ? (
-                    <>
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Valid
-                    </>
-                  ) : (
-                    <>
-                      <AlertCircle className="h-3 w-3 mr-1" />
-                      Invalid
-                    </>
+                <div className="flex items-center gap-2">
+                  <Badge 
+                    className={isValidUuid 
+                      ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 h-10 px-3" 
+                      : "bg-red-500/10 text-red-600 border-red-500/20 h-10 px-3"
+                    }
+                  >
+                    {isValidUuid ? (
+                      <>
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Valid
+                      </>
+                    ) : (
+                      <>
+                        <AlertCircle className="h-3 w-3 mr-1" />
+                        Invalid
+                      </>
+                    )}
+                  </Badge>
+                  {isValidUuid && validationInput && (
+                    <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20 h-10 px-3">
+                      v{getUuidVersion(validationInput)}
+                    </Badge>
                   )}
-                </Badge>
+                </div>
               )}
             </div>
 
-            {decodedValidation && (
+            {isValidUuid && validationInput && decodedValidation && (
               <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-sm font-semibold text-foreground">Decoded Information (v1 UUID)</h4>
+                  <h4 className="text-sm font-semibold text-foreground">Decoded Information</h4>
                   <Button onClick={() => copyDecodedToClipboard(decodedValidation)} size="sm" variant="outline">
                     <Copy className="h-3 w-3 mr-1" />
                     Copy
@@ -508,19 +607,43 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                     <span className="text-muted-foreground">Date:</span>
                     <span className="text-foreground">{decodedValidation.dateString}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Clock Sequence:</span>
-                    <span className="text-foreground">{decodedValidation.clockSeq}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Node (MAC):</span>
-                    <span className="text-foreground">{decodedValidation.node}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Variant:</span>
-                    <span className="text-foreground">{decodedValidation.variant}</span>
-                  </div>
+                  {decodedValidation.timestampMs !== undefined && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Unix Timestamp (ms):</span>
+                      <span className="text-foreground">{decodedValidation.timestampMs}</span>
+                    </div>
+                  )}
+                  {decodedValidation.randomData && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Random Data:</span>
+                      <span className="text-foreground font-mono text-xs">{decodedValidation.randomData}</span>
+                    </div>
+                  )}
+                  {decodedValidation.clockSeq !== undefined && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Clock Sequence:</span>
+                      <span className="text-foreground">{decodedValidation.clockSeq}</span>
+                    </div>
+                  )}
+                  {decodedValidation.node && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Node (MAC):</span>
+                      <span className="text-foreground">{decodedValidation.node}</span>
+                    </div>
+                  )}
+                  {decodedValidation.variant && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Variant:</span>
+                      <span className="text-foreground">{decodedValidation.variant}</span>
+                    </div>
+                  )}
                 </div>
+              </div>
+            )}
+
+            {isValidUuid && validationInput && !decodedValidation && (
+              <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground">
+                <strong>Note:</strong> UUID v{getUuidVersion(validationInput)} cannot be decoded. v3 and v5 are hash-based (MD5/SHA-1), and v4 is randomly generated.
               </div>
             )}
 
@@ -529,10 +652,6 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                 Invalid UUID format. Please enter a valid UUID.
               </div>
             )}
-
-            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground">
-              <strong>Note:</strong> Only v1 UUIDs contain decodable timestamp information. v4 UUIDs are randomly generated and cannot be decoded.
-            </div>
           </TabsContent>
         </Tabs>
       </CardContent>
