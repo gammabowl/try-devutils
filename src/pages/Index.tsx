@@ -10,6 +10,8 @@ import { HashGenerator } from "@/components/tools/HashGenerator";
 import { YamlValidator } from "@/components/tools/YamlValidator";
 import { StringAnalyser } from "@/components/tools/StringAnalyser";
 import { ZlibCompressor } from "@/components/tools/ZlibCompressor";
+import { SslCertificateDecoder } from "@/components/tools/SslCertificateDecoder";
+import { RegExpTester } from "@/components/tools/RegExpTester";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +36,9 @@ import {
   Type,
   Zap,
   Info,
-  X
+  X,
+  ShieldCheck,
+  Regex
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -54,7 +58,9 @@ const Index = () => {
     { id: "color", label: "Colour Converter", icon: Palette, component: ColorConverter, description: "Convert between colour formats", color: "from-fuchsia-500 to-pink-600", textColor: "text-fuchsia-600", bgColor: "bg-fuchsia-500/10" },
     { id: "diff", label: "Text Diff", icon: FileDiffIcon, component: TextDiff, description: "Compare texts and find differences", color: "from-red-500 to-red-600", textColor: "text-red-600", bgColor: "bg-red-500/10" },
     { id: "markdown", label: "Markdown", icon: FileText, component: MarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
-    { id: "string", label: "String Analyser", icon: Type, component: StringAnalyser, description: "Analyse text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" }
+    { id: "string", label: "String Analyser", icon: Type, component: StringAnalyser, description: "Analyse text stats and convert case", color: "from-violet-500 to-purple-600", textColor: "text-violet-600", bgColor: "bg-violet-500/10" },
+    { id: "ssl", label: "SSL Certificate Decoder", icon: ShieldCheck, component: SslCertificateDecoder, description: "Decode and inspect X.509 certificates", color: "from-green-500 to-emerald-600", textColor: "text-green-600", bgColor: "bg-green-500/10" },
+    { id: "regex", label: "RegExp Tester", icon: Regex, component: RegExpTester, description: "Test and debug regular expressions", color: "from-blue-500 to-indigo-600", textColor: "text-blue-600", bgColor: "bg-blue-500/10" }
   ];
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);

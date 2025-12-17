@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Hash, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { v4 as uuidv4, v1 as uuidv1 } from "uuid";
+import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5 } from "uuid";
 
 interface DecodedV1 {
   date: Date;
@@ -33,6 +33,9 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
   const [uuids, setUuids] = useState<GeneratedUuid[]>([]);
   const [count, setCount] = useState(1);
   const [validationInput, setValidationInput] = useState(initialContent || "");
+  const [selectedVersion, setSelectedVersion] = useState<'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7'>('v4');
+  const [namespace, setNamespace] = useState('');
+  const [name, setName] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -41,11 +44,53 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     }
   }, [initialContent, action]);
 
-  const generateUuid = (version: 'v1' | 'v4', quantity = 1) => {
+  const generateUuid = (version: 'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7', quantity = 1) => {
     const newUuids: GeneratedUuid[] = [];
     
     for (let i = 0; i < quantity; i++) {
-      const value = version === 'v4' ? uuidv4() : uuidv1();
+      let value: string;
+      
+      switch (version) {
+        case 'v1':
+          value = uuidv1();
+          break;
+        case 'v3':
+          if (!namespace || !name) {
+            toast({
+              title: "Error",
+              description: "Namespace and name are required for UUID v3",
+              variant: "destructive"
+            });
+            return;
+          }
+          value = uuidv3(name, namespace);
+          break;
+        case 'v4':
+          value = uuidv4();
+          break;
+        case 'v5':
+          if (!namespace || !name) {
+            toast({
+              title: "Error",
+              description: "Namespace and name are required for UUID v5",
+              variant: "destructive"
+            });
+            return;
+          }
+          value = uuidv5(name, namespace);
+          break;
+        case 'v6':
+          // UUID v6 is time-ordered version of v1 (reordered timestamp fields)
+          value = generateUuidV6();
+          break;
+        case 'v7':
+          // UUID v7 uses Unix timestamp
+          value = generateUuidV7();
+          break;
+        default:
+          value = uuidv4();
+      }
+      
       newUuids.push({
         id: uuidv4(), // For React key
         value,
@@ -60,6 +105,42 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
       title: "Generated!",
       description: `${quantity} UUID${quantity > 1 ? 's' : ''} generated`,
     });
+  };
+
+  // Helper function to generate UUID v6 (time-ordered variant of v1)
+  const generateUuidV6 = (): string => {
+    const v1uuid = uuidv1();
+    const parts = v1uuid.split('-');
+    // Reorder timestamp fields: time_high-time_mid-time_low-clock_seq-node
+    // v1: time_low-time_mid-time_hi_version-clock_seq-node
+    // v6: time_hi_version-time_mid-time_low-clock_seq-node (reordered for time-sorting)
+    const timeHi = parts[2].substring(0, 3);
+    const version = '6';
+    const timeMid = parts[1];
+    const timeLow = parts[0];
+    return `${timeHi}${timeMid.substring(0, 1)}-${timeMid.substring(1)}-${version}${timeLow.substring(1, 4)}-${timeLow.substring(4)}-${parts[3]}-${parts[4]}`;
+  };
+
+  // Helper function to generate UUID v7 (Unix timestamp-based)
+  const generateUuidV7 = (): string => {
+    const timestamp = Date.now();
+    const timestampHex = timestamp.toString(16).padStart(12, '0');
+    
+    // 48 bits timestamp + 4 bits version + 12 bits random
+    // 2 bits variant + 62 bits random
+    const randomBytes = new Uint8Array(10);
+    crypto.getRandomValues(randomBytes);
+    
+    const version = '7';
+    const rand1 = Array.from(randomBytes.slice(0, 2))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+    const rand2 = ((randomBytes[2] & 0x3f) | 0x80).toString(16).padStart(2, '0');
+    const rand3 = Array.from(randomBytes.slice(3))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+    
+    return `${timestampHex.substring(0, 8)}-${timestampHex.substring(8, 12)}-${version}${rand1.substring(0, 3)}-${rand2}${rand1.substring(3, 4)}-${rand3}`;
   };
 
   const copyToClipboard = async (value: string) => {
@@ -185,34 +266,112 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
 
           {/* Generator Tab */}
           <TabsContent value="generator" className="space-y-4 pt-4">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
-              <div className="flex-1 max-w-xs">
+            <div className="space-y-4">
+              <div>
                 <label className="block text-sm font-medium mb-2 text-foreground">
-                  Quantity
+                  UUID Version
                 </label>
-                <Input
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={count}
-                  onChange={(e) => setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
-                  className="bg-muted/50 border-border/50"
-                />
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  {[
+                    { version: 'v1', label: 'v1', desc: 'Time + MAC' },
+                    { version: 'v3', label: 'v3', desc: 'MD5' },
+                    { version: 'v4', label: 'v4', desc: 'Random' },
+                    { version: 'v5', label: 'v5', desc: 'SHA-1' },
+                    { version: 'v6', label: 'v6', desc: 'Time-ordered' },
+                    { version: 'v7', label: 'v7', desc: 'Unix Time' },
+                  ].map((v) => (
+                    <button
+                      key={v.version}
+                      onClick={() => setSelectedVersion(v.version as any)}
+                      className={`p-2 rounded-md border transition-all text-center hover:shadow-sm ${
+                        selectedVersion === v.version
+                          ? 'border-dev-primary bg-dev-primary/10 text-dev-primary font-medium'
+                          : 'border-border/50 bg-muted/20 hover:border-dev-primary/30 text-foreground'
+                      }`}
+                    >
+                      <div className="font-medium text-sm">{v.label}</div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5">{v.desc}</div>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+
+              {(selectedVersion === 'v3' || selectedVersion === 'v5') && (
+                <div className="p-4 bg-muted/20 rounded-lg border border-border/50 space-y-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertCircle className="h-4 w-4 text-dev-primary" />
+                    <span className="text-sm font-medium text-foreground">Namespace-based UUID Configuration</span>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-foreground">
+                      Namespace
+                    </label>
+                    <div className="flex gap-2 mb-2">
+                      {['dns', 'url', 'oid', 'x500'].map((ns) => (
+                        <Button
+                          key={ns}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const namespaces: Record<string, string> = {
+                              'dns': '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+                              'url': '6ba7b811-9dad-11d1-80b4-00c04fd430c8',
+                              'oid': '6ba7b812-9dad-11d1-80b4-00c04fd430c8',
+                              'x500': '6ba7b814-9dad-11d1-80b4-00c04fd430c8',
+                            };
+                            setNamespace(namespaces[ns]);
+                          }}
+                          className={`text-xs ${namespace === '6ba7b810-9dad-11d1-80b4-00c04fd430c8' && ns === 'dns' || 
+                                               namespace === '6ba7b811-9dad-11d1-80b4-00c04fd430c8' && ns === 'url' || 
+                                               namespace === '6ba7b812-9dad-11d1-80b4-00c04fd430c8' && ns === 'oid' || 
+                                               namespace === '6ba7b814-9dad-11d1-80b4-00c04fd430c8' && ns === 'x500' 
+                                               ? 'bg-dev-primary/10 border-dev-primary/50' : ''}`}
+                        >
+                          {ns.toUpperCase()}
+                        </Button>
+                      ))}
+                    </div>
+                    <Input
+                      placeholder="Or enter custom namespace UUID"
+                      value={namespace}
+                      onChange={(e) => setNamespace(e.target.value)}
+                      className="font-mono bg-muted/50 border-border/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-foreground">
+                      Name
+                    </label>
+                    <Input
+                      placeholder="e.g., example.com"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="bg-muted/50 border-border/50"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+                <div className="flex-1 max-w-xs">
+                  <label className="block text-sm font-medium mb-2 text-foreground">
+                    Quantity
+                  </label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={count}
+                    onChange={(e) => setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
+                    className="bg-muted/50 border-border/50"
+                  />
+                </div>
                 <Button
-                  onClick={() => generateUuid('v4', count)}
+                  onClick={() => generateUuid(selectedVersion, count)}
                   className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
-                  Generate v4
-                </Button>
-                <Button
-                  onClick={() => generateUuid('v1', count)}
-                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
-                >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Generate v1
+                  Generate UUID {selectedVersion}
                 </Button>
               </div>
             </div>
@@ -286,8 +445,12 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
             )}
 
             <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-1">
-              <div><strong>UUID v4:</strong> Random/pseudo-random generation (most common)</div>
               <div><strong>UUID v1:</strong> Time-based with MAC address and clock sequence</div>
+              <div><strong>UUID v3:</strong> Name-based (MD5 hash) - requires namespace and name</div>
+              <div><strong>UUID v4:</strong> Random/pseudo-random generation (most common)</div>
+              <div><strong>UUID v5:</strong> Name-based (SHA-1 hash) - requires namespace and name</div>
+              <div><strong>UUID v6:</strong> Time-ordered version of v1 (better for database indexing)</div>
+              <div><strong>UUID v7:</strong> Unix timestamp-based (newest, sortable)</div>
             </div>
           </TabsContent>
 
