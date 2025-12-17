@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Copy, AlertCircle, CheckCircle } from "lucide-react";
+import { Calendar, Copy, AlertCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import cronstrue from "cronstrue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
@@ -241,17 +241,18 @@ export function CronParser({ initialContent, action }: CronParserProps) {
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <Clock className="h-5 w-5 text-dev-primary" />
+          <Calendar className="h-5 w-5 text-dev-primary" />
           Cron Expression Parser
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end gap-3">
           <div className="flex-1 max-w-md">
-            <label className="block text-sm font-medium mb-2 text-foreground">
+            <label htmlFor="cron-expression" className="block text-sm font-medium mb-2 text-foreground">
               Cron Expression
             </label>
             <Input
+              id="cron-expression"
               placeholder="* * * * *"
               value={cronExpression}
               onChange={(e) => setCronExpression(e.target.value)}
@@ -262,7 +263,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
             onClick={parseCron}
             className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
           >
-            <Clock className="h-4 w-4 mr-2" />
+            <Calendar className="h-4 w-4 mr-2" />
             Parse
           </Button>
         </div>

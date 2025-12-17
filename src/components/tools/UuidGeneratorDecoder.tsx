@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Hash, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
+import { Fingerprint as FingerprintIcon, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5, v6 as uuidv6, v7 as uuidv7 } from "uuid";
 
@@ -337,7 +337,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <Hash className="h-5 w-5 text-dev-primary" />
+          <FingerprintIcon className="h-5 w-5 text-dev-primary" />
           UUID Generator & Validator/Decoder
         </CardTitle>
       </CardHeader>
@@ -367,12 +367,17 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                     <button
                       key={v.version}
                       onClick={() => setSelectedVersion(v.version as any)}
-                      className={`p-2 rounded-md border transition-all text-center hover:shadow-sm ${
+                      className={`p-2 rounded-md border transition-all text-center hover:shadow-sm relative ${
                         selectedVersion === v.version
                           ? 'border-dev-primary bg-dev-primary/10 text-dev-primary font-medium'
                           : 'border-border/50 bg-muted/20 hover:border-dev-primary/30 text-foreground'
                       }`}
                     >
+                      {v.version === 'v4' && (
+                        <span className="absolute -top-1.5 -right-1.5 bg-dev-primary text-white text-[9px] px-1.5 py-0.5 rounded-full font-semibold">
+                          Most Used
+                        </span>
+                      )}
                       <div className="font-medium text-sm">{v.label}</div>
                       <div className="text-[10px] text-muted-foreground mt-0.5">{v.desc}</div>
                     </button>
@@ -416,6 +421,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                       ))}
                     </div>
                     <Input
+                      id="uuid-namespace"
                       placeholder="Or enter custom namespace UUID"
                       value={namespace}
                       onChange={(e) => setNamespace(e.target.value)}
@@ -423,10 +429,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-foreground">
+                    <label htmlFor="uuid-name" className="block text-sm font-medium mb-2 text-foreground">
                       Name
                     </label>
                     <Input
+                      id="uuid-name"
                       placeholder="e.g., example.com"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -438,10 +445,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
 
               <div className="flex flex-col sm:flex-row sm:items-end gap-3">
                 <div className="flex-1 max-w-xs">
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label htmlFor="uuid-quantity" className="block text-sm font-medium mb-2 text-foreground">
                     Quantity
                   </label>
                   <Input
+                    id="uuid-quantity"
                     type="number"
                     min="1"
                     max="100"
@@ -550,10 +558,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
           <TabsContent value="validator" className="space-y-4 pt-4">
             <div className="flex items-end gap-3">
               <div className="flex-1 max-w-md">
-                <label className="block text-sm font-medium mb-2 text-foreground">
+                <label htmlFor="uuid-validate" className="block text-sm font-medium mb-2 text-foreground">
                   UUID to Validate
                 </label>
                 <Input
+                  id="uuid-validate"
                   placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000"
                   value={validationInput}
                   onChange={(e) => setValidationInput(e.target.value)}

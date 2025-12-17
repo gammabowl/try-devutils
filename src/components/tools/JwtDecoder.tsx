@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { KeyRound, AlertCircle, CheckCircle, Copy, Shield, Clock } from "lucide-react";
+import { FileKey as FileKeyIcon, AlertCircle, CheckCircle, Copy, Shield, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface DecodedToken {
@@ -219,7 +219,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <KeyRound className="h-5 w-5 text-dev-primary" />
+          <FileKeyIcon className="h-5 w-5 text-dev-primary" />
           JWT Token
         </CardTitle>
       </CardHeader>

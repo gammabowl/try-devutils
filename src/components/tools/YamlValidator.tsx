@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Copy, FileText, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
+import { Copy, FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import * as yaml from "js-yaml";
 
@@ -155,7 +155,7 @@ settings:
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <FileText className="h-5 w-5 text-dev-primary" />
+          <FileCode className="h-5 w-5 text-dev-primary" />
           YAML Validator & Converter
         </CardTitle>
       </CardHeader>

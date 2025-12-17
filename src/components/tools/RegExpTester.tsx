@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Copy, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
+import { Regex, Copy, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -181,7 +181,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
   };
 
   const getHighlightedText = () => {
-    if (matches.length === 0) return testString;
+    if (matches.length === 0) return [{ text: testString, isMatch: false }];
 
     const parts: { text: string; isMatch: boolean; matchIndex?: number }[] = [];
     let lastIndex = 0;
@@ -208,7 +208,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <Search className="h-5 w-5 text-dev-primary" />
+          <Regex className="h-5 w-5 text-dev-primary" />
           RegExp Tester
         </CardTitle>
       </CardHeader>
@@ -236,6 +236,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground font-mono text-lg">/</span>
             <Input
+              id="regex-pattern"
               placeholder="Enter regex pattern (without delimiters)"
               value={pattern}
               onChange={(e) => setPattern(e.target.value)}
@@ -277,7 +278,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
           onClick={testRegex}
           className="w-full bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
         >
-          <Search className="h-4 w-4 mr-2" />
+          <Regex className="h-4 w-4 mr-2" />
           Test Pattern
         </Button>
 
@@ -368,10 +369,11 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
 
             <TabsContent value="replace" className="space-y-4 pt-4">
               <div>
-                <label className="block text-sm font-medium mb-2 text-foreground">
+                <label htmlFor="replace-pattern" className="block text-sm font-medium mb-2 text-foreground">
                   Replacement Pattern
                 </label>
                 <Input
+                  id="replace-pattern"
                   placeholder="Enter replacement text (use $1, $2, etc. for groups)"
                   value={replacePattern}
                   onChange={(e) => setReplacePattern(e.target.value)}

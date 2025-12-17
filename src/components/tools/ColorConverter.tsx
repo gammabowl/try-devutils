@@ -232,11 +232,12 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
           
           <TabsContent value="convert" className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2 text-foreground">
+              <label htmlFor="color-input" className="block text-sm font-medium mb-2 text-foreground">
                 Colour Input
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Input
+                  id="color-picker"
                   type="color"
                   value={inputColor}
                   onChange={(e) => {
@@ -246,6 +247,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                   className="w-full sm:w-16 h-10 p-1 bg-muted/50 border-border/50"
                 />
                 <Input
+                  id="color-input"
                   placeholder="Enter hex, rgb, or hsl..."
                   value={inputColor}
                   onChange={(e) => {

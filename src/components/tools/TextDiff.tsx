@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { GitCompare, RotateCcw } from "lucide-react";
+import { FileDiff as FileDiffIcon, RotateCcw } from "lucide-react";
 import { diffLines, diffWords, Change } from "diff";
 
 interface TextDiffProps {
@@ -80,12 +80,11 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <GitCompare className="h-5 w-5 text-dev-primary" />
+          <FileDiffIcon className="h-5 w-5 text-dev-primary" />
           Text Diff Checker
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex gap-2 mb-4">
+      <CardContent className="space-y-4">\n        <div className="flex gap-2 mb-4">
           <Button
             onClick={() => setDiffType("lines")}
             variant={diffType === "lines" ? "default" : "outline"}
@@ -130,7 +129,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
 
         <div className="flex gap-2">
           <Button onClick={calculateDiff} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            <GitCompare className="h-4 w-4 mr-2" />
+            <FileDiffIcon className="h-4 w-4 mr-2" />
             Compare Texts
           </Button>
           <Button onClick={clearAll} variant="outline" size="sm">
