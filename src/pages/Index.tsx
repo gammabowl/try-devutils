@@ -150,7 +150,7 @@ const Index = () => {
             </div>
             
             {/* Tool Component */}
-            <div className="relative max-w-6xl mx-auto">
+            <div className="relative max-w-[1400px] mx-auto">
               {selectedToolData && (() => {
                 if (selectedTool === "base64") {
                   return <Base64Converter navigate={setSelectedTool} />;

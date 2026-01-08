@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -139,9 +140,77 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1rem; /* 16px base for better readability */
+    line-height: 1.65;
+    letter-spacing: -0.01em;
     background: hsl(var(--background));
+  }
+
+  /* Improved typography scale */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.375rem; }
+  h4 { font-size: 1.25rem; }
+  h5 { font-size: 1.125rem; }
+  h6 { font-size: 1rem; }
+
+  p {
+    line-height: 1.7;
+  }
+
+  /* Better code/mono font */
+  code, pre, .font-mono, kbd, samp {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', monospace;
+    font-size: 0.875em;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+  }
+
+  /* Better input/textarea readability */
+  input, textarea, select, button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  /* Small text utility */
+  .text-xs {
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.5;
+  }
+
+  .text-sm {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.55;
+  }
+
+  /* Desktop-specific larger text */
+  @media (min-width: 1024px) {
+    body {
+      font-size: 1.0625rem; /* 17px on desktop */
+    }
+
+    .text-xs {
+      font-size: 0.8125rem; /* 13px */
+    }
+
+    .text-sm {
+      font-size: 0.9375rem; /* 15px */
+    }
   }
 
   /* Custom animations and effects */

@@ -14,8 +14,12 @@ export default {
 			center: true,
 			padding: '2rem',
 			screens: {
-				'2xl': '1400px'
+				'2xl': '1600px'
 			}
+		},
+		fontFamily: {
+			sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+			mono: ['JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', 'monospace'],
 		},
 		extend: {
 			colors: {
