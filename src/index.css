@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -75,63 +75,63 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark theme colors */
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
+    /* Dark theme colors - improved for readability */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 96%;
 
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 96%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 96%;
 
     --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 96%;
 
-    --muted: 215 27.9% 20%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 215 27.9% 20%;
+    --accent: 217 33% 17%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 215 27.9% 20%;
-    --input: 215 27.9% 18%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 217 33% 22%;
+    --input: 217 33% 18%;
+    --ring: 214 80% 60%;
 
-    /* Dark theme developer token colors */
-    --dev-primary: 214 90% 60%; /* slightly brighter for dark mode */
-    --dev-primary-foreground: 224 71% 4%;
-    --dev-secondary: 187 85% 55%; /* slightly brighter teal */
-    --dev-success: 145 70% 45%; /* brighter green */
-    --dev-success-foreground: 224 71% 4%;
-    --dev-warning: 34 100% 60%; /* brighter warning */
-    --dev-warning-foreground: 224 71% 4%;
-    --dev-error: 0 85% 60%; /* brighter error */
-    --dev-error-foreground: 224 71% 4%;
+    /* Dark theme developer token colors - brighter for readability */
+    --dev-primary: 214 100% 65%;
+    --dev-primary-foreground: 222 47% 6%;
+    --dev-secondary: 187 100% 50%;
+    --dev-success: 142 76% 55%;
+    --dev-success-foreground: 222 47% 6%;
+    --dev-warning: 38 100% 60%;
+    --dev-warning-foreground: 222 47% 6%;
+    --dev-error: 0 91% 65%;
+    --dev-error-foreground: 222 47% 6%;
 
     /* Dark theme gradients - improved depth */
-    --gradient-primary: linear-gradient(135deg, hsl(214 90% 60%), hsl(197 85% 55%));
-    --gradient-secondary: linear-gradient(135deg, hsl(215 27.9% 18%), hsl(224 71% 8%));
-    --gradient-accent: linear-gradient(135deg, hsl(214 90% 60% / 0.12), hsl(197 85% 55% / 0.08));
+    --gradient-primary: linear-gradient(135deg, hsl(214 100% 65%), hsl(187 100% 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(222 47% 10%), hsl(222 47% 8%));
+    --gradient-accent: linear-gradient(135deg, hsl(214 100% 65% / 0.15), hsl(187 100% 50% / 0.10));
     
-    --shadow-elegant: 0 10px 30px -10px hsl(214 90% 60% / 0.2);
-    --shadow-glow: 0 0 36px hsl(214 90% 60% / 0.15);
-    --shadow-card: 0 4px 6px -1px hsl(224 71% 4% / 0.3), 0 2px 4px -1px hsl(224 71% 4% / 0.2);
+    --shadow-elegant: 0 10px 30px -10px hsl(214 100% 65% / 0.25);
+    --shadow-glow: 0 0 36px hsl(214 100% 65% / 0.20);
+    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 214 90% 60%;
-    --sidebar-primary-foreground: 224 71% 4%;
-    --sidebar-accent: 240 3.7% 20%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 18%;
-    --sidebar-ring: 214 90% 60%;
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 214 100% 65%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 214 100% 65%;
   }
 }
 
@@ -149,18 +149,18 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     font-size: 1rem; /* 16px base for better readability */
     line-height: 1.65;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.01em;
     background: hsl(var(--background));
   }
 
-  /* Improved typography scale */
+  /* Improved typography scale for Roboto */
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.3;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
   }
 
   h1 { font-size: 2.25rem; }
@@ -174,11 +174,12 @@ All colors MUST be HSL.
     line-height: 1.7;
   }
 
-  /* Better code/mono font */
+  /* Better code/mono font - Roboto Mono */
   code, pre, .font-mono, kbd, samp {
-    font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', monospace;
-    font-size: 0.875em;
+    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', monospace;
+    font-size: 0.9em;
     font-feature-settings: 'liga' 1, 'calt' 1;
+    letter-spacing: 0;
   }
 
   /* Better input/textarea readability */
@@ -187,15 +188,20 @@ All colors MUST be HSL.
     font-size: inherit;
   }
 
-  /* Small text utility */
+  /* Small text utility - slightly larger for readability */
   .text-xs {
     font-size: 0.8125rem; /* 13px */
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   .text-sm {
-    font-size: 0.875rem; /* 14px */
-    line-height: 1.55;
+    font-size: 0.9375rem; /* 15px - increased for readability */
+    line-height: 1.6;
+  }
+
+  .text-base {
+    font-size: 1rem; /* 16px */
+    line-height: 1.65;
   }
 
   /* Desktop-specific larger text */
@@ -232,6 +238,244 @@ All colors MUST be HSL.
     background: var(--gradient-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  /* Dark mode specific color improvements */
+  .dark {
+    /* Improved syntax highlighting colors for dark mode */
+    --syntax-string: 142 70% 60%;
+    --syntax-number: 200 100% 65%;
+    --syntax-boolean: 32 98% 60%;
+    --syntax-null: 32 98% 60%;
+    --syntax-key: 210 40% 96%;
+    --syntax-comment: 215 20% 50%;
+  }
+
+  /* Dark mode text color improvements */
+  .dark .text-green-600 {
+    color: hsl(142 76% 60%);
+  }
+
+  .dark .text-blue-500 {
+    color: hsl(200 100% 68%);
+  }
+
+  .dark .text-orange-500 {
+    color: hsl(32 98% 60%);
+  }
+
+  .dark .text-red-500 {
+    color: hsl(0 91% 68%);
+  }
+
+  .dark .text-red-600 {
+    color: hsl(0 91% 65%);
+  }
+
+  .dark .text-purple-500 {
+    color: hsl(270 91% 72%);
+  }
+
+  .dark .text-purple-600 {
+    color: hsl(270 91% 68%);
+  }
+
+  .dark .text-cyan-500 {
+    color: hsl(187 100% 55%);
+  }
+
+  .dark .text-cyan-600 {
+    color: hsl(187 100% 50%);
+  }
+
+  .dark .text-emerald-500 {
+    color: hsl(160 84% 50%);
+  }
+
+  .dark .text-emerald-600 {
+    color: hsl(160 84% 45%);
+  }
+
+  .dark .text-amber-500 {
+    color: hsl(38 100% 55%);
+  }
+
+  .dark .text-amber-600 {
+    color: hsl(38 100% 50%);
+  }
+
+  .dark .text-indigo-500 {
+    color: hsl(234 89% 74%);
+  }
+
+  .dark .text-indigo-600 {
+    color: hsl(234 89% 70%);
+  }
+
+  .dark .text-teal-500 {
+    color: hsl(168 84% 50%);
+  }
+
+  .dark .text-teal-600 {
+    color: hsl(168 84% 45%);
+  }
+
+  .dark .text-sky-500 {
+    color: hsl(198 93% 60%);
+  }
+
+  .dark .text-sky-600 {
+    color: hsl(198 93% 55%);
+  }
+
+  .dark .text-lime-500 {
+    color: hsl(84 81% 55%);
+  }
+
+  .dark .text-lime-600 {
+    color: hsl(84 81% 50%);
+  }
+
+  .dark .text-violet-500 {
+    color: hsl(258 90% 72%);
+  }
+
+  .dark .text-violet-600 {
+    color: hsl(258 90% 68%);
+  }
+
+  .dark .text-rose-500 {
+    color: hsl(350 89% 65%);
+  }
+
+  .dark .text-rose-600 {
+    color: hsl(350 89% 60%);
+  }
+
+  .dark .text-fuchsia-500 {
+    color: hsl(292 91% 68%);
+  }
+
+  .dark .text-fuchsia-600 {
+    color: hsl(292 91% 62%);
+  }
+
+  .dark .text-stone-500 {
+    color: hsl(25 6% 55%);
+  }
+
+  .dark .text-stone-600 {
+    color: hsl(25 6% 50%);
+  }
+
+  /* Dark mode background color improvements for tool cards */
+  .dark .bg-rose-500\/10 { background-color: hsl(350 89% 65% / 0.15); }
+  .dark .bg-fuchsia-500\/10 { background-color: hsl(292 91% 68% / 0.15); }
+  .dark .bg-sky-500\/10 { background-color: hsl(198 93% 60% / 0.15); }
+  .dark .bg-emerald-500\/10 { background-color: hsl(160 84% 50% / 0.15); }
+  .dark .bg-amber-500\/10 { background-color: hsl(38 100% 55% / 0.15); }
+  .dark .bg-indigo-500\/10 { background-color: hsl(234 89% 74% / 0.15); }
+  .dark .bg-orange-500\/10 { background-color: hsl(25 95% 55% / 0.15); }
+  .dark .bg-blue-500\/10 { background-color: hsl(200 100% 68% / 0.15); }
+  .dark .bg-green-500\/10 { background-color: hsl(142 76% 55% / 0.15); }
+  .dark .bg-violet-500\/10 { background-color: hsl(258 90% 72% / 0.15); }
+  .dark .bg-red-500\/10 { background-color: hsl(0 91% 68% / 0.15); }
+  .dark .bg-teal-500\/10 { background-color: hsl(168 84% 50% / 0.15); }
+  .dark .bg-cyan-500\/10 { background-color: hsl(187 100% 55% / 0.15); }
+  .dark .bg-lime-500\/10 { background-color: hsl(84 81% 55% / 0.15); }
+  .dark .bg-stone-500\/10 { background-color: hsl(25 6% 55% / 0.15); }
+  .dark .bg-purple-500\/10 { background-color: hsl(270 91% 72% / 0.15); }
+
+  /* Dark mode gradient improvements for tool cards */
+  .dark .from-rose-500 { --tw-gradient-from: hsl(350 89% 65%); }
+  .dark .from-fuchsia-500 { --tw-gradient-from: hsl(292 91% 68%); }
+  .dark .from-sky-500 { --tw-gradient-from: hsl(198 93% 60%); }
+  .dark .from-emerald-500 { --tw-gradient-from: hsl(160 84% 50%); }
+  .dark .from-amber-500 { --tw-gradient-from: hsl(38 100% 55%); }
+  .dark .from-indigo-500 { --tw-gradient-from: hsl(234 89% 74%); }
+  .dark .from-orange-500 { --tw-gradient-from: hsl(25 95% 55%); }
+  .dark .from-blue-500 { --tw-gradient-from: hsl(200 100% 68%); }
+  .dark .from-green-500 { --tw-gradient-from: hsl(142 76% 55%); }
+  .dark .from-violet-500 { --tw-gradient-from: hsl(258 90% 72%); }
+  .dark .from-red-500 { --tw-gradient-from: hsl(0 91% 68%); }
+  .dark .from-teal-500 { --tw-gradient-from: hsl(168 84% 50%); }
+  .dark .from-cyan-500 { --tw-gradient-from: hsl(187 100% 55%); }
+  .dark .from-lime-500 { --tw-gradient-from: hsl(84 81% 55%); }
+  .dark .from-stone-500 { --tw-gradient-from: hsl(25 6% 55%); }
+
+  /* Dark mode border improvements */
+  .dark .border-border\/50 {
+    border-color: hsl(217 33% 30% / 0.6);
+  }
+
+  /* Dark mode badge improvements */
+  .dark .bg-emerald-500\/10 {
+    background-color: hsl(160 84% 50% / 0.18);
+  }
+
+  .dark .text-emerald-600 {
+    color: hsl(160 84% 55%);
+  }
+
+  .dark .border-emerald-500\/20 {
+    border-color: hsl(160 84% 50% / 0.3);
+  }
+
+  /* Dark mode link improvements */
+  .dark .text-blue-400 {
+    color: hsl(200 100% 70%);
+  }
+
+  .dark .text-blue-500 {
+    color: hsl(200 100% 68%);
+  }
+
+  .dark .text-blue-600 {
+    color: hsl(200 100% 60%);
+  }
+
+  /* Dark mode input/textarea improvements */
+  .dark input,
+  .dark textarea,
+  .dark select {
+    background-color: hsl(222 47% 10%);
+    border-color: hsl(217 33% 25%);
+    color: hsl(210 40% 96%);
+  }
+
+  .dark input:focus,
+  .dark textarea:focus,
+  .dark select:focus {
+    border-color: hsl(214 100% 65%);
+    outline-color: hsl(214 100% 65%);
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: hsl(215 20% 50%);
+  }
+
+  /* Dark mode code/pre improvements */
+  .dark pre,
+  .dark code {
+    background-color: hsl(222 47% 8%);
+    border-color: hsl(217 33% 22%);
+  }
+
+  /* Dark mode table improvements */
+  .dark table thead {
+    background-color: hsl(217 33% 12%);
+  }
+
+  .dark table tbody tr:hover {
+    background-color: hsl(217 33% 14%);
+  }
+
+  /* Dark mode alert/badge improvements */
+  .dark [data-variant="destructive"] {
+    background-color: hsl(0 72% 15%);
+    border-color: hsl(0 72% 30%);
+    color: hsl(0 91% 75%);
   }
 
   /* Terminal-specific styles */

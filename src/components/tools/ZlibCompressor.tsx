@@ -94,7 +94,7 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
         {/* Cross-link to Base64 tool */}
         {navigate && (
           <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="text-xs text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               Working with plain encoding? Switch to Base64 tool.
             </div>
             <Button
@@ -171,15 +171,15 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
               <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Input Size</div>
+                    <div className="text-sm text-muted-foreground mb-1">Input Size</div>
                     <div className="text-lg font-semibold text-foreground">{stats.inputSize} bytes</div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Output Size</div>
+                    <div className="text-sm text-muted-foreground mb-1">Output Size</div>
                     <div className="text-lg font-semibold text-foreground">{stats.outputSize} bytes</div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Expansion</div>
+                    <div className="text-sm text-muted-foreground mb-1">Expansion</div>
                     <div className="text-lg font-semibold text-dev-primary">
                       {stats.ratio > 0 ? "+" : ""}{stats.ratio}%
                     </div>
@@ -246,15 +246,15 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
               <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Input Size</div>
+                    <div className="text-sm text-muted-foreground mb-1">Input Size</div>
                     <div className="text-lg font-semibold text-foreground">{stats.inputSize} bytes</div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Output Size</div>
+                    <div className="text-sm text-muted-foreground mb-1">Output Size</div>
                     <div className="text-lg font-semibold text-foreground">{stats.outputSize} bytes</div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Compression Ratio</div>
+                    <div className="text-sm text-muted-foreground mb-1">Compression Ratio</div>
                     <div className="text-lg font-semibold text-dev-primary">
                       {stats.ratio > 0 ? "+" : ""}{stats.ratio}%
                     </div>

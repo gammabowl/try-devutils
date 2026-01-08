@@ -298,7 +298,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                   </div>
                 ))}
               </div>
-              <div className="text-xs text-muted-foreground text-center">
+              <div className="text-sm text-muted-foreground text-center">
                 Click any colour to copy its hex value
               </div>
             </div>

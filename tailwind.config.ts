@@ -18,8 +18,8 @@ export default {
 			}
 		},
 		fontFamily: {
-			sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-			mono: ['JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', 'monospace'],
+			sans: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+			mono: ['Roboto Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', 'monospace'],
 		},
 		extend: {
 			colors: {

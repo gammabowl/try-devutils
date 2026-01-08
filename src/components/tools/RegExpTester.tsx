@@ -252,12 +252,12 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                       setFlags(prev => ({ ...prev, [flag]: checked === true }))
                     }
                   />
-                  <span className="text-xs font-mono text-foreground">{flag}</span>
+                  <span className="text-sm font-mono text-foreground">{flag}</span>
                 </label>
               ))}
             </div>
           </div>
-          <div className="mt-1 text-xs text-muted-foreground">
+          <div className="mt-1 text-sm text-muted-foreground">
             <span className="font-semibold">Flags:</span> g=global, i=case-insensitive, m=multiline, s=dotAll, u=unicode, y=sticky
           </div>
         </div>
@@ -331,21 +331,21 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">Match {idx + 1}</Badge>
-                          <span className="text-xs text-muted-foreground">Position: {match.index}</span>
+                          <Badge variant="outline" className="text-sm">Match {idx + 1}</Badge>
+                          <span className="text-sm text-muted-foreground">Position: {match.index}</span>
                         </div>
                         <div>
-                          <div className="text-xs text-muted-foreground mb-1">Full Match:</div>
+                          <div className="text-sm text-muted-foreground mb-1">Full Match:</div>
                           <div className="font-mono text-sm text-foreground bg-background/50 p-2 rounded border border-border/30 break-all">
                             {match.fullMatch}
                           </div>
                         </div>
                         {match.groups.length > 0 && (
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">Captured Groups:</div>
+                            <div className="text-sm text-muted-foreground mb-1">Captured Groups:</div>
                             <div className="space-y-1">
                               {match.groups.map((group, groupIdx) => (
-                                <div key={groupIdx} className="font-mono text-xs text-foreground bg-background/50 p-1.5 rounded border border-border/30">
+                                <div key={groupIdx} className="font-mono text-sm text-foreground bg-background/50 p-1.5 rounded border border-border/30">
                                   <span className="text-muted-foreground">Group {groupIdx + 1}:</span> {group || '(empty)'}
                                 </div>
                               ))}
@@ -379,7 +379,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                   onChange={(e) => setReplacePattern(e.target.value)}
                   className="font-mono bg-muted/50 border-border/50"
                 />
-                <div className="mt-1 text-xs text-muted-foreground">
+                <div className="mt-1 text-sm text-muted-foreground">
                   Use $1, $2, etc. to reference captured groups. Use $& for the full match.
                 </div>
               </div>
@@ -415,7 +415,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
           </Tabs>
         )}
 
-        <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-2">
+        <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground space-y-2">
           <div><strong>Quick Reference:</strong></div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 font-mono">
             <div>\d = digit</div>

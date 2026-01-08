@@ -103,7 +103,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
         {/* Cross-link to Zlib compressor */}
         {navigate && (
           <div className="p-3 rounded-md border border-border/50 bg-muted/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
-            <div className="text-xs text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               Need compression? Use the Zlib (deflate + Base64) tool.
             </div>
             <Button
@@ -218,7 +218,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
                   <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
                     <div>
                       <div className="text-sm text-foreground">{example.text}</div>
-                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                      <div className="text-sm text-muted-foreground">{example.desc}</div>
                     </div>
                     <Button
                       onClick={() => setInput(example.text)}
@@ -236,7 +236,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
                   <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
                     <div>
                       <div className="font-mono text-sm text-foreground">{example.text}</div>
-                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                      <div className="text-sm text-muted-foreground">{example.desc}</div>
                     </div>
                     <Button
                       onClick={() => setInput(example.text)}

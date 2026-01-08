@@ -78,19 +78,19 @@ export function StringAnalyser() {
         {/* Statistics Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-xs text-muted-foreground font-medium mb-1">Length</div>
+            <div className="text-sm text-muted-foreground font-medium mb-1">Length</div>
             <div className="text-2xl font-bold text-dev-primary">{stats.length}</div>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-xs text-muted-foreground font-medium mb-1">Unique Characters</div>
+            <div className="text-sm text-muted-foreground font-medium mb-1">Unique Characters</div>
             <div className="text-2xl font-bold text-dev-secondary">{stats.charCount}</div>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-xs text-muted-foreground font-medium mb-1">Words</div>
+            <div className="text-sm text-muted-foreground font-medium mb-1">Words</div>
             <div className="text-2xl font-bold text-dev-success">{stats.wordCount}</div>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-xs text-muted-foreground font-medium mb-1">Lines</div>
+            <div className="text-sm text-muted-foreground font-medium mb-1">Lines</div>
             <div className="text-2xl font-bold text-dev-warning">{stats.lineCount}</div>
           </div>
         </div>
@@ -142,7 +142,7 @@ export function StringAnalyser() {
         )}
 
         {/* Info */}
-        <div className="text-xs text-muted-foreground space-y-1 pt-2">
+        <div className="text-sm text-muted-foreground space-y-1 pt-2">
           <div><strong>Length:</strong> Total number of characters (Unicode code points)</div>
           <div><strong>Unique Characters:</strong> Count of distinct characters</div>
           <div><strong>Words:</strong> Count of space-separated words</div>

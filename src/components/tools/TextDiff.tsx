@@ -66,7 +66,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
             })}
           </pre>
         </div>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           <span className="inline-block w-4 h-4 bg-green-500/20 rounded mr-1"></span>
           Added
           <span className="inline-block w-4 h-4 bg-red-500/20 rounded mr-1 ml-4"></span>

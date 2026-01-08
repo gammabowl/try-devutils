@@ -231,7 +231,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                     <div key={label} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-medium text-muted-foreground mb-1">{label}</div>
+                          <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
                           <div className="text-sm text-foreground font-mono break-all">{value}</div>
                         </div>
                         <Button
@@ -285,7 +285,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                   Convert
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">ISO 8601: YYYY-MM-DDTHH:mm:ss</p>
+              <p className="text-sm text-muted-foreground">ISO 8601: YYYY-MM-DDTHH:mm:ss</p>
             </div>
 
             {error && (
@@ -301,7 +301,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                     <div key={label} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-medium text-muted-foreground mb-1">{label}</div>
+                          <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
                           <div className="text-sm text-foreground font-mono break-all">{value}</div>
                         </div>
                         <Button
@@ -419,7 +419,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                   <div key={value} className="flex items-center justify-between p-2 bg-muted rounded-md">
                     <div>
                       <div className="font-mono text-sm text-foreground">{value}</div>
-                      <div className="text-xs text-muted-foreground">{desc}</div>
+                      <div className="text-sm text-muted-foreground">{desc}</div>
                     </div>
                     <Button
                       onClick={() => setTimestamp(value)}
@@ -437,7 +437,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                   <div key={value} className="flex items-center justify-between p-2 bg-muted rounded-md">
                     <div>
                       <div className="font-mono text-sm text-foreground">{value}</div>
-                      <div className="text-xs text-muted-foreground">{desc}</div>
+                      <div className="text-sm text-muted-foreground">{desc}</div>
                     </div>
                     <Button
                       onClick={() => setDateTime(value)}

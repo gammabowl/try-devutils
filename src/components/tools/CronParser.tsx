@@ -319,7 +319,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
                   <div className="font-mono text-sm text-foreground">
                     {example.cron}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-sm text-muted-foreground">
                     {example.desc}
                   </div>
                 </div>

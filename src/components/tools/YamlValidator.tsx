@@ -300,7 +300,7 @@ settings:
           </Alert>
         )}
 
-        <div className="text-xs text-muted-foreground space-y-1 border-t border-border/50 pt-4">
+        <div className="text-sm text-muted-foreground space-y-1 border-t border-border/50 pt-4">
           <div><strong>YAML Tips:</strong></div>
           <div>• Use 2 spaces for indentation (no tabs)</div>
           <div>• Strings with special characters need quotes</div>

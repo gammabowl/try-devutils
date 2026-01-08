@@ -638,7 +638,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 {/* Color-coded token parts preview */}
                 {token && token.split(".").length === 3 && (
                   <div className="p-4 bg-muted/20 rounded-lg border border-border/50">
-                    <div className="text-xs text-muted-foreground mb-2">Token Structure:</div>
+                    <div className="text-sm text-muted-foreground mb-2">Token Structure:</div>
                     <div className="font-mono text-sm break-all">
                       <span className="text-red-500 bg-red-500/10 px-1 rounded">
                         {tokenParts.header}
@@ -723,7 +723,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
               {/* Color-coded token parts preview */}
               {token && token.split(".").length === 3 && (
                 <div className="p-4 bg-muted/20 rounded-lg border border-border/50">
-                  <div className="text-xs text-muted-foreground mb-2">Token Structure:</div>
+                  <div className="text-sm text-muted-foreground mb-2">Token Structure:</div>
                   <div className="font-mono text-sm break-all">
                     <span className="text-red-500 bg-red-500/10 px-1 rounded">
                       {tokenParts.header}
@@ -999,14 +999,14 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                               {decoded?.signature || 'No signature'}
                             </span>
                           </div>
-                          <div className="flex justify-between text-xs">
+                          <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Status:</span>
-                            <Badge variant="secondary" className="h-5 text-xs">
+                            <Badge variant="secondary" className="h-5 text-sm">
                               <AlertCircle className="h-3 w-3 mr-1" />
                               Signature not verified
                             </Badge>
                           </div>
-                          <div className="text-xs text-muted-foreground mt-3 p-2 bg-muted/20 rounded border">
+                          <div className="text-sm text-muted-foreground mt-3 p-2 bg-muted/20 rounded border">
                             <strong>Note:</strong> This is a demo implementation. In production, signature verification requires the actual signing algorithm and proper key management.
                           </div>
                         </div>

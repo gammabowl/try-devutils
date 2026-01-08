@@ -180,7 +180,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                           <Badge variant="outline" className="font-semibold">
                             {algo.name}
                           </Badge>
-                          <span className="text-xs text-muted-foreground">{algo.description}</span>
+                          <span className="text-sm text-muted-foreground">{algo.description}</span>
                         </div>
                         <Button
                           onClick={() => copyToClipboard(hashValue)}
@@ -191,7 +191,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                           <Copy className="h-3.5 w-3.5" />
                         </Button>
                       </div>
-                      <code className="text-xs font-mono text-foreground break-all block">
+                      <code className="text-sm font-mono text-foreground break-all block">
                         {hashValue}
                       </code>
                     </div>
@@ -200,7 +200,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
               </div>
             )}
 
-            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-1">
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground space-y-1">
               <div><strong>MD5:</strong> Fast but not secure for passwords (128-bit)</div>
               <div><strong>SHA1:</strong> Deprecated for security applications (160-bit)</div>
               <div><strong>SHA256:</strong> Current standard for most applications (256-bit)</div>
@@ -255,7 +255,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
               </div>
             )}
 
-            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground">
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground">
               <strong>Note:</strong> Enter the original text and a hash value to verify if they match. The verifier will check against all supported algorithms (MD5, SHA1, SHA256, SHA512).
             </div>
           </TabsContent>

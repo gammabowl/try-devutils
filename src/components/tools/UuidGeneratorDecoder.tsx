@@ -504,15 +504,15 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                               {uuid.value}
                             </div>
                             <div className="flex items-center gap-2 mt-2">
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="outline" className="text-sm">
                                 {uuid.version}
                               </Badge>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-sm text-muted-foreground">
                                 {uuid.timestamp}
                               </span>
                             </div>
                             {decoded && (
-                              <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                              <div className="mt-3 text-sm text-muted-foreground space-y-1">
                                 <div><span className="font-medium">Timestamp:</span> {decoded.date.toISOString()}</div>
                                 {decoded.timestampMs !== undefined && (
                                   <div><span className="font-medium">Unix Timestamp (ms):</span> {decoded.timestampMs}</div>
@@ -544,7 +544,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
               </>
             )}
 
-            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-1">
+            <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground space-y-1">
               <div><strong>UUID v1:</strong> Time-based with MAC address and clock sequence</div>
               <div><strong>UUID v3:</strong> Name-based (MD5 hash) - requires namespace and name</div>
               <div><strong>UUID v4:</strong> Random/pseudo-random generation (most common)</div>
@@ -625,7 +625,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                   {decodedValidation.randomData && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Random Data:</span>
-                      <span className="text-foreground font-mono text-xs">{decodedValidation.randomData}</span>
+                      <span className="text-foreground font-mono text-sm">{decodedValidation.randomData}</span>
                     </div>
                   )}
                   {decodedValidation.clockSeq !== undefined && (

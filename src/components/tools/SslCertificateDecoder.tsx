@@ -392,7 +392,7 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
             placeholder="Paste your SSL certificate here (including -----BEGIN CERTIFICATE----- and -----END CERTIFICATE-----)"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="font-mono text-xs bg-muted/50 border-border/50 min-h-[200px]"
+            className="font-mono text-sm bg-muted/50 border-border/50 min-h-[200px]"
           />
         </div>
 
@@ -445,7 +445,7 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
                   <div className="grid grid-cols-[120px_1fr] gap-2">
                     <span className="text-muted-foreground">Serial Number:</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-foreground font-mono text-xs break-all">{decoded.serialNumber}</span>
+                      <span className="text-foreground font-mono text-sm break-all">{decoded.serialNumber}</span>
                       <Button
                         onClick={() => copyToClipboard(decoded.serialNumber)}
                         variant="ghost"
@@ -526,7 +526,7 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
           </div>
         )}
 
-        <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-xs text-muted-foreground">
+        <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground">
           <strong>Note:</strong> This decoder parses X.509 certificates in PEM format. Paste the entire certificate including the BEGIN and END markers.
         </div>
       </CardContent>

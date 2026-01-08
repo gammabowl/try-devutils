@@ -191,7 +191,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
               </Badge>
             </div>
 
-            <pre className="bg-muted/50 p-3 rounded-md text-xs overflow-auto max-h-[300px] border border-border/50">
+            <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-auto max-h-[300px] border border-border/50">
               {output}
             </pre>
           </div>
@@ -216,7 +216,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
                   <div className="font-mono text-sm text-foreground truncate">
                     {example.json}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-sm text-muted-foreground">
                     {example.desc}
                   </div>
                 </div>
