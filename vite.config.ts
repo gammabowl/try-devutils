@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  preview: {
+    port: 8080,
+  },
+  // Ensure SPA routing works - Vite serves index.html for all routes by default
+  appType: 'spa',
   plugins: [
     react(),
   ].filter(Boolean),
