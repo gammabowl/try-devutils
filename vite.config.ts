@@ -26,19 +26,25 @@ export default defineConfig(({ mode }) => ({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console.log statements
+        drop_console: true,
         drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'],
+        passes: 2, // Multiple passes for better compression
       },
       mangle: {
-        toplevel: true, // Mangle top-level variable names
+        toplevel: true,
         safari10: true,
       },
       format: {
-        comments: false, // Remove all comments
+        comments: false, // Remove all comments including license comments
       },
     },
-    sourcemap: false, // Don't generate source maps (they reveal original code)
+    sourcemap: false,
+    cssMinify: true, // Minify CSS
+    cssCodeSplit: true, // Split CSS per chunk
+    modulePreload: {
+      polyfill: false, // Most modern browsers support modulepreload
+    },
     rollupOptions: {
       output: {
         manualChunks: {
