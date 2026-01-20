@@ -19,10 +19,10 @@ export function Layout() {
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <div className="p-2 rounded-lg dev-gradient">
-                <img src="/logo.png" alt="DevTools Suite Logo" className="h-6 w-6" />
+                <img src="/logo.png" alt="TryDevUtils Logo" className="h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">DevTools</h1>
+                <h1 className="text-2xl font-bold text-foreground">TryDevUtils</h1>
                 <p className="text-sm text-muted-foreground">Essential developer utilities</p>
               </div>
             </Link>
@@ -62,7 +62,7 @@ export function Layout() {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Why another dev tools?</DialogTitle>
+                    <DialogTitle>Why another dev utils?</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 text-sm text-muted-foreground">
                     <p>

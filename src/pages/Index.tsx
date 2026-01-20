@@ -17,8 +17,8 @@ const Index = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Choose Your Tool</h2>
-        <p className="text-muted-foreground">Select a developer tool to get started</p>
+        <h2 className="text-3xl font-bold text-foreground mb-2">Choose Your Util</h2>
+        <p className="text-muted-foreground">Select a developer util to get started</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
