@@ -84,7 +84,8 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
           Text Diff Checker
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">\n        <div className="flex gap-2 mb-4">
+      <CardContent className="space-y-4">
+        <div className="flex gap-2 mb-4">
           <Button
             onClick={() => setDiffType("lines")}
             variant={diffType === "lines" ? "default" : "outline"}
