@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { tools } from "@/lib/tools";
+import { prefetchTool } from "@/lib/lazyTools";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const Index = () => {
             <Link
               key={tool.id}
               to={`/${tool.id}`}
+              onMouseEnter={() => prefetchTool(tool.id)}
               className="group cursor-pointer p-6 bg-card/50 border border-border/50 rounded-lg hover:bg-card/80 hover:border-dev-primary/50 transition-all duration-200 hover:shadow-md hover:scale-105"
             >
               <div className="flex flex-col items-center text-center space-y-3">

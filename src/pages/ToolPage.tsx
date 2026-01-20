@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useEffect } from "react";
-import { ArrowLeft } from "lucide-react";
+import { useEffect, Suspense } from "react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { tools } from "@/lib/tools";
 
 export function ToolPage() {
@@ -60,11 +60,17 @@ export function ToolPage() {
 
       {/* Tool Component */}
       <div className="max-w-[1400px] mx-auto">
-        {needsNavigate ? (
-          <ToolComponent navigate={(id: string | null) => navigate(id ? `/${id}` : "/")} />
-        ) : (
-          <ToolComponent />
-        )}
+        <Suspense fallback={
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-dev-primary" />
+          </div>
+        }>
+          {needsNavigate ? (
+            <ToolComponent navigate={(id: string | null) => navigate(id ? `/${id}` : "/")} />
+          ) : (
+            <ToolComponent />
+          )}
+        </Suspense>
       </div>
     </div>
   );
