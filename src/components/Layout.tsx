@@ -80,7 +80,7 @@ export function Layout() {
                       </a>
                     </p>
                     <p className="text-xs">
-                      <span className="italic">Assisted by Copilot</span> 🤖✨
+                      <span className="italic">UI assisted by Copilot</span> 🤖✨
                     </p>
                   </div>
                 </DialogContent>
