@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Binary as BinaryIcon, ArrowUpDown } from "lucide-react";
+import { Copy, DecimalsArrowRight, ArrowUpDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -95,7 +95,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <BinaryIcon className="h-5 w-5 text-dev-primary" />
+          <DecimalsArrowRight className="h-5 w-5 text-dev-primary" />
           Base64 Encoder/Decoder
         </CardTitle>
       </CardHeader>

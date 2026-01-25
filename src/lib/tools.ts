@@ -22,7 +22,7 @@ import {
   FileKeyIcon,
   Braces,
   FingerprintIcon,
-  BinaryIcon,
+  Binary,
   Clock,
   FileDiffIcon,
   Calendar,
@@ -36,7 +36,7 @@ import {
   Regex,
   Database,
   Link,
-  Calculator,
+  DecimalsArrowRight,
   LucideIcon,
 } from "lucide-react";
 
@@ -52,14 +52,14 @@ export interface Tool {
 }
 
 export const tools: Tool[] = [
-  { id: "base64", label: "Base64 Converter", icon: BinaryIcon, component: LazyBase64Converter, description: "Encode and decode Base64 strings", color: "from-rose-500 to-red-600", textColor: "text-rose-600", bgColor: "bg-rose-500/10" },
+  { id: "base64", label: "Base64 Converter", icon: DecimalsArrowRight, component: LazyBase64Converter, description: "Encode and decode Base64 strings", color: "from-rose-500 to-red-600", textColor: "text-rose-600", bgColor: "bg-rose-500/10" },
   { id: "color", label: "Colour Converter", icon: Palette, component: LazyColorConverter, description: "Convert between colour formats", color: "from-fuchsia-500 to-pink-600", textColor: "text-fuchsia-600", bgColor: "bg-fuchsia-500/10" },
   { id: "cron", label: "Cron Parser", icon: Calendar, component: LazyCronParser, description: "Parse and explain cron expressions", color: "from-sky-500 to-blue-600", textColor: "text-sky-600", bgColor: "bg-sky-500/10" },
   { id: "hash", label: "Hash Generator", icon: Hash, component: LazyHashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-emerald-500 to-green-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
   { id: "json", label: "JSON Formatter", icon: Braces, component: LazyJsonFormatter, description: "Format, validate and minify JSON", color: "from-amber-500 to-orange-600", textColor: "text-amber-600", bgColor: "bg-amber-500/10" },
   { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: LazyJwtDecoder, description: "Decode, Encode and validate JWT tokens", color: "from-indigo-500 to-indigo-600", textColor: "text-indigo-600", bgColor: "bg-indigo-500/10" },
   { id: "markdown", label: "Markdown", icon: FileText, component: LazyMarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
-  { id: "numberbase", label: "Number Base Converter", icon: Calculator, component: LazyNumberBaseConverter, description: "Convert between binary, octal, decimal, hex", color: "from-slate-500 to-zinc-600", textColor: "text-slate-600", bgColor: "bg-slate-500/10" },
+  { id: "numberbase", label: "Number Base Converter", icon: Binary, component: LazyNumberBaseConverter, description: "Convert between binary, octal, decimal, hex", color: "from-slate-500 to-zinc-600", textColor: "text-slate-600", bgColor: "bg-slate-500/10" },
   { id: "regex", label: "RegExp Tester", icon: Regex, component: LazyRegExpTester, description: "Test and debug regular expressions", color: "from-blue-500 to-indigo-600", textColor: "text-blue-600", bgColor: "bg-blue-500/10" },
   { id: "sql", label: "SQL Formatter", icon: Database, component: LazySqlFormatter, description: "Format SQL for PostgreSQL, MySQL, MariaDB, PL/SQL", color: "from-purple-500 to-violet-600", textColor: "text-purple-600", bgColor: "bg-purple-500/10" },
   { id: "ssl", label: "SSL Certificate Decoder", icon: ShieldCheck, component: LazySslCertificateDecoder, description: "Decode and inspect X.509 certificates", color: "from-green-500 to-emerald-600", textColor: "text-green-600", bgColor: "bg-green-500/10" },

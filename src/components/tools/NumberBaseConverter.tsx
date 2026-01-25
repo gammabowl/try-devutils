@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calculator, Copy, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
+import { Binary, Copy, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type Base = "2" | "8" | "10" | "16" | "32" | "64";
@@ -210,7 +210,7 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <Calculator className="h-5 w-5 text-dev-primary" />
+          <Binary className="h-5 w-5 text-dev-primary" />
           Number Base Converter
         </CardTitle>
       </CardHeader>
