@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format, fromUnixTime, getUnixTime, parseISO } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface TimestampConverterProps {
   initialContent?: string;
@@ -115,10 +116,40 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
     });
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     toast({ description: "Copied to clipboard!" });
-  };
+  }, [toast]);
+
+  const clearAll = useCallback(() => {
+    setTimestamp("");
+    setDateTime("");
+    setConversionValue("");
+    setError("");
+    setFromTimestampResults({});
+    setToTimestampResults({});
+    setCurrentTimestampResults({});
+    setUnitConversionResults({});
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: () => {
+      if (activeMainTab === "from-timestamp") convertFromTimestamp();
+      else if (activeMainTab === "to-timestamp") convertToTimestamp();
+      else if (activeMainTab === "current") refreshCurrentTime();
+      else if (activeMainTab === "convert") {
+        // Unit conversion handled separately
+      }
+    },
+    onClear: clearAll,
+    onCopy: () => {
+      const results = activeMainTab === "from-timestamp" ? fromTimestampResults :
+                     activeMainTab === "to-timestamp" ? toTimestampResults :
+                     activeMainTab === "current" ? currentTimestampResults : {};
+      const firstResult = Object.values(results)[0];
+      if (firstResult) copyToClipboard(firstResult);
+    }
+  });
 
   const getRelativeTime = (date: Date): string => {
     const now = new Date();

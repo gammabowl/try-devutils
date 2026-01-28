@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, DecimalsArrowRight, ArrowUpDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface Base64ConverterProps {
   initialContent?: string;
@@ -17,10 +18,64 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
   const [input, setInput] = useState(initialContent || "");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
+  const [activeTab, setActiveTab] = useState<string>("encode");
   const { toast } = useToast();
+
+  const encode = useCallback(() => {
+    try {
+      setError("");
+      const encoded = btoa(unescape(encodeURIComponent(input)));
+      setOutput(encoded);
+    } catch (err) {
+      setError("Failed to encode. Please check your input.");
+      setOutput("");
+    }
+  }, [input]);
+
+  const decode = useCallback(() => {
+    try {
+      setError("");
+      const decoded = decodeURIComponent(escape(atob(input)));
+      setOutput(decoded);
+    } catch (err) {
+      setError("Failed to decode. Invalid base64 string.");
+      setOutput("");
+    }
+  }, [input]);
+
+  const copyToClipboard = useCallback(async () => {
+    if (!output) return;
+    try {
+      await navigator.clipboard.writeText(output);
+      toast({
+        title: "Copied!",
+        description: "Output copied to clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "Failed to copy",
+        description: "Could not copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  }, [output, toast]);
+
+  const clearAll = useCallback(() => {
+    setInput("");
+    setOutput("");
+    setError("");
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: () => activeTab === "encode" ? encode() : decode(),
+    onClear: clearAll,
+    onCopy: copyToClipboard,
+  });
 
   useEffect(() => {
     if (initialContent && action === "decode") {
+      setActiveTab("decode");
       try {
         setError("");
         const decoded = decodeURIComponent(escape(atob(initialContent)));
@@ -45,50 +100,6 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
       { text: "dXNlckBleGFtcGxlLmNvbQ==", desc: "Decodes to 'user@example.com'" },
       { text: "cGFzc3dvcmQxMjM=", desc: "Decodes to 'password123'" },
     ],
-  };
-
-  const encode = () => {
-    try {
-      setError("");
-      const encoded = btoa(unescape(encodeURIComponent(input)));
-      setOutput(encoded);
-    } catch (err) {
-      setError("Failed to encode. Please check your input.");
-      setOutput("");
-    }
-  };
-
-  const decode = () => {
-    try {
-      setError("");
-      const decoded = decodeURIComponent(escape(atob(input)));
-      setOutput(decoded);
-    } catch (err) {
-      setError("Failed to decode. Invalid base64 string.");
-      setOutput("");
-    }
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-      toast({
-        title: "Copied!",
-        description: "Output copied to clipboard",
-      });
-    } catch (err) {
-      toast({
-        title: "Error",
-        description: "Failed to copy to clipboard",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const clearAll = () => {
-    setInput("");
-    setOutput("");
-    setError("");
   };
 
   return (
@@ -116,7 +127,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
             </Button>
           </div>
         )}
-        <Tabs defaultValue="decode" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="decode">Decode</TabsTrigger>
             <TabsTrigger value="encode">Encode</TabsTrigger>

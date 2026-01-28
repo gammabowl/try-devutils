@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, Copy, ArrowRightLeft, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface UrlEncoderDecoderProps {
   initialContent?: string;
@@ -77,18 +78,24 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
     setOutput(input);
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string) => {
     await navigator.clipboard.writeText(text);
     toast({
       title: "Copied!",
       description: "Value copied to clipboard",
     });
-  };
+  }, [toast]);
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setInput("");
     setOutput("");
-  };
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: process,
+    onClear: clearAll,
+    onCopy: () => { if (output) copyToClipboard(output); }
+  });
 
   return (
     <Card className="tool-card">

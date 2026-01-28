@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Binary, Copy, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 type Base = "2" | "8" | "10" | "16" | "32" | "64";
 
@@ -182,13 +183,13 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
     }
   }, [fromBase, toBase]);
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string) => {
     await navigator.clipboard.writeText(text);
     toast({
       title: "Copied!",
       description: "Value copied to clipboard",
     });
-  };
+  }, [toast]);
 
   const swapBases = () => {
     const tempFrom = fromBase;
@@ -199,12 +200,19 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
     }
   };
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setInput("");
     setResult("");
     setAllBases({} as Record<Base, string>);
     setError("");
-  };
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: convert,
+    onClear: clearAll,
+    onCopy: () => result && copyToClipboard(result),
+  });
 
   return (
     <Card className="tool-card">

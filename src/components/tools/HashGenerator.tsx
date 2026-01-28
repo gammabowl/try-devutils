@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Copy, Hash, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import CryptoJS from "crypto-js";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface HashResult {
   md5: string;
@@ -33,13 +34,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
   const [verificationResult, setVerificationResult] = useState<string>("");
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (initialContent && action === "hash") {
-      generateHashes();
-    }
-  }, [initialContent, action]);
-
-  const generateHashes = () => {
+  const generateHashes = useCallback(() => {
     if (!input.trim()) {
       setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
       return;
@@ -51,7 +46,45 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
       sha256: CryptoJS.SHA256(input).toString(),
       sha512: CryptoJS.SHA512(input).toString()
     });
-  };
+  }, [input]);
+
+  const copyAllHashes = useCallback(async () => {
+    if (!hashes.sha256) return;
+    const allHashes = `MD5: ${hashes.md5}\nSHA1: ${hashes.sha1}\nSHA256: ${hashes.sha256}\nSHA512: ${hashes.sha512}`;
+    try {
+      await navigator.clipboard.writeText(allHashes);
+      toast({
+        title: "Copied!",
+        description: "All hashes copied to clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  }, [hashes, toast]);
+
+  const clearAll = useCallback(() => {
+    setInput("");
+    setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
+    setHashToVerify("");
+    setVerificationResult("");
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: generateHashes,
+    onClear: clearAll,
+    onCopy: copyAllHashes,
+  });
+
+  useEffect(() => {
+    if (initialContent && action === "hash") {
+      generateHashes();
+    }
+  }, [initialContent, action, generateHashes]);
 
   const verifyHash = () => {
     if (!input.trim() || !hashToVerify.trim()) {
@@ -98,13 +131,6 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
         variant: "destructive",
       });
     }
-  };
-
-  const clearAll = () => {
-    setInput("");
-    setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
-    setHashToVerify("");
-    setVerificationResult("");
   };
 
   const hashAlgorithms = [

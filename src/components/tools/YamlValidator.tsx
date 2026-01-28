@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import * as yaml from "js-yaml";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface YamlValidatorProps {
   initialContent?: string;
@@ -76,7 +77,7 @@ export function YamlValidator({ initialContent, action }: YamlValidatorProps) {
     }
   };
 
-  const copyToClipboard = async (text: string, type: string) => {
+  const copyToClipboard = useCallback(async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
       toast({
@@ -90,7 +91,7 @@ export function YamlValidator({ initialContent, action }: YamlValidatorProps) {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   const loadExample = () => {
     const exampleYaml = `# Example YAML configuration
@@ -125,13 +126,22 @@ settings:
     setTimeout(() => validateYaml(), 100);
   };
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setYamlInput("");
     setJsonOutput("");
     setIsValid(null);
     setError("");
     setStats(null);
-  };
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: validateYaml,
+    onClear: clearAll,
+    onCopy: () => {
+      if (jsonOutput) copyToClipboard(jsonOutput, "JSON");
+      else if (yamlInput) copyToClipboard(yamlInput, "YAML");
+    }
+  });
 
   const formatYaml = () => {
     try {

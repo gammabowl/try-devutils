@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Copy, AlertCircle, CheckCircle, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface SslCertificateDecoderProps {
   initialContent?: string;
@@ -346,13 +347,27 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
     }
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string) => {
     await navigator.clipboard.writeText(text);
     toast({
       title: "Copied!",
       description: "Copied to clipboard",
     });
-  };
+  }, [toast]);
+
+  const clearAll = useCallback(() => {
+    setInput("");
+    setDecoded(null);
+    setError("");
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: decodeCertificate,
+    onClear: clearAll,
+    onCopy: () => {
+      if (decoded) copyToClipboard(JSON.stringify(decoded, null, 2));
+    }
+  });
 
   const formatDate = (date: Date): string => {
     return date.toISOString();

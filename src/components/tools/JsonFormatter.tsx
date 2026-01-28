@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Braces, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface JsonFormatterProps {
   initialContent?: string;
@@ -24,32 +25,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
   
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (initialContent && action === "format") {
-      formatJson(false);
-    }
-  }, [initialContent, action]);
-
-  const examples = [
-    {
-      json: '{"name":"John Doe","age":30,"city":"New York","active":true}',
-      desc: "Simple user object"
-    },
-    {
-      json: '[{"id":1,"product":"Laptop","price":999.99},{"id":2,"product":"Mouse","price":29.99}]',
-      desc: "Product array"
-    },
-    {
-      json: '{"user":{"profile":{"name":"Jane","settings":{"theme":"dark","notifications":true}},"posts":[{"title":"Hello World","tags":["intro","welcome"]}]}}',
-      desc: "Nested object structure"
-    },
-    {
-      json: '{"timestamp":"2024-01-01T00:00:00Z","data":null,"count":0,"tags":[]}',
-      desc: "Mixed data types"
-    }
-  ];
-
-  const formatJson = (minify = false) => {
+  const formatJson = useCallback((minify = false) => {
     try {
       setError("");
       
@@ -75,9 +51,9 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
       setOutput("");
       setParsedJson(null);
     }
-  };
+  }, [input]);
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = useCallback(async () => {
     if (output) {
       await navigator.clipboard.writeText(output);
       toast({
@@ -85,16 +61,47 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
         description: "Formatted JSON copied to clipboard",
       });
     }
-  };
+  }, [output, toast]);
 
-
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setInput("");
     setOutput("");
     setParsedJson(null);
     setError("");
     setIsValid(null);
-  };
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: () => formatJson(false),
+    onClear: clearAll,
+    onCopy: copyToClipboard,
+  });
+
+  useEffect(() => {
+    if (initialContent && action === "format") {
+      formatJson(false);
+    }
+  }, [initialContent, action]);
+
+  const examples = [
+    {
+      json: '{"name":"John Doe","age":30,"city":"New York","active":true}',
+      desc: "Simple user object"
+    },
+    {
+      json: '[{"id":1,"product":"Laptop","price":999.99},{"id":2,"product":"Mouse","price":29.99}]',
+      desc: "Product array"
+    },
+    {
+      json: '{"user":{"profile":{"name":"Jane","settings":{"theme":"dark","notifications":true}},"posts":[{"title":"Hello World","tags":["intro","welcome"]}]}}',
+      desc: "Nested object structure"
+    },
+    {
+      json: '{"timestamp":"2024-01-01T00:00:00Z","data":null,"count":0,"tags":[]}',
+      desc: "Mixed data types"
+    }
+  ];
 
   return (
     <Card className="tool-card">

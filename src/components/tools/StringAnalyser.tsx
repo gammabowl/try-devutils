@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Copy, RotateCcw, Type } from "lucide-react";
 import { length, charCount, wordCount, lineCount, toLowerCase, toUpperCase, toCamelCase, toSnakeCase, toKebabCase } from "@/lib/stringUtils";
 import { toast } from "sonner";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 export function StringAnalyser() {
   const [input, setInput] = useState("");
@@ -18,15 +19,23 @@ export function StringAnalyser() {
     lineCount: lineCount(input),
   };
 
-  const handleCopyToClipboard = (text: string, label: string) => {
+  const handleCopyToClipboard = useCallback((text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast.success(`${label} copied to clipboard!`);
-  };
+  }, []);
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setInput("");
     setDisplayText("");
-  };
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onClear: handleClear,
+    onCopy: () => {
+      if (displayText) handleCopyToClipboard(displayText, "Result");
+      else if (input) handleCopyToClipboard(input, "Input");
+    }
+  });
 
   const handleToLowerCase = () => {
     const result = toLowerCase(input);

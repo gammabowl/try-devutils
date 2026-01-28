@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import ReactMarkdown from "react-markdown"
 import { Copy, FileText } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts"
 
 export function MarkdownPreview() {
   const { toast } = useToast()
@@ -12,7 +13,7 @@ export function MarkdownPreview() {
     "# Welcome to Markdown Preview\n\nThis is a **live** preview of your markdown.\n\n## Features:\n- Bold text\n- *Italics*\n- Lists\n- [Links](https://example.com)\n\n```\ncode blocks\n```"
   )
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(markdown)
       toast({
@@ -26,11 +27,17 @@ export function MarkdownPreview() {
         variant: "destructive",
       })
     }
-  }
+  }, [markdown, toast])
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setMarkdown("")
-  }
+  }, [])
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onClear: clearAll,
+    onCopy: copyToClipboard,
+  })
 
   return (
     <Card className="tool-card">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Regex, Copy, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface RegExpTesterProps {
   initialContent?: string;
@@ -164,13 +165,31 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
     }
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string) => {
     await navigator.clipboard.writeText(text);
     toast({
       title: "Copied!",
       description: "Copied to clipboard",
     });
-  };
+  }, [toast]);
+
+  const clearAll = useCallback(() => {
+    setPattern("");
+    setTestString("");
+    setMatches([]);
+    setError("");
+    setReplacePattern("");
+    setReplaceResult("");
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: testRegex,
+    onClear: clearAll,
+    onCopy: () => {
+      if (replaceResult) copyToClipboard(replaceResult);
+      else if (matches.length > 0) copyToClipboard(matches.map(m => m.fullMatch).join('\n'));
+    }
+  });
 
   const loadExample = (example: typeof examples[0]) => {
     setPattern(example.pattern);

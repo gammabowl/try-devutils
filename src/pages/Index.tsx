@@ -1,29 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { tools } from "@/lib/tools";
 import { prefetchTool } from "@/lib/lazyTools";
+import { Keyboard } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
-
-  // Handle ESC key - no-op on grid, but keep for consistency
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // ESC does nothing on the grid page
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-foreground mb-2">Choose Your Util</h2>
         <p className="text-muted-foreground">Select a developer util to get started</p>
+        <div className="mt-3 inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
+          <Keyboard className="h-3.5 w-3.5" />
+          <span>Press</span>
+          <kbd className="px-1.5 py-0.5 rounded border bg-background text-xs font-mono">/</kbd>
+          <span>to search or</span>
+          <kbd className="px-1.5 py-0.5 rounded border bg-background text-xs font-mono">?</kbd>
+          <span>for shortcuts</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {tools.map((tool) => {
+        {tools.map((tool, index) => {
           const IconComponent = tool.icon;
           return (
             <Link

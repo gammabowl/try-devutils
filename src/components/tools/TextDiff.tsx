@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FileDiff as FileDiffIcon, RotateCcw } from "lucide-react";
 import { diffLines, diffWords, Change } from "diff";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface TextDiffProps {
   initialContent?: string;
@@ -29,11 +30,16 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
     setDiffResult(diff);
   };
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setLeftText("");
     setRightText("");
     setDiffResult([]);
-  };
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: calculateDiff,
+    onClear: clearAll
+  });
 
   const renderDiff = () => {
     if (diffResult.length === 0) return null;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { deflateSync, inflateSync, strToU8, strFromU8 } from "fflate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, RotateCcw, Zap } from "lucide-react";
 import { toast } from "sonner";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface ZlibCompressorProps {
   navigate?: (toolId: string | null) => void;
@@ -69,18 +70,24 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
     }
   };
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard = useCallback(() => {
     if (!output) return;
     navigator.clipboard.writeText(output);
     toast.success("Copied to clipboard!");
-  };
+  }, [output]);
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setInput("");
     setOutput("");
     setError("");
     setStats(null);
-  };
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: () => activeTab === "compress" ? compress() : decompress(),
+    onClear: clearAll,
+    onCopy: handleCopyToClipboard
+  });
 
   return (
     <Card className="tool-card">

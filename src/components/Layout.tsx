@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Sparkles, Info } from "lucide-react";
+import { Sparkles, Info, Search, Keyboard } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -9,10 +9,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { CommandPalette, useCommandPalette } from "@/components/CommandPalette";
+import { KeyboardShortcutsHelp, useGlobalKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 export function Layout() {
+  const { isOpen, setIsOpen } = useCommandPalette();
+  const { showHelp, setShowHelp } = useGlobalKeyboardShortcuts();
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {/* Command Palette */}
+      <CommandPalette isOpen={isOpen} onOpenChange={setIsOpen} />
+      
+      {/* Keyboard Shortcuts Help */}
+      <KeyboardShortcutsHelp isOpen={showHelp} onOpenChange={setShowHelp} />
+
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-6">
@@ -27,7 +38,33 @@ export function Layout() {
               </div>
             </Link>
             <div className="ml-auto flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-2">
+              {/* Keyboard shortcuts button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHelp(true)}
+                className="hidden sm:flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                title="Keyboard shortcuts"
+              >
+                <Keyboard className="h-4 w-4" />
+                <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium hidden lg:inline-flex">
+                  ?
+                </kbd>
+              </Button>
+              {/* Search button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsOpen(true)}
+                className="hidden sm:flex items-center gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <Search className="h-4 w-4" />
+                <span className="text-sm">Search...</span>
+                <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium hidden lg:inline-flex">
+                  ⌘K
+                </kbd>
+              </Button>
+              <div className="hidden md:flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-dev-primary animate-pulse" />
                 <span className="text-sm text-muted-foreground">No data leaves your browser</span>
               </div>

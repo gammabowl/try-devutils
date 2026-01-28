@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FileKey as FileKeyIcon, AlertCircle, CheckCircle, Copy, Shield, Clock, ChevronDown, Maximize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 // JWT Registered Claims as per RFC 7519
 const REGISTERED_CLAIMS: Record<string, { description: string; link: string }> = {
@@ -440,10 +441,25 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
     };
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     toast({ description: "Copied to clipboard!" });
-  };
+  }, [toast]);
+
+  const clearAll = useCallback(() => {
+    setToken("");
+    setDecoded(null);
+    setError("");
+  }, []);
+
+  useToolKeyboardShortcuts({
+    onExecute: () => decodeJWT(token),
+    onClear: clearAll,
+    onCopy: () => {
+      if (decoded) copyToClipboard(formatJson(decoded.payload));
+      else if (token) copyToClipboard(token);
+    }
+  });
 
   const loadSampleToken = () => {
     setToken(sampleToken);

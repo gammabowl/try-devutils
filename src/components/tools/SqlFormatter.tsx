@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Database, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "sql-formatter";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 type SqlDialect = "postgresql" | "mysql" | "mariadb" | "plsql";
 
@@ -35,12 +36,6 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
 
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (initialContent && action === "format") {
-      formatSql(false);
-    }
-  }, [initialContent, action]);
-
   const examples = [
     {
       sql: "SELECT id, name, email FROM users WHERE status = 'active' AND created_at > '2024-01-01' ORDER BY name ASC LIMIT 10;",
@@ -64,7 +59,7 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
     }
   ];
 
-  const formatSql = (minify = false) => {
+  const formatSql = useCallback((minify = false) => {
     try {
       setError("");
 
@@ -94,9 +89,9 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
       setOutput("");
       setIsFormatted(false);
     }
-  };
+  }, [input, dialect, tabWidth, uppercase]);
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = useCallback(async () => {
     if (output) {
       await navigator.clipboard.writeText(output);
       toast({
@@ -104,14 +99,27 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
         description: "Formatted SQL copied to clipboard",
       });
     }
-  };
+  }, [output, toast]);
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setInput("");
     setOutput("");
     setError("");
     setIsFormatted(false);
-  };
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: () => formatSql(false),
+    onClear: clearAll,
+    onCopy: copyToClipboard,
+  });
+
+  useEffect(() => {
+    if (initialContent && action === "format") {
+      formatSql(false);
+    }
+  }, [initialContent, action]);
 
   return (
     <Card className="tool-card">

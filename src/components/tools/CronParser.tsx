@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Calendar, Copy, AlertCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import cronstrue from "cronstrue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface CronParserProps {
   initialContent?: string;
@@ -184,7 +185,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
     }
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       toast({
@@ -198,7 +199,21 @@ export function CronParser({ initialContent, action }: CronParserProps) {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
+
+  const clearAll = useCallback(() => {
+    setCronExpression("");
+    setDescription("");
+    setError("");
+    setNextRuns([]);
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: parseCron,
+    onClear: clearAll,
+    onCopy: () => copyToClipboard(description),
+  });
 
   const loadExample = (cron: string) => {
     setCronExpression(cron);

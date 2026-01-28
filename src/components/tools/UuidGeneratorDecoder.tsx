@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Fingerprint as FingerprintIcon, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5, v6 as uuidv6, v7 as uuidv7 } from "uuid";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface DecodedUuid {
   version: number;
@@ -110,13 +111,13 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     });
   };
 
-  const copyToClipboard = async (value: string) => {
+  const copyToClipboard = useCallback(async (value: string) => {
     await navigator.clipboard.writeText(value);
     toast({
       title: "Copied!",
       description: "UUID copied to clipboard",
     });
-  };
+  }, [toast]);
 
   const copyDecodedToClipboard = async (decoded: DecodedUuid | null) => {
     if (!decoded) return;
@@ -153,13 +154,21 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     });
   };
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setUuids([]);
     toast({
       title: "Cleared",
       description: "All UUIDs removed",
     });
-  };
+  }, [toast]);
+
+  useToolKeyboardShortcuts({
+    onExecute: () => generateUuid(selectedVersion, count),
+    onClear: clearAll,
+    onCopy: () => {
+      if (uuids.length > 0) copyToClipboard(uuids[0].value);
+    }
+  });
 
   const validateUuid = (uuid: string) => {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

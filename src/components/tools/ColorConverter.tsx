@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, Palette, RotateCcw, Pipette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface ColorValues {
   hex: string;
@@ -181,7 +182,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
   };
 
-  const copyToClipboard = async (value: string) => {
+  const copyToClipboard = useCallback(async (value: string) => {
     try {
       await navigator.clipboard.writeText(value);
       toast({
@@ -195,7 +196,27 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
+
+  const clearAll = useCallback(() => {
+    setInputColor("#3b82f6");
+    setColorValues({
+      hex: "#3B82F6",
+      rgb: "rgb(59, 130, 246)",
+      rgba: "rgba(59, 130, 246, 1)",
+      hsl: "hsl(217, 91%, 60%)",
+      hsla: "hsla(217, 91%, 60%, 1)",
+      hsv: "hsv(217, 76%, 96%)"
+    });
+    setError("");
+  }, []);
+
+  // Keyboard shortcuts
+  useToolKeyboardShortcuts({
+    onExecute: () => convertColor(inputColor),
+    onClear: clearAll,
+    onCopy: () => copyToClipboard(colorValues.hex),
+  });
 
   const generatePalette = () => {
     const rgb = hexToRgb(inputColor);
