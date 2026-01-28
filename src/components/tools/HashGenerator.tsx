@@ -200,7 +200,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                   if (!hashValue) return null;
                   
                   return (
-                    <div key={algo.key} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group">
+                    <div key={algo.key} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors">
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="font-semibold">
@@ -208,14 +208,14 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                           </Badge>
                           <span className="text-sm text-muted-foreground">{algo.description}</span>
                         </div>
-                        <Button
+                        <button
                           onClick={() => copyToClipboard(hashValue)}
-                          variant="ghost"
-                          size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                          title={`Copy ${algo.name}`}
+                          type="button"
                         >
-                          <Copy className="h-3.5 w-3.5" />
-                        </Button>
+                          copy
+                        </button>
                       </div>
                       <code className="text-sm font-mono text-foreground break-all block">
                         {hashValue}

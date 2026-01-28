@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Copy, AlertCircle, CheckCircle } from "lucide-react";
+import { Calendar, Copy, AlertCircle, CheckCircle, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import cronstrue from "cronstrue";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
@@ -261,96 +261,187 @@ export function CronParser({ initialContent, action }: CronParserProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end gap-3">
-          <div className="flex-1 max-w-md">
-            <label htmlFor="cron-expression" className="block text-sm font-medium mb-2 text-foreground">
-              Cron Expression
-            </label>
-            <Input
-              id="cron-expression"
-              placeholder="* * * * *"
-              value={cronExpression}
-              onChange={(e) => setCronExpression(e.target.value)}
-              className="font-mono bg-muted/50 border-border/50"
-            />
-          </div>
-          <Button
-            onClick={parseCron}
-            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground w-full sm:w-auto"
-          >
-            <Calendar className="h-4 w-4 mr-2" />
-            Parse
-          </Button>
-        </div>
+        {/* Two column layout for input and syntax guide */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left column - Input and Results */}
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label htmlFor="cron-expression" className="block text-sm font-medium text-foreground">
+                Cron Expression
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    id="cron-expression"
+                    placeholder="* * * * *"
+                    value={cronExpression}
+                    onChange={(e) => setCronExpression(e.target.value)}
+                    className="font-mono bg-muted/50 border-border/50 pr-14"
+                  />
+                  <button
+                    onClick={() => copyToClipboard(cronExpression)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-sky-200 dark:border-sky-700"
+                    disabled={!cronExpression}
+                    title="Copy cron expression"
+                    type="button"
+                  >
+                    copy
+                  </button>
+                </div>
+                <Button
+                  onClick={parseCron}
+                  className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Parse
+                </Button>
+              </div>
+              {/* Field labels below input - like crontab.guru */}
+              {cronExpression && (() => {
+                const parts = cronExpression.trim().split(/\s+/);
+                const fieldLabels = ['minute', 'hour', 'day (month)', 'month', 'day (week)'];
+                const fieldColors = ['text-sky-500', 'text-emerald-500', 'text-amber-500', 'text-purple-500', 'text-rose-500'];
+                return (
+                  <div className="flex justify-start gap-4 mt-2 font-mono text-sm">
+                    {parts.slice(0, 5).map((part, index) => (
+                      <div key={index} className="flex flex-col items-center">
+                        <span className={`font-medium ${fieldColors[index]}`}>{part}</span>
+                        <span className="text-xs text-muted-foreground">{fieldLabels[index]}</span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
 
-        {error && (
-          <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-md border border-destructive/30 max-w-md">
-            {error}
-          </div>
-        )}
+            {error && (
+              <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-md border border-destructive/30">
+                {error}
+              </div>
+            )}
 
-        {description && (
-          <div className="space-y-3">
-            <div className="space-y-2">
+            {description && (
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
                 <div className="space-y-1">
                   <div className="text-sm font-medium text-foreground">Human Readable</div>
                   <div className="text-sm text-muted-foreground">{description}</div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {nextRuns.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-dev-primary">Next 5 Occurrences</h4>
-            <div className="space-y-2">
-              {nextRuns.map((date, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-md border border-border/50">
-                  <div className="text-sm font-mono text-foreground">{date}</div>
+            {nextRuns.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-dev-primary">Next 5 Occurrences</h4>
+                <div className="space-y-1.5">
+                  {nextRuns.map((date, index) => (
+                    <div key={index} className="flex items-center p-2 bg-muted/30 rounded-md border border-border/50">
+                      <div className="text-sm font-mono text-foreground">{date}</div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </CardContent>
-
-      {/* Examples section moved outside CardContent */}
-      <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible defaultOpen={false} className="w-full">
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start">
-              Examples
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 mt-2">
-            {examples.map((example) => (
-              <div 
-                key={example.cron} 
-                className="flex items-center justify-between p-2 bg-muted rounded-md"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="font-mono text-sm text-foreground">
-                    {example.cron}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {example.desc}
-                  </div>
-                </div>
-                <Button
-                  onClick={() => loadExample(example.cron)}
-                  variant="outline"
-                  size="sm"
-                  className="ml-2 flex-shrink-0"
-                >
-                  Use
-                </Button>
               </div>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
+            )}
+
+            {/* Examples */}
+            <Collapsible defaultOpen={false} className="w-full">
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start px-0 hover:bg-transparent">
+                  <span className="text-sm text-muted-foreground">▶ Examples</span>
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-1.5 mt-2">
+                {examples.map((example) => (
+                  <div 
+                    key={example.cron} 
+                    className="flex items-center justify-between p-2 bg-muted/30 rounded-md border border-border/50"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="font-mono text-sm text-foreground">{example.cron}</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button
+                      onClick={() => loadExample(example.cron)}
+                      variant="outline"
+                      size="sm"
+                      className="ml-2 flex-shrink-0 h-7 text-xs"
+                    >
+                      Use
+                    </Button>
+                  </div>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+
+          {/* Right column - Syntax Guide */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <HelpCircle className="h-4 w-4" />
+              Syntax Guide
+            </div>
+            
+            {/* Format overview - 5 field boxes */}
+            <div className="p-4 bg-muted/30 rounded-md border border-border/50">
+              <div className="flex flex-wrap justify-center gap-3">
+                <div className="flex flex-col items-center">
+                  <div className="w-14 h-10 bg-sky-500/20 border border-sky-500/50 rounded flex items-center justify-center font-mono text-base">*</div>
+                  <div className="text-xs text-muted-foreground mt-1.5 text-center">Minute<br/><span className="text-foreground">0-59</span></div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="w-14 h-10 bg-emerald-500/20 border border-emerald-500/50 rounded flex items-center justify-center font-mono text-base">*</div>
+                  <div className="text-xs text-muted-foreground mt-1.5 text-center">Hour<br/><span className="text-foreground">0-23</span></div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="w-14 h-10 bg-amber-500/20 border border-amber-500/50 rounded flex items-center justify-center font-mono text-base">*</div>
+                  <div className="text-xs text-muted-foreground mt-1.5 text-center">Day<br/><span className="text-foreground">1-31</span></div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="w-14 h-10 bg-purple-500/20 border border-purple-500/50 rounded flex items-center justify-center font-mono text-base">*</div>
+                  <div className="text-xs text-muted-foreground mt-1.5 text-center">Month<br/><span className="text-foreground">1-12</span></div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="w-14 h-10 bg-rose-500/20 border border-rose-500/50 rounded flex items-center justify-center font-mono text-base">*</div>
+                  <div className="text-xs text-muted-foreground mt-1.5 text-center">Weekday<br/><span className="text-foreground">0-6</span></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Special characters & Named values side by side */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 bg-muted/30 rounded-md border border-border/50">
+                <div className="text-sm font-medium mb-2">Characters</div>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex items-center gap-2"><code className="bg-muted px-1.5 py-0.5 rounded font-mono">*</code><span className="text-muted-foreground">Any value</span></div>
+                  <div className="flex items-center gap-2"><code className="bg-muted px-1.5 py-0.5 rounded font-mono">,</code><span className="text-muted-foreground">List (1,3,5)</span></div>
+                  <div className="flex items-center gap-2"><code className="bg-muted px-1.5 py-0.5 rounded font-mono">-</code><span className="text-muted-foreground">Range (1-5)</span></div>
+                  <div className="flex items-center gap-2"><code className="bg-muted px-1.5 py-0.5 rounded font-mono">/</code><span className="text-muted-foreground">Step (*/15)</span></div>
+                </div>
+              </div>
+              <div className="p-3 bg-muted/30 rounded-md border border-border/50">
+                <div className="text-sm font-medium mb-2">Names</div>
+                <div className="space-y-1.5 text-sm text-muted-foreground">
+                  <div>Days: <span className="text-foreground">SUN-SAT</span></div>
+                  <div>Months: <span className="text-foreground">JAN-DEC</span></div>
+                  <div>Range: <span className="text-foreground">MON-FRI</span></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Common patterns */}
+            <div className="p-3 bg-muted/30 rounded-md border border-border/50">
+              <div className="text-sm font-medium mb-2">Common Patterns</div>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">
+                <div><code className="bg-muted px-1.5 py-0.5 rounded font-mono">* * * * *</code> <span className="text-muted-foreground">Every min</span></div>
+                <div><code className="bg-muted px-1.5 py-0.5 rounded font-mono">0 * * * *</code> <span className="text-muted-foreground">Hourly</span></div>
+                <div><code className="bg-muted px-1.5 py-0.5 rounded font-mono">0 0 * * *</code> <span className="text-muted-foreground">Daily</span></div>
+                <div><code className="bg-muted px-1.5 py-0.5 rounded font-mono">0 0 * * 0</code> <span className="text-muted-foreground">Weekly</span></div>
+                <div><code className="bg-muted px-1.5 py-0.5 rounded font-mono">0 0 1 * *</code> <span className="text-muted-foreground">Monthly</span></div>
+                <div><code className="bg-muted px-1.5 py-0.5 rounded font-mono">*/5 * * * *</code> <span className="text-muted-foreground">Every 5m</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   );
 }

@@ -190,21 +190,25 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-foreground">Output</label>
-              <div className="flex gap-2">
-                <Button onClick={copyToClipboard} variant="outline" size="sm">
-                  <Copy className="h-4 w-4 mr-1" />
-                  Copy
-                </Button>
-                <Button onClick={clearAll} variant="outline" size="sm">
-                  Clear
-                </Button>
-              </div>
+              <Button onClick={clearAll} variant="outline" size="sm">
+                Clear
+              </Button>
             </div>
+            <div className="relative">
               <Textarea
-              value={output}
-              readOnly
-              className="w-full min-h-[120px] font-mono text-sm bg-muted/30 border-border/50"
-            />
+                value={output}
+                readOnly
+                className="w-full min-h-[120px] font-mono text-sm bg-muted/30 border-border/50 pr-16"
+              />
+              <button
+                onClick={copyToClipboard}
+                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                title="Copy output"
+                type="button"
+              >
+                copy
+              </button>
+            </div>
           </div>
         )}
       </CardContent>

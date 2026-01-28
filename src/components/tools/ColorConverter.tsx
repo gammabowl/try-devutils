@@ -355,14 +355,14 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                     </div>
                   </div>
                 </div>
-                <Button
+                <button
                   onClick={() => copyToClipboard(value)}
-                  variant="outline"
-                  size="sm"
-                  className="ml-2 flex-shrink-0"
+                  className="ml-2 flex-shrink-0 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                  title={`Copy ${format}`}
+                  type="button"
                 >
-                  <Copy className="h-4 w-4" />
-                </Button>
+                  copy
+                </button>
               </div>
             ))}
           </CollapsibleContent>

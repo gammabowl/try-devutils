@@ -218,51 +218,52 @@ settings:
               </div>
             </div>
             <div className="space-y-3">
-              <Textarea
-                placeholder="Enter YAML content here..."
-                value={yamlInput}
-                onChange={(e) => {
-                  setYamlInput(e.target.value);
-                  // Auto-validate as user types
-                  if (e.target.value.trim()) {
-                    setTimeout(() => {
-                      try {
-                        setError("");
-                        const parsed = yaml.load(e.target.value);
-                        const jsonString = JSON.stringify(parsed, null, 2);
-                        
-                        setJsonOutput(jsonString);
-                        setIsValid(true);
-                        setStats({
-                          lines: e.target.value.split('\n').length,
-                          size: new Blob([e.target.value]).size
-                        });
-                      } catch (err) {
-                        setError(err instanceof Error ? err.message : "Invalid YAML format");
-                        setIsValid(false);
-                        setJsonOutput("");
-                        setStats(null);
-                      }
-                    }, 500);
-                  } else {
-                    setIsValid(null);
-                    setJsonOutput("");
-                    setStats(null);
-                    setError("");
-                  }
-                }}
-                className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
-              />
-              <Button
-                onClick={() => copyToClipboard(yamlInput, "YAML")}
-                variant="outline"
-                size="sm"
-                className="w-full"
-                disabled={!yamlInput}
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Copy YAML
-              </Button>
+              <div className="relative">
+                <Textarea
+                  placeholder="Enter YAML content here..."
+                  value={yamlInput}
+                  onChange={(e) => {
+                    setYamlInput(e.target.value);
+                    // Auto-validate as user types
+                    if (e.target.value.trim()) {
+                      setTimeout(() => {
+                        try {
+                          setError("");
+                          const parsed = yaml.load(e.target.value);
+                          const jsonString = JSON.stringify(parsed, null, 2);
+                          
+                          setJsonOutput(jsonString);
+                          setIsValid(true);
+                          setStats({
+                            lines: e.target.value.split('\n').length,
+                            size: new Blob([e.target.value]).size
+                          });
+                        } catch (err) {
+                          setError(err instanceof Error ? err.message : "Invalid YAML format");
+                          setIsValid(false);
+                          setJsonOutput("");
+                          setStats(null);
+                        }
+                      }, 500);
+                    } else {
+                      setIsValid(null);
+                      setJsonOutput("");
+                      setStats(null);
+                      setError("");
+                    }
+                  }}
+                  className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-16"
+                />
+                <button
+                  onClick={() => copyToClipboard(yamlInput, "YAML")}
+                  className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 disabled:opacity-50"
+                  disabled={!yamlInput}
+                  title="Copy YAML"
+                  type="button"
+                >
+                  copy
+                </button>
+              </div>
             </div>
           </div>
 
@@ -282,23 +283,24 @@ settings:
               )}
             </div>
             <div className="space-y-3">
-              <Textarea
-                placeholder="JSON representation will appear here..."
-                value={jsonOutput}
-                onChange={(e) => setJsonOutput(e.target.value)}
-                readOnly={!jsonOutput || isValid === true}
-                className="w-full min-h-[400px] font-mono text-sm bg-muted/30 border-border/50"
-              />
-              <Button
-                onClick={() => copyToClipboard(jsonOutput, "JSON")}
-                variant="outline"
-                size="sm"
-                className="w-full"
-                disabled={!jsonOutput}
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Copy JSON
-              </Button>
+              <div className="relative">
+                <Textarea
+                  placeholder="JSON representation will appear here..."
+                  value={jsonOutput}
+                  onChange={(e) => setJsonOutput(e.target.value)}
+                  readOnly={!jsonOutput || isValid === true}
+                  className="w-full min-h-[400px] font-mono text-sm bg-muted/30 border-border/50 pr-16"
+                />
+                <button
+                  onClick={() => copyToClipboard(jsonOutput, "JSON")}
+                  className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 disabled:opacity-50"
+                  disabled={!jsonOutput}
+                  title="Copy JSON"
+                  type="button"
+                >
+                  copy
+                </button>
+              </div>
             </div>
           </div>
         </div>

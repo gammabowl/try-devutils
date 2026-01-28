@@ -130,22 +130,21 @@ export function StringAnalyser() {
         {/* Output Section */}
         {displayText && (
           <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-foreground">
-                Converted Text
-              </label>
-              <Button
+            <label className="text-sm font-medium text-foreground">
+              Converted Text
+            </label>
+            <div className="relative">
+              <div className="p-4 pr-16 bg-muted/30 border border-border/50 rounded-lg font-mono text-sm text-foreground break-words max-h-64 overflow-auto">
+                {displayText}
+              </div>
+              <button
                 onClick={() => handleCopyToClipboard(displayText, "Text")}
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground"
+                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                title="Copy text"
+                type="button"
               >
-                <Copy className="h-4 w-4 mr-1" />
-                Copy
-              </Button>
-            </div>
-            <div className="p-4 bg-muted/30 border border-border/50 rounded-lg font-mono text-sm text-foreground break-words max-h-64 overflow-auto">
-              {displayText}
+                copy
+              </button>
             </div>
           </div>
         )}

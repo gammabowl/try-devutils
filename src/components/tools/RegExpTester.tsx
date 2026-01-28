@@ -372,14 +372,14 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                           </div>
                         )}
                       </div>
-                      <Button
+                      <button
                         onClick={() => copyToClipboard(match.fullMatch)}
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
+                        className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                        title="Copy match"
+                        type="button"
                       >
-                        <Copy className="h-3 w-3" />
-                      </Button>
+                        copy
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -414,14 +414,14 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                 <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="text-sm font-semibold text-foreground">Result</h4>
-                    <Button
+                    <button
                       onClick={() => copyToClipboard(replaceResult)}
-                      variant="outline"
-                      size="sm"
+                      className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                      title="Copy result"
+                      type="button"
                     >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy
-                    </Button>
+                      copy
+                    </button>
                   </div>
                   <Textarea
                     value={replaceResult}

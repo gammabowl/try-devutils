@@ -55,22 +55,27 @@ export function MarkdownPreview() {
               <label className="text-sm font-medium text-foreground">
                 Markdown Editor
               </label>
-              <div className="flex gap-2">
-                <Button onClick={copyToClipboard} variant="outline" size="sm">
-                  <Copy className="h-4 w-4 mr-1" />
-                  Copy
-                </Button>
-                <Button onClick={clearAll} variant="outline" size="sm">
-                  Clear
-                </Button>
-              </div>
+              <Button onClick={clearAll} variant="outline" size="sm">
+                Clear
+              </Button>
             </div>
-            <Textarea
-              value={markdown}
-              onChange={(e) => setMarkdown(e.target.value)}
-              placeholder="Enter markdown here..."
-              className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50"
-            />
+            <div className="relative">
+              <Textarea
+                value={markdown}
+                onChange={(e) => setMarkdown(e.target.value)}
+                placeholder="Enter markdown here..."
+                className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-16"
+              />
+              <button
+                onClick={copyToClipboard}
+                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 disabled:opacity-50"
+                title="Copy markdown"
+                type="button"
+                disabled={!markdown}
+              >
+                copy
+              </button>
+            </div>
           </div>
 
           {/* Preview Section */}

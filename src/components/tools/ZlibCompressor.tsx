@@ -143,16 +143,10 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
                 <Zap className="h-4 w-4 mr-2" />
                 Decompress
               </Button>
-              <Button onClick={clearAll} variant="outline" size="sm" className="mr-auto">
+              <Button onClick={clearAll} variant="outline" size="sm">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Clear
               </Button>
-              {output && (
-                <Button onClick={handleCopyToClipboard} variant="outline" size="sm">
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy Output
-                </Button>
-              )}
             </div>
 
             {error && (
@@ -166,11 +160,21 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   Decompressed Text
                 </label>
-                <Textarea
-                  value={output}
-                  readOnly
-                  className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50"
-                />
+                <div className="relative">
+                  <Textarea
+                    value={output}
+                    readOnly
+                    className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50 pr-16"
+                  />
+                  <button
+                    onClick={handleCopyToClipboard}
+                    className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                    title="Copy output"
+                    type="button"
+                  >
+                    copy
+                  </button>
+                </div>
               </div>
             )}
 
@@ -218,16 +222,10 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
                 <Zap className="h-4 w-4 mr-2" />
                 Compress
               </Button>
-              <Button onClick={clearAll} variant="outline" size="sm" className="mr-auto">
+              <Button onClick={clearAll} variant="outline" size="sm">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Clear
               </Button>
-              {output && (
-                <Button onClick={handleCopyToClipboard} variant="outline" size="sm">
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy Output
-                </Button>
-              )}
             </div>
 
             {error && (
@@ -241,11 +239,21 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   Compressed Output (Base64)
                 </label>
-                <Textarea
-                  value={output}
-                  readOnly
-                  className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50"
-                />
+                <div className="relative">
+                  <Textarea
+                    value={output}
+                    readOnly
+                    className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50 pr-16"
+                  />
+                  <button
+                    onClick={handleCopyToClipboard}
+                    className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                    title="Copy output"
+                    type="button"
+                  >
+                    copy
+                  </button>
+                </div>
               </div>
             )}
 

@@ -505,7 +505,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                     return (
                       <div
                         key={uuid.id}
-                        className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors group"
+                        className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors"
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex-1 min-w-0">
@@ -537,14 +537,14 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                             )}
                           </div>
                           
-                          <Button
+                          <button
                             onClick={() => copyToClipboard(uuid.value)}
-                            variant="ghost"
-                            size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                            title="Copy UUID"
+                            type="button"
                           >
-                            <Copy className="h-4 w-4" />
-                          </Button>
+                            copy
+                          </button>
                         </div>
                       </div>
                     );

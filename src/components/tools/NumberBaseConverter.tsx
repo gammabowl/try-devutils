@@ -315,20 +315,21 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
               </label>
               <Badge variant="outline">{bases[toBase].description}</Badge>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 bg-muted/50 p-3 rounded-md font-mono text-lg overflow-auto border border-border/50">
+            <div className="relative">
+              <div className="bg-muted/50 p-3 pr-16 rounded-md font-mono text-lg overflow-auto border border-border/50">
                 {bases[toBase].prefix && (
                   <span className="text-muted-foreground">{bases[toBase].prefix}</span>
                 )}
                 {result}
               </div>
-              <Button
-                size="sm"
-                variant="outline"
+              <button
                 onClick={() => copyToClipboard(result)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                title="Copy result"
+                type="button"
               >
-                <Copy className="h-4 w-4" />
-              </Button>
+                copy
+              </button>
             </div>
           </div>
         )}
@@ -350,15 +351,15 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
                         <span className="text-muted-foreground">{bases[base].prefix}</span>
                         {allBases[base]}
                       </td>
-                      <td className="p-2 w-10">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0"
+                      <td className="p-2 w-14">
+                        <button
                           onClick={() => copyToClipboard(allBases[base])}
+                          className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                          title={`Copy ${bases[base].name}`}
+                          type="button"
                         >
-                          <Copy className="h-3 w-3" />
-                        </Button>
+                          copy
+                        </button>
                       </td>
                     </tr>
                   ))}
