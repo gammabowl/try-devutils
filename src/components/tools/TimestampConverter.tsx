@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Clock, Calendar, ArrowLeftRight } from "lucide-react";
+import { Clock, Calendar, ArrowLeftRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format, fromUnixTime, getUnixTime, parseISO } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface TimestampConverterProps {
   initialContent?: string;
@@ -265,14 +266,11 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                           <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
                           <div className="text-sm text-foreground font-mono break-all">{value}</div>
                         </div>
-                        <button
-                          onClick={() => copyToClipboard(value)}
-                          className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                        <CopyButton
+                          text={value}
+                          className="flex-shrink-0"
                           title={`Copy ${label}`}
-                          type="button"
-                        >
-                          copy
-                        </button>
+                        />
                       </div>
                     </div>
                   ))}
@@ -335,14 +333,11 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
                           <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
                           <div className="text-sm text-foreground font-mono break-all">{value}</div>
                         </div>
-                        <button
-                          onClick={() => copyToClipboard(value)}
-                          className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                        <CopyButton
+                          text={value}
+                          className="flex-shrink-0"
                           title={`Copy ${label}`}
-                          type="button"
-                        >
-                          copy
-                        </button>
+                        />
                       </div>
                     </div>
                   ))}

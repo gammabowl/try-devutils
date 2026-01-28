@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link, Copy, ArrowRightLeft, CheckCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Link, ArrowRightLeft, CheckCircle } from "lucide-react";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
 
 interface UrlEncoderDecoderProps {
   initialContent?: string;
@@ -194,14 +195,11 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
               <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-auto max-h-[200px] border border-border/50 whitespace-pre-wrap break-all pr-16">
                 {output}
               </pre>
-              <button
-                onClick={() => copyToClipboard(output)}
-                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+              <CopyButton
+                text={output}
+                className="absolute right-2 top-2"
                 title="Copy output"
-                type="button"
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
         )}

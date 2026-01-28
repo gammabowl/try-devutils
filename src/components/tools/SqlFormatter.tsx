@@ -6,10 +6,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Database, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Database, AlertCircle, CheckCircle, WandSparkles, Minimize, Copy } from "lucide-react";
 import { format } from "sql-formatter";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
 
 type SqlDialect = "postgresql" | "mysql" | "mariadb" | "plsql";
 
@@ -262,14 +263,11 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
               <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-auto max-h-[300px] border border-border/50 whitespace-pre-wrap pr-16">
                 {output}
               </pre>
-              <button
-                onClick={copyToClipboard}
-                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+              <CopyButton
+                text={output}
+                className="absolute right-2 top-2"
                 title="Copy output"
-                type="button"
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
         )}

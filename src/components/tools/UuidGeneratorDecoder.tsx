@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Fingerprint as FingerprintIcon, Copy, RefreshCw, Trash2, CheckCircle, AlertCircle, Download } from "lucide-react";
+import { Fingerprint as FingerprintIcon, RefreshCw, Trash2, CheckCircle, AlertCircle, Download, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5, v6 as uuidv6, v7 as uuidv7 } from "uuid";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface DecodedUuid {
   version: number;
@@ -537,14 +538,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                             )}
                           </div>
                           
-                          <button
-                            onClick={() => copyToClipboard(uuid.value)}
-                            className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                          <CopyButton
+                            text={uuid.value}
+                            className="flex-shrink-0"
                             title="Copy UUID"
-                            type="button"
-                          >
-                            copy
-                          </button>
+                          />
                         </div>
                       </div>
                     );
@@ -611,10 +609,11 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
               <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-sm font-semibold text-foreground">Decoded Information</h4>
-                  <Button onClick={() => copyDecodedToClipboard(decodedValidation)} size="sm" variant="outline">
-                    <Copy className="h-3 w-3 mr-1" />
-                    Copy
-                  </Button>
+                  <CopyButton
+                    text={`Version: ${decodedValidation.version}\nTimestamp: ${decodedValidation.date.toISOString()}\nVariant: ${decodedValidation.variant}${decodedValidation.clockSeq !== undefined ? `\nClock Sequence: ${decodedValidation.clockSeq}` : ""}${decodedValidation.node ? `\nNode: ${decodedValidation.node}` : ""}`}
+                    className="ml-2"
+                    title="Copy decoded info"
+                  />
                 </div>
                 <div className="space-y-2 text-sm font-mono">
                   <div className="flex justify-between">

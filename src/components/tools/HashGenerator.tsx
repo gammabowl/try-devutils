@@ -4,11 +4,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Hash, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
+import { Hash, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import CryptoJS from "crypto-js";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface HashResult {
   md5: string;
@@ -208,14 +209,10 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                           </Badge>
                           <span className="text-sm text-muted-foreground">{algo.description}</span>
                         </div>
-                        <button
-                          onClick={() => copyToClipboard(hashValue)}
-                          className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                        <CopyButton
+                          text={hashValue}
                           title={`Copy ${algo.name}`}
-                          type="button"
-                        >
-                          copy
-                        </button>
+                        />
                       </div>
                       <code className="text-sm font-mono text-foreground break-all block">
                         {hashValue}

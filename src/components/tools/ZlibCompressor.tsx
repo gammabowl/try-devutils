@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, RotateCcw, Zap } from "lucide-react";
+import { RotateCcw, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface ZlibCompressorProps {
   navigate?: (toolId: string | null) => void;
@@ -166,14 +167,11 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
                     readOnly
                     className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50 pr-16"
                   />
-                  <button
-                    onClick={handleCopyToClipboard}
-                    className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                  <CopyButton
+                    text={output}
+                    className="absolute right-2 top-2"
                     title="Copy output"
-                    type="button"
-                  >
-                    copy
-                  </button>
+                  />
                 </div>
               </div>
             )}
@@ -245,14 +243,11 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
                     readOnly
                     className="w-full min-h-[150px] font-mono text-sm bg-background border-border/50 pr-16"
                   />
-                  <button
-                    onClick={handleCopyToClipboard}
-                    className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                  <CopyButton
+                    text={output}
+                    className="absolute right-2 top-2"
                     title="Copy output"
-                    type="button"
-                  >
-                    copy
-                  </button>
+                  />
                 </div>
               </div>
             )}

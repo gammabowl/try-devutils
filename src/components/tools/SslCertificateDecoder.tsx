@@ -4,9 +4,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Copy, AlertCircle, CheckCircle, FileText } from "lucide-react";
+import { ShieldCheck, AlertCircle, CheckCircle, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface SslCertificateDecoderProps {
   initialContent?: string;
@@ -461,14 +462,11 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
                     <span className="text-muted-foreground">Serial Number:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-foreground font-mono text-sm break-all">{decoded.serialNumber}</span>
-                      <button
-                        onClick={() => copyToClipboard(decoded.serialNumber)}
-                        className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                      <CopyButton
+                        text={decoded.serialNumber}
+                        className="flex-shrink-0"
                         title="Copy serial number"
-                        type="button"
-                      >
-                        copy
-                      </button>
+                      />
                     </div>
                   </div>
                   <div className="grid grid-cols-[120px_1fr] gap-2">

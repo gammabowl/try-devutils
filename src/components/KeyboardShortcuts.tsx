@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 // Context to share keyboard shortcut state
@@ -69,6 +70,9 @@ export function KeyboardShortcutsHelp({
             <Keyboard className="h-5 w-5" />
             Keyboard Shortcuts
           </DialogTitle>
+          <DialogDescription>
+            Dialog listing all available keyboard shortcuts for the application.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-6">
           {shortcuts.map((section) => (

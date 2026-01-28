@@ -6,9 +6,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Binary, Copy, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
+import { Binary, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 type Base = "2" | "8" | "10" | "16" | "32" | "64";
 
@@ -322,14 +323,11 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
                 )}
                 {result}
               </div>
-              <button
-                onClick={() => copyToClipboard(result)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+              <CopyButton
+                text={result}
+                className="absolute right-2 top-1/2 -translate-y-1/2"
                 title="Copy result"
-                type="button"
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
         )}
@@ -352,14 +350,10 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
                         {allBases[base]}
                       </td>
                       <td className="p-2 w-14">
-                        <button
-                          onClick={() => copyToClipboard(allBases[base])}
-                          className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                        <CopyButton
+                          text={allBases[base]}
                           title={`Copy ${bases[base].name}`}
-                          type="button"
-                        >
-                          copy
-                        </button>
+                        />
                       </td>
                     </tr>
                   ))}

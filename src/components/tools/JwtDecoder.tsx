@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { FileKey as FileKeyIcon, AlertCircle, CheckCircle, Copy, Shield, Clock, ChevronDown, Maximize2 } from "lucide-react";
+import { FileKey as FileKeyIcon, AlertCircle, CheckCircle, Shield, Clock, ChevronDown, Maximize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 // JWT Registered Claims as per RFC 7519
 const REGISTERED_CLAIMS: Record<string, { description: string; link: string }> = {
@@ -630,28 +631,27 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-foreground">JSON WEB TOKEN</h3>
-                  {token && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(token)}
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copy
-                    </Button>
-                  )}
+                  {/* CopyButton outside the field removed for consistency */}
                 </div>
                 
                 <div className="space-y-3">
-                  <Textarea
-                    value={token}
-                    readOnly
-                    className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input resize-none"
-                    placeholder="Your encoded JWT will appear here..."
-                  />
+                  <div className="relative">
+                    <Textarea
+                      value={token}
+                      readOnly
+                      className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input resize-none pr-20"
+                      placeholder="Your encoded JWT will appear here..."
+                    />
+                    <CopyButton
+                      text={token}
+                      className="absolute right-4 top-3 z-10 px-2 py-0.5 rounded text-xs shadow border border-border transition-all"
+                      title="Copy token"
+                      style={{transform: 'translateY(-2px)'}}
+                    />
+                  </div>
                 </div>
 
-                {/* Color-coded token parts preview */}
+                {/* Colour-coded token parts preview */}
                 {token && token.split(".").length === 3 && (
                   <div className="p-4 bg-muted/20 rounded-lg border border-border/50">
                     <div className="text-sm text-muted-foreground mb-2">Token Structure:</div>
@@ -679,52 +679,49 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
             <div className="grid lg:grid-cols-2 gap-6 min-h-[540px] items-stretch">
             {/* Left Side - JWT Input */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">ENCODED VALUE</h3>
-                {decoded && (
-                  <div className="flex items-center gap-2">
-                    {decoded.isValid ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Valid JWT
-                      </Badge>
-                    ) : (
-                      <Badge variant="destructive">
-                        <AlertCircle className="h-3 w-3 mr-1" />
-                        Invalid/Expired
-                      </Badge>
-                    )}
-                  </div>
+              <div className="flex items-center gap-3 flex-wrap mb-1">
+                <h3 className="text-lg font-semibold text-foreground whitespace-nowrap">Encoded JWT Token</h3>
+                {decoded ? (
+                  decoded.isValid ? (
+                    <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Valid JWT
+                    </Badge>
+                  ) : (
+                    <Badge variant="destructive">
+                      <AlertCircle className="h-3 w-3 mr-1" />
+                      Invalid/Expired
+                    </Badge>
+                  )
+                ) : (
+                  token.trim() && (
+                    <Badge variant="destructive">
+                      <AlertCircle className="h-3 w-3 mr-1" />
+                      Invalid JWT
+                    </Badge>
+                  )
                 )}
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-foreground">JWT Token</label>
-                  <div className="flex gap-2">
-                    {token && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(token)}
-                      >
-                        <Copy className="h-3 w-3 mr-1" />
-                        Copy
-                      </Button>
-                    )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setToken("");
-                        setDecoded(null);
-                        setError("");
-                      }}
-                    >
-                      Clear
-                    </Button>
-                  </div>
+                <div className="flex gap-2 ml-auto">
+                  <CopyButton
+                    text={token}
+                    className="px-2 py-0.5 rounded text-xs shadow border border-border transition-all"
+                    title="Copy token"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setToken("");
+                      setDecoded(null);
+                      setError("");
+                    }}
+                    className="px-2 py-0.5 rounded text-xs shadow border border-border transition-all bg-muted text-muted-foreground hover:bg-muted/70"
+                    title="Clear token"
+                  >
+                    clear
+                  </button>
                 </div>
+              </div>
+              <div className="space-y-3">
                 <Textarea
                   placeholder="Paste your JWT token here..."
                   value={token}
@@ -736,7 +733,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                 />
               </div>
 
-              {/* Color-coded token parts preview */}
+              {/* Colour-coded token parts preview */}
               {token && token.split(".").length === 3 && (
                 <div className="p-4 bg-muted/20 rounded-lg border border-border/50">
                   <div className="text-sm text-muted-foreground mb-2">Token Structure:</div>
@@ -781,14 +778,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                             <h4 className="text-sm font-semibold">DECODED HEADER</h4>
                           </button>
                         </CollapsibleTrigger>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(formatJson(decoded.header))}
-                        >
-                          <Copy className="h-3 w-3 mr-1" />
-                          Copy
-                        </Button>
+                        {/* CopyButton outside the field removed for consistency */}
                       </div>
                       
                       <CollapsibleContent>
@@ -806,6 +796,12 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                               >
                                 <Maximize2 className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
                               </button>
+                              <CopyButton
+                                text={formatJson(decoded.header)}
+                                className="absolute right-12 top-2 z-10 px-2 py-0.5 rounded text-xs shadow border border-border transition-all"
+                                title="Copy header JSON"
+                                style={{transform: 'translateY(-2px)'}}
+                              />
                               {renderJsonWithSelectableValues(decoded.header, true)}
                             </div>
                           </TabsContent>
@@ -834,13 +830,13 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                                       <td className={`p-2 font-mono text-foreground break-all align-top ${claim.description ? 'border-r border-border/50' : ''}`} colSpan={claim.description ? 1 : 2}>
                                         <div className="flex items-start gap-1 group">
                                           <span className="flex-1">{claim.value}</span>
-                                          <button
-                                            onClick={() => copyToClipboard(claim.value)}
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0"
-                                            title="Copy value"
-                                          >
-                                            <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                                          </button>
+                                          <span className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0">
+                                            <CopyButton
+                                              text={claim.value}
+                                              className="!p-0 !bg-transparent !border-0 !shadow-none h-3 w-3 text-muted-foreground hover:text-foreground"
+                                              title="Copy value"
+                                            />
+                                          </span>
                                         </div>
                                       </td>
                                       {claim.description && (
@@ -884,14 +880,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                             <h4 className="text-sm font-semibold">DECODED PAYLOAD</h4>
                           </button>
                         </CollapsibleTrigger>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(formatJson(decoded.payload))}
-                        >
-                          <Copy className="h-3 w-3 mr-1" />
-                          Copy
-                        </Button>
+                        {/* CopyButton outside the field removed for consistency */}
                       </div>
                       
                       <CollapsibleContent>
@@ -910,6 +899,12 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                               >
                                 <Maximize2 className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
                               </button>
+                              <CopyButton
+                                text={formatJson(decoded.payload)}
+                                className="absolute right-12 top-2 z-10 px-2 py-0.5 rounded text-xs shadow border border-border transition-all"
+                                title="Copy payload JSON"
+                                style={{transform: 'translateY(-2px)'}}
+                              />
                               {renderJsonWithSelectableValues(decoded.payload, false)}
                             </div>
                           </TabsContent>
@@ -927,7 +922,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                               <table className="w-full text-sm">
                                 <thead>
                                   <tr className="border-b border-border bg-muted/50">
-                                    <th className="text-left p-2 font-semibold text-purple-600 w-[80px] border-r border-border/50">CLAIM</th>
+                                    <th className="text-left p-2 font-semibold text-purple-600 w-[100px] border-r border-border/50">CLAIM</th>
                                     <th className="text-left p-2 font-semibold text-foreground border-r border-border/50">VALUE</th>
                                     <th className="text-left p-2 font-semibold text-muted-foreground">DESCRIPTION</th>
                                   </tr>
@@ -944,7 +939,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                                             className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0"
                                             title="Copy value"
                                           >
-                                            <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                                            <CopyButton className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                                           </button>
                                         </div>
                                       </td>
@@ -1046,7 +1041,8 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
         {/* Maximized View Dialog */}
         <Dialog open={maximizedView !== null} onOpenChange={(open) => !open && setMaximizedView(null)}>
           <DialogContent className="max-w-6xl w-[90vw] max-h-[85vh] overflow-hidden flex flex-col">
-            <DialogHeader className="flex-shrink-0">
+                        <span id="jwt-dialog-desc" className="sr-only">This dialog shows the maximized JWT section for easier viewing and copying.</span>
+            <DialogHeader className="flex-shrink-0" aria-describedby="jwt-dialog-desc">
               <DialogTitle className="flex items-center gap-2">
                 {maximizedView?.type.includes('header') ? (
                   <div className="w-3 h-3 bg-red-500 rounded"></div>
@@ -1085,7 +1081,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                                 className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0"
                                 title="Copy value"
                               >
-                                <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                                <CopyButton className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                               </button>
                             </div>
                           </td>
@@ -1135,7 +1131,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                                 className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0"
                                 title="Copy value"
                               >
-                                <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                                <CopyButton className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                               </button>
                             </div>
                           </td>

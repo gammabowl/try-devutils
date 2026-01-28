@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, DecimalsArrowRight, ArrowUpDown } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { DecimalsArrowRight, ArrowUpDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
 
 interface Base64ConverterProps {
   initialContent?: string;
@@ -200,14 +201,11 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
                 readOnly
                 className="w-full min-h-[120px] font-mono text-sm bg-muted/30 border-border/50 pr-16"
               />
-              <button
-                onClick={copyToClipboard}
-                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+              <CopyButton
+                text={output}
+                className="absolute right-2 top-2"
                 title="Copy output"
-                type="button"
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
         )}

@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Regex, Copy, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Regex, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
 
 interface RegExpTesterProps {
   initialContent?: string;
@@ -372,14 +373,11 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                           </div>
                         )}
                       </div>
-                      <button
-                        onClick={() => copyToClipboard(match.fullMatch)}
-                        className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 flex-shrink-0"
+                      <CopyButton
+                        text={match.fullMatch}
+                        className="flex-shrink-0"
                         title="Copy match"
-                        type="button"
-                      >
-                        copy
-                      </button>
+                      />
                     </div>
                   </div>
                 ))}
@@ -414,14 +412,10 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
                 <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="text-sm font-semibold text-foreground">Result</h4>
-                    <button
-                      onClick={() => copyToClipboard(replaceResult)}
-                      className="px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                    <CopyButton
+                      text={replaceResult}
                       title="Copy result"
-                      type="button"
-                    >
-                      copy
-                    </button>
+                    />
                   </div>
                   <Textarea
                     value={replaceResult}

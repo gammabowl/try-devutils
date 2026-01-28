@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import ReactMarkdown from "react-markdown"
-import { Copy, FileText } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { FileText } from "lucide-react"
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts"
+import { CopyButton } from "@/components/ui/copy-button"
+import { useToast } from "@/hooks/use-toast"
 
 export function MarkdownPreview() {
   const { toast } = useToast()
@@ -66,15 +67,11 @@ export function MarkdownPreview() {
                 placeholder="Enter markdown here..."
                 className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-16"
               />
-              <button
-                onClick={copyToClipboard}
-                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 disabled:opacity-50"
+              <CopyButton
+                text={markdown}
+                className={`absolute right-2 top-2 ${!markdown ? 'opacity-50 pointer-events-none' : ''}`}
                 title="Copy markdown"
-                type="button"
-                disabled={!markdown}
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
 

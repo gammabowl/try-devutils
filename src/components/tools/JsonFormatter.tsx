@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Braces, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface JsonFormatterProps {
   initialContent?: string;
@@ -202,14 +203,11 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
               <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-auto max-h-[300px] border border-border/50 pr-16">
                 {output}
               </pre>
-              <button
-                onClick={copyToClipboard}
-                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+              <CopyButton
+                text={output}
+                className="absolute right-2 top-2"
                 title="Copy output"
-                type="button"
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
         )}

@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Palette, RotateCcw, Pipette } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Palette, RotateCcw, Pipette } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
 
 interface ColorValues {
   hex: string;
@@ -355,14 +356,11 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => copyToClipboard(value)}
-                  className="ml-2 flex-shrink-0 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+                <CopyButton
+                  text={value}
+                  className="ml-2 flex-shrink-0"
                   title={`Copy ${format}`}
-                  type="button"
-                >
-                  copy
-                </button>
+                />
               </div>
             ))}
           </CollapsibleContent>

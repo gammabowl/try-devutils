@@ -4,10 +4,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Copy, FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
 import * as yaml from "js-yaml";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
 
 interface YamlValidatorProps {
   initialContent?: string;
@@ -219,50 +220,48 @@ settings:
             </div>
             <div className="space-y-3">
               <div className="relative">
-                <Textarea
-                  placeholder="Enter YAML content here..."
-                  value={yamlInput}
-                  onChange={(e) => {
-                    setYamlInput(e.target.value);
-                    // Auto-validate as user types
-                    if (e.target.value.trim()) {
-                      setTimeout(() => {
-                        try {
-                          setError("");
-                          const parsed = yaml.load(e.target.value);
-                          const jsonString = JSON.stringify(parsed, null, 2);
-                          
-                          setJsonOutput(jsonString);
-                          setIsValid(true);
-                          setStats({
-                            lines: e.target.value.split('\n').length,
-                            size: new Blob([e.target.value]).size
-                          });
-                        } catch (err) {
-                          setError(err instanceof Error ? err.message : "Invalid YAML format");
-                          setIsValid(false);
-                          setJsonOutput("");
-                          setStats(null);
-                        }
-                      }, 500);
-                    } else {
-                      setIsValid(null);
-                      setJsonOutput("");
-                      setStats(null);
-                      setError("");
-                    }
-                  }}
-                  className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-16"
-                />
-                <button
-                  onClick={() => copyToClipboard(yamlInput, "YAML")}
-                  className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 disabled:opacity-50"
-                  disabled={!yamlInput}
-                  title="Copy YAML"
-                  type="button"
-                >
-                  copy
-                </button>
+                <div className="relative">
+                  <Textarea
+                    placeholder="Enter YAML content here..."
+                    value={yamlInput}
+                    onChange={(e) => {
+                      setYamlInput(e.target.value);
+                      // Auto-validate as user types
+                      if (e.target.value.trim()) {
+                        setTimeout(() => {
+                          try {
+                            setError("");
+                            const parsed = yaml.load(e.target.value);
+                            const jsonString = JSON.stringify(parsed, null, 2);
+                            setJsonOutput(jsonString);
+                            setIsValid(true);
+                            setStats({
+                              lines: e.target.value.split('\n').length,
+                              size: new Blob([e.target.value]).size
+                            });
+                          } catch (err) {
+                            setError(err instanceof Error ? err.message : "Invalid YAML format");
+                            setIsValid(false);
+                            setJsonOutput("");
+                            setStats(null);
+                          }
+                        }, 500);
+                      } else {
+                        setIsValid(null);
+                        setJsonOutput("");
+                        setStats(null);
+                        setError("");
+                      }
+                    }}
+                    className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-20"
+                  />
+                  <CopyButton
+                    text={yamlInput}
+                    className="absolute right-8 top-3 z-10 px-2 py-0.5 rounded text-xs shadow transition-all"
+                    title="Copy YAML"
+                    style={{transform: 'translateY(-2px)'}}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -291,15 +290,12 @@ settings:
                   readOnly={!jsonOutput || isValid === true}
                   className="w-full min-h-[400px] font-mono text-sm bg-muted/30 border-border/50 pr-16"
                 />
-                <button
-                  onClick={() => copyToClipboard(jsonOutput, "JSON")}
-                  className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700 disabled:opacity-50"
-                  disabled={!jsonOutput}
+                <CopyButton
+                  text={jsonOutput}
+                  className={`absolute right-8 top-3 z-10 px-2 py-0.5 rounded text-xs shadow transition-all ${!jsonOutput ? 'opacity-50 pointer-events-none' : ''}`}
                   title="Copy JSON"
-                  type="button"
-                >
-                  copy
-                </button>
+                  style={{transform: 'translateY(-2px)'}}
+                />
               </div>
             </div>
           </div>

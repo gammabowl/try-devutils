@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 interface CommandPaletteProps {
@@ -94,6 +95,9 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
       <DialogContent className="sm:max-w-[500px] p-0 gap-0 overflow-hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>Command Palette</DialogTitle>
+          <DialogDescription>
+            Command palette dialog for searching and running utilities.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex items-center border-b px-3">
           <Search className="h-4 w-4 shrink-0 opacity-50" />

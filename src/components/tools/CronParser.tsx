@@ -3,11 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Copy, AlertCircle, CheckCircle, HelpCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import cronstrue from "cronstrue";
+import { Calendar, AlertCircle, CheckCircle, HelpCircle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useToast } from "@/hooks/use-toast";
+import cronstrue from "cronstrue";
 
 interface CronParserProps {
   initialContent?: string;
@@ -278,15 +279,11 @@ export function CronParser({ initialContent, action }: CronParserProps) {
                     onChange={(e) => setCronExpression(e.target.value)}
                     className="font-mono bg-muted/50 border-border/50 pr-14"
                   />
-                  <button
-                    onClick={() => copyToClipboard(cronExpression)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-sky-200 dark:border-sky-700"
-                    disabled={!cronExpression}
+                  <CopyButton
+                    text={cronExpression}
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 ${!cronExpression ? 'opacity-50 pointer-events-none' : ''}`}
                     title="Copy cron expression"
-                    type="button"
-                  >
-                    copy
-                  </button>
+                  />
                 </div>
                 <Button
                   onClick={parseCron}

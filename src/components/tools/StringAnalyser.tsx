@@ -2,10 +2,11 @@ import { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Copy, RotateCcw, Type } from "lucide-react";
+import { RotateCcw, Type } from "lucide-react";
 import { length, charCount, wordCount, lineCount, toLowerCase, toUpperCase, toCamelCase, toSnakeCase, toKebabCase } from "@/lib/stringUtils";
 import { toast } from "sonner";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { CopyButton } from "@/components/ui/copy-button";
 
 export function StringAnalyser() {
   const [input, setInput] = useState("");
@@ -137,14 +138,11 @@ export function StringAnalyser() {
               <div className="p-4 pr-16 bg-muted/30 border border-border/50 rounded-lg font-mono text-sm text-foreground break-words max-h-64 overflow-auto">
                 {displayText}
               </div>
-              <button
-                onClick={() => handleCopyToClipboard(displayText, "Text")}
-                className="absolute right-2 top-2 px-2 py-0.5 rounded text-xs bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 hover:bg-sky-200 dark:hover:bg-sky-800 transition-colors border border-sky-200 dark:border-sky-700"
+              <CopyButton
+                text={displayText}
+                className="absolute right-2 top-2"
                 title="Copy text"
-                type="button"
-              >
-                copy
-              </button>
+              />
             </div>
           </div>
         )}
