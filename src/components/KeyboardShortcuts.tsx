@@ -71,7 +71,7 @@ export function KeyboardShortcutsHelp({
             Keyboard Shortcuts
           </DialogTitle>
           <DialogDescription>
-            Dialog listing all available keyboard shortcuts for the application.
+            A list of all available keyboard shortcuts for the application.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-6">

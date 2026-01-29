@@ -96,10 +96,10 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
         <DialogHeader className="sr-only">
           <DialogTitle>Command Palette</DialogTitle>
           <DialogDescription>
-            Command palette dialog for searching and running utilities.
+            Search and run utilities from the command palette.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex items-center border-b px-3">
+        <div className="flex items-center border-b pl-3 pr-12">
           <Search className="h-4 w-4 shrink-0 opacity-50" />
           <input
             ref={inputRef}
