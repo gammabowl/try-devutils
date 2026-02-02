@@ -8,6 +8,7 @@ import { Hash, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import CryptoJS from "crypto-js";
+import bcrypt from "bcryptjs";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
@@ -16,6 +17,7 @@ interface HashResult {
   sha1: string;
   sha256: string;
   sha512: string;
+  bcrypt: string;
 }
 
 interface HashGeneratorProps {
@@ -29,29 +31,51 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
     md5: "",
     sha1: "",
     sha256: "",
-    sha512: ""
+    sha512: "",
+    bcrypt: ""
   });
+  const [saltRounds, setSaltRounds] = useState(10);
+  const [isGeneratingBcrypt, setIsGeneratingBcrypt] = useState(false);
   const [hashToVerify, setHashToVerify] = useState("");
   const [verificationResult, setVerificationResult] = useState<string>("");
   const { toast } = useToast();
 
-  const generateHashes = useCallback(() => {
+  const generateHashes = useCallback(async () => {
     if (!input.trim()) {
-      setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
+      setHashes({ md5: "", sha1: "", sha256: "", sha512: "", bcrypt: "" });
       return;
     }
 
-    setHashes({
+    const syncHashes = {
       md5: CryptoJS.MD5(input).toString(),
       sha1: CryptoJS.SHA1(input).toString(),
       sha256: CryptoJS.SHA256(input).toString(),
-      sha512: CryptoJS.SHA512(input).toString()
-    });
-  }, [input]);
+      sha512: CryptoJS.SHA512(input).toString(),
+      bcrypt: ""
+    };
+
+    setHashes(syncHashes);
+
+    // Generate bcrypt hash asynchronously
+    setIsGeneratingBcrypt(true);
+    try {
+      const bcryptHash = await bcrypt.hash(input, saltRounds);
+      setHashes(prev => ({ ...prev, bcrypt: bcryptHash }));
+    } catch (error) {
+      console.error("Error generating bcrypt hash:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate bcrypt hash",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingBcrypt(false);
+    }
+  }, [input, saltRounds, toast]);
 
   const copyAllHashes = useCallback(async () => {
     if (!hashes.sha256) return;
-    const allHashes = `MD5: ${hashes.md5}\nSHA1: ${hashes.sha1}\nSHA256: ${hashes.sha256}\nSHA512: ${hashes.sha512}`;
+    const allHashes = `MD5: ${hashes.md5}\nSHA1: ${hashes.sha1}\nSHA256: ${hashes.sha256}\nSHA512: ${hashes.sha512}\nBcrypt: ${hashes.bcrypt}`;
     try {
       await navigator.clipboard.writeText(allHashes);
       toast({
@@ -69,7 +93,8 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
 
   const clearAll = useCallback(() => {
     setInput("");
-    setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
+    setHashes({ md5: "", sha1: "", sha256: "", sha512: "", bcrypt: "" });
+    setSaltRounds(10);
     setHashToVerify("");
     setVerificationResult("");
   }, []);
@@ -87,7 +112,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
     }
   }, [initialContent, action, generateHashes]);
 
-  const verifyHash = () => {
+  const verifyHash = async () => {
     if (!input.trim() || !hashToVerify.trim()) {
       setVerificationResult("Please enter both text and hash to verify");
       return;
@@ -104,12 +129,26 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
     let matchFound = false;
     let matchType = "";
 
+    // Check sync hashes
     Object.entries(currentHashes).forEach(([type, hash]) => {
       if (hash === hashLower) {
         matchFound = true;
         matchType = type.toUpperCase();
       }
     });
+
+    // Check bcrypt if not found in sync hashes
+    if (!matchFound) {
+      try {
+        const isBcryptMatch = await bcrypt.compare(input, hashToVerify);
+        if (isBcryptMatch) {
+          matchFound = true;
+          matchType = "BCRYPT";
+        }
+      } catch (error) {
+        // If bcrypt.compare fails, it's not a valid bcrypt hash
+      }
+    }
 
     if (matchFound) {
       setVerificationResult(`✅ Hash verified! Matches ${matchType} algorithm`);
@@ -138,7 +177,8 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
     { name: "MD5", key: "md5" as keyof HashResult, description: "128-bit (not cryptographically secure)" },
     { name: "SHA1", key: "sha1" as keyof HashResult, description: "160-bit (deprecated for security)" },
     { name: "SHA256", key: "sha256" as keyof HashResult, description: "256-bit (recommended)" },
-    { name: "SHA512", key: "sha512" as keyof HashResult, description: "512-bit (highest security)" }
+    { name: "SHA512", key: "sha512" as keyof HashResult, description: "512-bit (highest security)" },
+    { name: "Bcrypt", key: "bcrypt" as keyof HashResult, description: "Password hashing (adaptive, slow)" }
   ];
 
   return (
@@ -167,20 +207,37 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                 value={input}
                 onChange={(e) => {
                   setInput(e.target.value);
-                  // Auto-generate hashes as user types
+                  // Auto-generate sync hashes as user types
                   if (e.target.value.trim()) {
                     setHashes({
                       md5: CryptoJS.MD5(e.target.value).toString(),
                       sha1: CryptoJS.SHA1(e.target.value).toString(),
                       sha256: CryptoJS.SHA256(e.target.value).toString(),
-                      sha512: CryptoJS.SHA512(e.target.value).toString()
+                      sha512: CryptoJS.SHA512(e.target.value).toString(),
+                      bcrypt: "" // Clear bcrypt until generated
                     });
                   } else {
-                    setHashes({ md5: "", sha1: "", sha256: "", sha512: "" });
+                    setHashes({ md5: "", sha1: "", sha256: "", sha512: "", bcrypt: "" });
                   }
                 }}
                 className="w-full min-h-[120px] bg-muted/50 border-border/50 font-mono text-sm"
               />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  Bcrypt Salt Rounds
+                </label>
+                <Input
+                  type="number"
+                  min="4"
+                  max="20"
+                  value={saltRounds}
+                  onChange={(e) => setSaltRounds(parseInt(e.target.value) || 10)}
+                  className="bg-muted/50 border-border/50"
+                />
+              </div>
             </div>
 
             <div className="flex gap-2">
@@ -194,11 +251,11 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
               </Button>
             </div>
 
-            {(hashes.md5 || hashes.sha1 || hashes.sha256 || hashes.sha512) && (
+            {(hashes.md5 || hashes.sha1 || hashes.sha256 || hashes.sha512 || hashes.bcrypt) && (
               <div className="space-y-3 pt-2">
                 {hashAlgorithms.map((algo) => {
                   const hashValue = hashes[algo.key];
-                  if (!hashValue) return null;
+                  if (!hashValue && algo.key !== 'bcrypt') return null;
                   
                   return (
                     <div key={algo.key} className="p-4 bg-muted/30 rounded-lg border border-border/50 hover:border-dev-primary/30 transition-colors">
@@ -208,14 +265,19 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
                             {algo.name}
                           </Badge>
                           <span className="text-sm text-muted-foreground">{algo.description}</span>
+                          {algo.key === 'bcrypt' && isGeneratingBcrypt && (
+                            <span className="text-sm text-muted-foreground">(Generating...)</span>
+                          )}
                         </div>
-                        <CopyButton
-                          text={hashValue}
-                          title={`Copy ${algo.name}`}
-                        />
+                        {hashValue && (
+                          <CopyButton
+                            text={hashValue}
+                            title={`Copy ${algo.name}`}
+                          />
+                        )}
                       </div>
                       <code className="text-sm font-mono text-foreground break-all block">
-                        {hashValue}
+                        {hashValue || (algo.key === 'bcrypt' && isGeneratingBcrypt ? "Generating bcrypt hash..." : "")}
                       </code>
                     </div>
                   );
@@ -228,6 +290,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
               <div><strong>SHA1:</strong> Deprecated for security applications (160-bit)</div>
               <div><strong>SHA256:</strong> Current standard for most applications (256-bit)</div>
               <div><strong>SHA512:</strong> Highest security, larger output (512-bit)</div>
+              <div><strong>Bcrypt:</strong> Designed for password hashing with salt (adaptive cost)</div>
             </div>
           </TabsContent>
 
@@ -279,7 +342,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
             )}
 
             <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground">
-              <strong>Note:</strong> Enter the original text and a hash value to verify if they match. The verifier will check against all supported algorithms (MD5, SHA1, SHA256, SHA512).
+              <strong>Note:</strong> Enter the original text and a hash value to verify if they match. The verifier will check against all supported algorithms (MD5, SHA1, SHA256, SHA512, Bcrypt).
             </div>
           </TabsContent>
         </Tabs>

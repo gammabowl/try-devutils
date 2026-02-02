@@ -34,13 +34,14 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
     hsv: "hsv(217, 76%, 96%)"
   });
   const [error, setError] = useState("");
+  const [examplesOpen, setExamplesOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (initialContent && action === "convert") {
       convertColor(initialContent);
     }
-  }, [initialContent, action]);
+  }, [initialContent, action]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const hexToRgb = (hex: string): [number, number, number] | null => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -58,7 +59,8 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
     
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h = 0, s = 0, l = (max + min) / 2;
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
 
     if (max === min) {
       h = s = 0;
@@ -103,7 +105,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
     return [Math.round(h * 360), Math.round(s * 100), Math.round(v * 100)];
   };
 
-  const convertColor = (input: string) => {
+  const convertColor = useCallback((input: string) => {
     try {
       setError("");
       let hex = input;
@@ -152,7 +154,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
     } catch (err) {
       setError("Invalid color format. Please use hex, rgb, or hsl format.");
     }
-  };
+  }, []);
 
   const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
     h /= 360;
@@ -330,10 +332,10 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
 
       {/* Color Values section moved outside CardContent */}
       <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible defaultOpen={false} className="w-full">
+        <Collapsible open={examplesOpen} onOpenChange={setExamplesOpen} className="w-full">
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-start">
-              Examples
+              {examplesOpen ? "▼" : "▶"} Examples
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2 mt-2">

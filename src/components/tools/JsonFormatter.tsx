@@ -19,7 +19,7 @@ interface JsonFormatterProps {
 export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
   const [input, setInput] = useState(initialContent || "");
   const [output, setOutput] = useState("");
-  const [parsedJson, setParsedJson] = useState<any>(null);
+  const [parsedJson, setParsedJson] = useState<unknown>(null);
   const [error, setError] = useState("");
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [isMinified, setIsMinified] = useState(false);
@@ -83,7 +83,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
     if (initialContent && action === "format") {
       formatJson(false);
     }
-  }, [initialContent, action]);
+  }, [initialContent, action, formatJson]);
 
   const examples = [
     {

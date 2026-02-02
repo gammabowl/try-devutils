@@ -42,7 +42,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       convertFromTimestamp();
       convertToTimestamp();
     }
-  }, []);
+  }, [action, initialContent]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const examples = {
     timestamps: [
@@ -59,7 +59,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
     ],
   };
 
-  const convertFromTimestamp = () => {
+  const convertFromTimestamp = useCallback(() => {
     try {
       setError("");
       const ts = parseInt(timestamp);
@@ -82,9 +82,9 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       setError("Invalid timestamp format");
       setFromTimestampResults({});
     }
-  };
+  }, [timestamp]);
 
-  const convertToTimestamp = () => {
+  const convertToTimestamp = useCallback(() => {
     try {
       setError("");
       const date = parseISO(dateTime);
@@ -104,7 +104,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       setError("Invalid date format. Use ISO format like: 2023-12-25T15:30:00");
       setToTimestampResults({});
     }
-  };
+  }, [dateTime]);
 
   const getCurrentTimestamp = () => {
     const now = new Date();
@@ -193,9 +193,42 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
     // Convert the seconds to the target unit ("toUnit")
     const convertedValue = fromSeconds / unitToSeconds[toUnit];
 
+    // Format the result with appropriate precision
+    const formatResult = (num: number): string => {
+      if (num === 0) return "0";
+
+      // For extremely small numbers, use scientific notation
+      if (Math.abs(num) < 0.000001) {
+        return num.toExponential(2);
+      }
+
+      // For very small numbers, show many decimal places
+      if (Math.abs(num) < 0.0001) {
+        return num.toFixed(8);
+      }
+
+      // For small numbers, show more decimal places
+      if (Math.abs(num) < 0.01) {
+        return num.toFixed(6);
+      }
+
+      // For numbers less than 1, show 4 decimal places
+      if (Math.abs(num) < 1) {
+        return num.toFixed(4);
+      }
+
+      // For normal numbers, use 2 decimal places
+      if (Math.abs(num) < 100) {
+        return num.toFixed(2);
+      }
+
+      // For large numbers, use fewer decimal places
+      return num.toFixed(1);
+    };
+
     // Update the results state
     setUnitConversionResults({
-      [`${value} ${fromUnit} to ${toUnit}`]: convertedValue.toFixed(2),
+      [`${value} ${fromUnit} to ${toUnit}`]: formatResult(convertedValue),
     });
   };
 

@@ -119,8 +119,8 @@ function getClaimInfo(claim: string, isHeader: boolean = false): { description: 
 }
 
 interface DecodedToken {
-  header: any;
-  payload: any;
+  header: Record<string, unknown>;
+  payload: Record<string, unknown>;
   signature: string;
   isValid: boolean;
 }
@@ -154,9 +154,9 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
     } else {
       setTimeout(() => decodeJWT(token), 0);
     }
-  }, [initialContent, action]);
+  }, [initialContent, action, token]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const decodeJWT = (token: string) => {
+const decodeJWT = useCallback((token: string) => {
     try {
       setError("");
       
@@ -215,13 +215,13 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
       setError(err instanceof Error ? err.message : "Failed to decode JWT");
       setDecoded(null);
     }
-  };
+  }, []);
 
-  const formatJson = (obj: any) => {
+  const formatJson = (obj: unknown) => {
     return JSON.stringify(obj, null, 2);
   };
 
-  const renderJsonWithSelectableValues = (obj: any, isHeader: boolean = false) => {
+  const renderJsonWithSelectableValues = (obj: unknown, isHeader: boolean = false) => {
     const handleValueDoubleClick = (e: React.MouseEvent<HTMLSpanElement>) => {
       e.stopPropagation();
       const selection = window.getSelection();
@@ -289,7 +289,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
       );
     };
 
-    const renderValue = (value: any, isLast: boolean, indent: number = 2, key?: string): React.ReactNode => {
+    const renderValue = (value: unknown, isLast: boolean, indent: number = 2, key?: string): React.ReactNode => {
       const indentStr = "  ".repeat(indent);
       const prevIndentStr = "  ".repeat(indent - 1);
       
@@ -467,7 +467,7 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
     decodeJWT(sampleToken);
   };
 
-  const formatClaims = (obj: any, isHeader: boolean = false): ClaimInfo[] => {
+  const formatClaims = (obj: unknown, isHeader: boolean = false): ClaimInfo[] => {
     const TIMESTAMP_FIELDS = ['exp', 'iat', 'nbf', 'auth_time', 'updated_at'];
     
     const formatTimestamp = (timestamp: number): string => {
@@ -934,13 +934,11 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                                       <td className={`p-2 font-mono text-foreground break-all align-top ${claim.description ? 'border-r border-border/50' : ''}`} colSpan={claim.description ? 1 : 2}>
                                         <div className="flex items-start gap-1 group">
                                           <span className="flex-1">{claim.value}</span>
-                                          <button
-                                            onClick={() => copyToClipboard(claim.value)}
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0"
+                                          <CopyButton
+                                            text={claim.value}
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity h-3 w-3 text-muted-foreground hover:text-foreground"
                                             title="Copy value"
-                                          >
-                                            <CopyButton className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                                          </button>
+                                          />
                                         </div>
                                       </td>
                                       {claim.description && (
@@ -1076,13 +1074,11 @@ export function JwtDecoder({ initialContent, action }: JwtDecoderProps) {
                           <td className={`p-2 font-mono text-foreground break-all align-top ${claim.description ? 'border-r border-border/50' : ''}`} colSpan={claim.description ? 1 : 2}>
                             <div className="flex items-start gap-1 group">
                               <span className="flex-1">{claim.value}</span>
-                              <button
-                                onClick={() => copyToClipboard(claim.value)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-muted rounded flex-shrink-0"
+                              <CopyButton
+                                text={claim.value}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity h-3 w-3 text-muted-foreground hover:text-foreground"
                                 title="Copy value"
-                              >
-                                <CopyButton className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                              </button>
+                              />
                             </div>
                           </td>
                           {claim.description && (

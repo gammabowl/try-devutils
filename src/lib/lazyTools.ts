@@ -25,7 +25,7 @@ const toolImports = {
 export type ToolId = keyof typeof toolImports;
 
 // Cache for prefetched modules
-const prefetchCache = new Map<string, Promise<any>>();
+const prefetchCache = new Map<string, Promise<unknown>>();
 
 // Prefetch a tool component (call on hover)
 // Silently catches errors to avoid issues with page refresh, network failures, etc.

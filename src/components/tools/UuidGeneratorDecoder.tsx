@@ -376,7 +376,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                   ].map((v) => (
                     <button
                       key={v.version}
-                      onClick={() => setSelectedVersion(v.version as any)}
+                      onClick={() => setSelectedVersion(v.version as 'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7')}
                       className={`p-2 rounded-md border transition-all text-center hover:shadow-sm relative ${
                         selectedVersion === v.version
                           ? 'border-dev-primary bg-dev-primary/10 text-dev-primary font-medium'

@@ -20,6 +20,7 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
   const [output, setOutput] = useState("");
   const [mode, setMode] = useState<"encode" | "decode">("decode");
   const [encodeMode, setEncodeMode] = useState<"component" | "full">("component");
+  const [examplesOpen, setExamplesOpen] = useState(false);
 
   const { toast } = useToast();
 
@@ -229,10 +230,10 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
       </CardContent>
 
       <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible defaultOpen={false} className="w-full">
+        <Collapsible open={examplesOpen} onOpenChange={setExamplesOpen} className="w-full">
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-start">
-              Examples
+              {examplesOpen ? "▼" : "▶"} Examples
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2 mt-2">

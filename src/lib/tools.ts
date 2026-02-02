@@ -44,7 +44,7 @@ export interface Tool {
   id: string;
   label: string;
   icon: LucideIcon;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<{ initialContent?: string; action?: string }>;
   description: string;
   color: string;
   textColor: string;
@@ -55,7 +55,7 @@ export const tools: Tool[] = [
   { id: "base64", label: "Base64 Converter", icon: DecimalsArrowRight, component: LazyBase64Converter, description: "Encode and decode Base64 strings", color: "from-rose-500 to-rose-600", textColor: "text-rose-600", bgColor: "bg-rose-500/10" },
   { id: "color", label: "Colour Converter", icon: Palette, component: LazyColorConverter, description: "Convert between colour formats", color: "from-fuchsia-500 to-fuchsia-600", textColor: "text-fuchsia-600", bgColor: "bg-fuchsia-500/10" },
   { id: "cron", label: "Cron Parser", icon: Calendar, component: LazyCronParser, description: "Parse and explain cron expressions", color: "from-sky-500 to-sky-600", textColor: "text-sky-600", bgColor: "bg-sky-500/10" },
-  { id: "hash", label: "Hash Generator", icon: Hash, component: LazyHashGenerator, description: "Generate MD5, SHA1, SHA256 hashes", color: "from-emerald-500 to-emerald-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
+  { id: "hash", label: "Hash Generator", icon: Hash, component: LazyHashGenerator, description: "Generate MD5, SHA1, SHA256, SHA512, Bcrypt hashes", color: "from-emerald-500 to-emerald-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
   { id: "json", label: "JSON Formatter", icon: Braces, component: LazyJsonFormatter, description: "Format, validate and minify JSON", color: "from-amber-500 to-amber-600", textColor: "text-amber-600", bgColor: "bg-amber-500/10" },
   { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: LazyJwtDecoder, description: "Decode, Encode and validate JWT tokens", color: "from-indigo-500 to-indigo-600", textColor: "text-indigo-600", bgColor: "bg-indigo-500/10" },
   { id: "markdown", label: "Markdown", icon: FileText, component: LazyMarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },

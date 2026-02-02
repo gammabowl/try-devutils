@@ -113,13 +113,13 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
     return cleaned;
   };
 
-  const validateInput = (value: string, base: Base): boolean => {
+  const validateInput = useCallback((value: string, base: Base): boolean => {
     if (!value) return false;
     const cleaned = cleanInput(value, base);
     return bases[base].regex.test(cleaned);
-  };
+  }, []);
 
-  const convert = () => {
+  const convert = useCallback(() => {
     setError("");
     setResult("");
     setAllBases({} as Record<Base, string>);
@@ -176,13 +176,13 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
     } catch (err) {
       setError(err instanceof Error ? err.message : "Conversion failed");
     }
-  };
+  }, [input, fromBase, toBase, validateInput]);
 
   useEffect(() => {
     if (input) {
       convert();
     }
-  }, [fromBase, toBase]);
+  }, [fromBase, toBase, convert, input]);
 
   const copyToClipboard = useCallback(async (text: string) => {
     await navigator.clipboard.writeText(text);

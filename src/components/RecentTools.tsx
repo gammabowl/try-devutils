@@ -1,11 +1,11 @@
 
 import { ToolCard } from "./ToolCard";
-import { Clock } from "lucide-react";
+import { Clock, LucideIcon } from "lucide-react";
 
 interface Tool {
   id: string;
   label: string;
-  icon: any;
+  icon: LucideIcon;
   description: string;
   category: string;
 }

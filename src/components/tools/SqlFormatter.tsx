@@ -120,7 +120,7 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
     if (initialContent && action === "format") {
       formatSql(false);
     }
-  }, [initialContent, action]);
+  }, [initialContent, action, formatSql]);
 
   return (
     <Card className="tool-card">

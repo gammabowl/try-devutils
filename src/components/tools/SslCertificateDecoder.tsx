@@ -28,7 +28,7 @@ interface CertificateInfo {
     algorithm: string;
     keySize?: number;
   };
-  extensions?: Record<string, any>;
+  extensions?: Record<string, unknown>;
   fingerprints: {
     sha1?: string;
     sha256?: string;

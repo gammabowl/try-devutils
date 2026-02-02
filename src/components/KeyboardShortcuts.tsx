@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useCallback, createContext, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { tools } from "@/lib/tools";

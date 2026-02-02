@@ -27,9 +27,9 @@ export function YamlValidator({ initialContent, action }: YamlValidatorProps) {
     if (initialContent && action === "validate") {
       validateYaml();
     }
-  }, [initialContent, action]);
+  }, [initialContent, action]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const validateYaml = () => {
+  const validateYaml = useCallback(() => {
     try {
       setError("");
       
@@ -55,7 +55,7 @@ export function YamlValidator({ initialContent, action }: YamlValidatorProps) {
       setJsonOutput("");
       setStats(null);
     }
-  };
+  }, [yamlInput]);
 
   const convertJsonToYaml = () => {
     try {

@@ -10,23 +10,111 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 import cronstrue from "cronstrue";
 
+interface ParsedCron {
+  minute: number[];
+  hour: number[];
+  dayOfMonth: number[];
+  month: number[];
+  dayOfWeek: number[];
+  seconds: number[];
+}
+
 interface CronParserProps {
   initialContent?: string;
   action?: string;
 }
+
+const parseField = (field: string, min: number, max: number): number[] => {
+  const values: Set<number> = new Set();
+
+  if (field === "*") {
+    for (let i = min; i <= max; i++) {
+      values.add(i);
+    }
+    return Array.from(values).sort((a, b) => a - b);
+  }
+
+  const parts = field.split(",");
+  for (const part of parts) {
+    if (part.includes("/")) {
+      // Handle step values like "*/5"
+      const [range, step] = part.split("/");
+      const stepNum = parseInt(step, 10);
+      let rangeMin = min;
+      let rangeMax = max;
+
+      if (range !== "*") {
+        const [rmin, rmax] = range.includes("-")
+          ? range.split("-").map(Number)
+          : [parseInt(range, 10), parseInt(range, 10)];
+        rangeMin = rmin;
+        rangeMax = rmax;
+      }
+
+      for (let i = rangeMin; i <= rangeMax; i += stepNum) {
+        values.add(i);
+      }
+    } else if (part.includes("-")) {
+      // Handle ranges like "1-5" or "MON-FRI"
+      const [start, end] = part.split("-").map(s => {
+        // Convert day names to numbers
+        const dayMap: Record<string, number> = {
+          'SUN': 0, 'MON': 1, 'TUE': 2, 'WED': 3, 'THU': 4, 'FRI': 5, 'SAT': 6
+        };
+        return dayMap[s.toUpperCase()] !== undefined ? dayMap[s.toUpperCase()] : parseInt(s, 10);
+      });
+      for (let i = start; i <= end; i++) {
+        if (i >= min && i <= max) {
+          values.add(i);
+        }
+      }
+    } else {
+      // Handle single values or day names
+      const dayMap: Record<string, number> = {
+        'SUN': 0, 'MON': 1, 'TUE': 2, 'WED': 3, 'THU': 4, 'FRI': 5, 'SAT': 6
+      };
+      const num = dayMap[part.toUpperCase()] !== undefined ? dayMap[part.toUpperCase()] : parseInt(part, 10);
+      if (num >= min && num <= max) {
+        values.add(num);
+      }
+    }
+  }
+
+  return Array.from(values)
+    .filter((v) => v >= min && v <= max)
+    .sort((a, b) => a - b);
+};
+
+const parseCronExpression = (expression: string): ParsedCron => {
+  const parts = expression.trim().split(/\s+/);
+  if (parts.length !== 5 && parts.length !== 6) {
+    throw new Error("Cron expression must have 5 or 6 fields");
+  }
+
+  const [minute, hour, dayOfMonth, month, dayOfWeek, ...secondsPart] = parts;
+  return {
+    minute: parseField(minute, 0, 59),
+    hour: parseField(hour, 0, 23),
+    dayOfMonth: parseField(dayOfMonth, 1, 31),
+    month: parseField(month, 1, 12),
+    dayOfWeek: parseField(dayOfWeek, 0, 6),
+    seconds: secondsPart.length > 0 ? parseField(secondsPart[0], 0, 59) : [0],
+  };
+};
 
 export function CronParser({ initialContent, action }: CronParserProps) {
   const [cronExpression, setCronExpression] = useState(initialContent || "");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [nextRuns, setNextRuns] = useState<string[]>([]);
+  const [examplesOpen, setExamplesOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (initialContent && action === "parse") {
       parseCron();
     }
-  }, [initialContent, action]);
+  }, [initialContent, action]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const examples = [
     { cron: "0 9 * * MON-FRI", desc: "At 9:00 AM, Monday through Friday" },
@@ -36,7 +124,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
     { cron: "0 22 * * SUN", desc: "At 10:00 PM on Sunday" },
   ];
 
-  const parseCron = () => {
+  const parseCron = useCallback(() => {
     try {
       setError("");
       
@@ -58,73 +146,9 @@ export function CronParser({ initialContent, action }: CronParserProps) {
       setDescription("");
       setNextRuns([]);
     }
-  };
+  }, [cronExpression]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const parseCronExpression = (expression: string) => {
-    const parts = expression.trim().split(/\s+/);
-    if (parts.length !== 5 && parts.length !== 6) {
-      throw new Error("Cron expression must have 5 or 6 fields");
-    }
-
-    const [minute, hour, dayOfMonth, month, dayOfWeek, ...secondsPart] = parts;
-    return {
-      minute: parseField(minute, 0, 59),
-      hour: parseField(hour, 0, 23),
-      dayOfMonth: parseField(dayOfMonth, 1, 31),
-      month: parseField(month, 1, 12),
-      dayOfWeek: parseField(dayOfWeek, 0, 6),
-      seconds: secondsPart.length > 0 ? parseField(secondsPart[0], 0, 59) : [0],
-    };
-  };
-
-  const parseField = (field: string, min: number, max: number): number[] => {
-    const values: Set<number> = new Set();
-
-    if (field === "*") {
-      for (let i = min; i <= max; i++) {
-        values.add(i);
-      }
-      return Array.from(values).sort((a, b) => a - b);
-    }
-
-    const parts = field.split(",");
-    for (const part of parts) {
-      if (part.includes("/")) {
-        // Handle step values like "*/5"
-        const [range, step] = part.split("/");
-        const stepNum = parseInt(step, 10);
-        let rangeMin = min;
-        let rangeMax = max;
-
-        if (range !== "*") {
-          const [rmin, rmax] = range.includes("-")
-            ? range.split("-").map(Number)
-            : [parseInt(range, 10), parseInt(range, 10)];
-          rangeMin = rmin;
-          rangeMax = rmax;
-        }
-
-        for (let i = rangeMin; i <= rangeMax; i += stepNum) {
-          values.add(i);
-        }
-      } else if (part.includes("-")) {
-        // Handle ranges like "1-5"
-        const [start, end] = part.split("-").map(Number);
-        for (let i = start; i <= end; i++) {
-          values.add(i);
-        }
-      } else {
-        // Single value
-        values.add(parseInt(part, 10));
-      }
-    }
-
-    return Array.from(values)
-      .filter((v) => v >= min && v <= max)
-      .sort((a, b) => a - b);
-  };
-
-  const matchesCron = (date: Date, parsed: any): boolean => {
+  const matchesCron = (date: Date, parsed: ParsedCron): boolean => {
     const minute = date.getMinutes();
     const hour = date.getHours();
     const dayOfMonth = date.getDate();
@@ -157,7 +181,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
     return minuteMatch && hourMatch && secondsMatch && monthMatch && dayMatch;
   };
 
-  const calculateNextRuns = () => {
+  const calculateNextRuns = useCallback(() => {
     try {
       const parsed = parseCronExpression(cronExpression);
       const runs: string[] = [];
@@ -184,7 +208,7 @@ export function CronParser({ initialContent, action }: CronParserProps) {
       setError("Failed to calculate next runs for this cron expression.");
       setNextRuns([]);
     }
-  };
+  }, [cronExpression]);
 
   const copyToClipboard = useCallback(async (text: string) => {
     try {
@@ -218,39 +242,8 @@ export function CronParser({ initialContent, action }: CronParserProps) {
 
   const loadExample = (cron: string) => {
     setCronExpression(cron);
-    // Trigger parsing
-    setTimeout(() => {
-      try {
-        const humanReadable = cronstrue.toString(cron, {
-          use24HourTimeFormat: true,
-          verbose: true
-        });
-        setDescription(humanReadable);
-        setError("");
-        
-        // Calculate next runs
-        const parsed = parseCronExpression(cron);
-        const runs: string[] = [];
-        let current = new Date();
-        
-        // Start from next minute to avoid current minute
-        current.setSeconds(0);
-        current.setMilliseconds(0);
-        current = new Date(current.getTime() + 60000);
-
-        while (runs.length < 5 && current.getFullYear() <= new Date().getFullYear() + 4) {
-          if (matchesCron(current, parsed)) {
-            runs.push(current.toLocaleString());
-          }
-          current = new Date(current.getTime() + 60000); // Add 1 minute
-        }
-
-        setNextRuns(runs);
-      } catch (err) {
-        setError("Failed to parse example");
-        setNextRuns([]);
-      }
-    }, 0);
+    // Trigger parsing after state update
+    setTimeout(() => parseCron(), 0);
   };
 
   return (
@@ -340,10 +333,12 @@ export function CronParser({ initialContent, action }: CronParserProps) {
             )}
 
             {/* Examples */}
-            <Collapsible defaultOpen={false} className="w-full">
+            <Collapsible open={examplesOpen} onOpenChange={setExamplesOpen} className="w-full">
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-start px-0 hover:bg-transparent">
-                  <span className="text-sm text-muted-foreground">▶ Examples</span>
+                  <span className="text-sm text-muted-foreground">
+                    {examplesOpen ? "▼" : "▶"} Examples
+                  </span>
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent className="space-y-1.5 mt-2">
