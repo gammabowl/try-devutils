@@ -12,15 +12,17 @@ A handy collection of developer utilities built with React, TypeScript and assis
 ### Installation & Development
 
 ```sh
-# Clone the repository
-git clone <YOUR_GIT_URL>
-cd try-devutils
+# Development
+npm run dev              # Start development server
+npm run preview          # Preview production build locally
 
-# Install dependencies
-npm install
+# Building
+npm run build            # Production build
+npm run build:dev        # Development build
 
-# Start development server
-npm run dev
+# Code Quality
+npm run lint             # Run ESLint
+npm run check            # Type check and build validation
 ```
 
 The app will be available at `http://localhost:8080` (or next available port).
@@ -50,22 +52,6 @@ src/
 ├── lib/                # Utilities and configurations
 ├── pages/              # Page components
 └── utils/              # Helper functions
-```
-
-### Available Scripts
-
-```sh
-# Development
-npm run dev              # Start development server
-npm run preview          # Preview production build locally
-
-# Building
-npm run build            # Production build
-npm run build:dev        # Development build
-
-# Code Quality
-npm run lint             # Run ESLint
-npm run check            # Type check and build validation
 ```
 
 
