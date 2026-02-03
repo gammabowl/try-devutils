@@ -6,8 +6,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Database, AlertCircle, CheckCircle, WandSparkles, Minimize, Copy } from "lucide-react";
-import { format } from "sql-formatter";
+import { Database, AlertCircle, CheckCircle, WandSparkles, Minimize, Copy, Loader2 } from "lucide-react";
+// import { format } from "sql-formatter"; // Moved to dynamic import
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +31,7 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
   const [isFormatted, setIsFormatted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [dialect, setDialect] = useState<SqlDialect>("postgresql");
   const [tabWidth, setTabWidth] = useState(2);
   const [uppercase, setUppercase] = useState(true);
@@ -60,7 +61,8 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
     }
   ];
 
-  const formatSql = useCallback((minify = false) => {
+  const formatSql = useCallback(async (minify = false) => {
+    setIsLoading(true);
     try {
       setError("");
 
@@ -69,6 +71,9 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
         setIsFormatted(false);
         return;
       }
+
+      // Dynamically import sql-formatter to reduce initial bundle size
+      const { format } = await import("sql-formatter");
 
       const formatted = format(input, {
         language: dialect,
@@ -89,6 +94,8 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
       setError(err instanceof Error ? err.message : "Failed to format SQL");
       setOutput("");
       setIsFormatted(false);
+    } finally {
+      setIsLoading(false);
     }
   }, [input, dialect, tabWidth, uppercase]);
 
@@ -205,17 +212,27 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
         <div className="flex flex-wrap gap-2 mt-2">
           <Button
             onClick={() => formatSql(false)}
+            disabled={isLoading}
             className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
           >
-            <WandSparkles className="h-4 w-4 mr-1" />
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <WandSparkles className="h-4 w-4 mr-1" />
+            )}
             Format
           </Button>
 
           <Button
             onClick={() => formatSql(true)}
+            disabled={isLoading}
             className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4"
           >
-            <Minimize className="h-4 w-4 mr-1" />
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <Minimize className="h-4 w-4 mr-1" />
+            )}
             Minify
           </Button>
 

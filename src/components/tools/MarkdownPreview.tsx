@@ -1,9 +1,9 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, Suspense } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import ReactMarkdown from "react-markdown"
-import { FileText } from "lucide-react"
+// import ReactMarkdown from "react-markdown" // Moved to dynamic import
+import { FileText, Loader2 } from "lucide-react"
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts"
 import { CopyButton } from "@/components/ui/copy-button"
 import { useToast } from "@/hooks/use-toast"
@@ -13,6 +13,14 @@ export function MarkdownPreview() {
   const [markdown, setMarkdown] = useState<string>(
     "# Welcome to Markdown Preview\n\nThis is a **live** preview of your markdown.\n\n## Features:\n- Bold text\n- *Italics*\n- Lists\n- [Links](https://example.com)\n\n```\ncode blocks\n```"
   )
+  const [ReactMarkdown, setReactMarkdown] = useState<React.ComponentType<{ children: string }> | null>(null)
+
+  useEffect(() => {
+    // Dynamically import react-markdown to reduce initial bundle size
+    import("react-markdown").then((module) => {
+      setReactMarkdown(() => module.default)
+    })
+  }, [])
 
   const copyToClipboard = useCallback(async () => {
     try {
@@ -81,7 +89,13 @@ export function MarkdownPreview() {
               Live Preview
             </label>
             <div className="prose dark:prose-invert max-w-none min-h-[400px] p-4 border rounded-md bg-muted/30 overflow-auto">
-              <ReactMarkdown>{markdown}</ReactMarkdown>
+              {ReactMarkdown ? (
+                <ReactMarkdown>{markdown}</ReactMarkdown>
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              )}
             </div>
           </div>
         </div>

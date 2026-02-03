@@ -106,6 +106,16 @@ export function Layout() {
                     <p>
                       Most developer utils websites are cluttered with ads and trackers. This project aims to provide quick to use essential utils in a clean, distraction-free interface.
                     </p>
+                    <div className="border-t border-border/50 pt-3 mt-3">
+                      <h4 className="font-medium text-foreground mb-2">Privacy First</h4>
+                      <ul className="text-xs space-y-1">
+                        <li>• All processing happens locally in your browser</li>
+                        <li>• No external fonts or tracking scripts</li>
+                        <li>• No analytics or usage tracking</li>
+                        <li>• No ads or third-party services</li>
+                        <li>• Only localStorage for your preferences</li>
+                      </ul>
+                    </div>
                     <p className="text-xs">
                       Crafted by{" "}
                       <a
@@ -118,7 +128,7 @@ export function Layout() {
                       </a>
                     </p>
                     <p className="text-xs">
-                      <span className="italic">UI assisted by Copilot</span> 🤖✨
+                      <span className="italic">Assisted by Copilot</span> 🤖✨
                     </p>
                   </div>
                 </DialogContent>

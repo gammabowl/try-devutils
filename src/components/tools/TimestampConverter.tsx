@@ -237,7 +237,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
           <Clock className="h-5 w-5 text-dev-primary" />
-          Timestamp Converter
+          Timestamp/Date Converter
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">

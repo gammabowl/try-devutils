@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+/* Privacy-first: Using system fonts only - no external font loading */
 
 @tailwind base;
 @tailwind components;
@@ -149,7 +149,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     font-size: 1rem; /* 16px base for better readability */
     line-height: 1.65;
     letter-spacing: 0.01em;
@@ -174,9 +174,9 @@ All colors MUST be HSL.
     line-height: 1.7;
   }
 
-  /* Better code/mono font - Roboto Mono */
+  /* Privacy-first: System monospace fonts only */
   code, pre, .font-mono, kbd, samp {
-    font-family: 'Roboto Mono', 'SF Mono', 'Consolas', 'Monaco', 'Liberation Mono', monospace;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Source Code Pro', 'Droid Sans Mono', 'Courier New', monospace;
     font-size: 0.9em;
     font-feature-settings: 'liga' 1, 'calt' 1;
     letter-spacing: 0;

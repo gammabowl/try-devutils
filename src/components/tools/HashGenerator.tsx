@@ -4,11 +4,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Hash, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
+import { Hash, RotateCcw, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import CryptoJS from "crypto-js";
-import bcrypt from "bcryptjs";
+// import CryptoJS from "crypto-js";
+// import bcrypt from "bcryptjs"; // Moved to dynamic imports
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
@@ -38,40 +38,112 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
   const [isGeneratingBcrypt, setIsGeneratingBcrypt] = useState(false);
   const [hashToVerify, setHashToVerify] = useState("");
   const [verificationResult, setVerificationResult] = useState<string>("");
+  const [cryptoJS, setCryptoJS] = useState<any>(null);
+  const [bcryptLib, setBcryptLib] = useState<any>(null);
+  const [isLoadingLibs, setIsLoadingLibs] = useState(false);
   const { toast } = useToast();
 
-  const generateHashes = useCallback(async () => {
-    if (!input.trim()) {
+  // Load crypto libraries on component mount
+  useEffect(() => {
+    const loadLibs = async () => {
+      setIsLoadingLibs(true);
+      try {
+        const [cryptoModule, bcryptModule] = await Promise.all([
+          import("crypto-js"),
+          import("bcryptjs")
+        ]);
+        setCryptoJS(cryptoModule.default);
+        setBcryptLib(bcryptModule.default);
+      } catch (error) {
+        console.error("Failed to load crypto libraries:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load crypto libraries",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingLibs(false);
+      }
+    };
+    loadLibs();
+  }, [toast]);
+
+  // Auto-generate hashes when input changes (debounced)
+  useEffect(() => {
+    if (!input.trim() || !cryptoJS) {
       setHashes({ md5: "", sha1: "", sha256: "", sha512: "", bcrypt: "" });
       return;
     }
 
+    const timeoutId = setTimeout(() => {
+      // Generate sync hashes immediately
+      const syncHashes = {
+        md5: cryptoJS.MD5(input).toString(),
+        sha1: cryptoJS.SHA1(input).toString(),
+        sha256: cryptoJS.SHA256(input).toString(),
+        sha512: cryptoJS.SHA512(input).toString(),
+        bcrypt: ""
+      };
+      setHashes(syncHashes);
+
+      // Generate bcrypt hash asynchronously
+      if (bcryptLib) {
+        setIsGeneratingBcrypt(true);
+        bcryptLib.hash(input, saltRounds)
+          .then((bcryptHash: string) => {
+            setHashes(prev => ({ ...prev, bcrypt: bcryptHash }));
+          })
+          .catch((error: any) => {
+            console.error("Error generating bcrypt hash:", error);
+            toast({
+              title: "Error",
+              description: "Failed to generate bcrypt hash",
+              variant: "destructive",
+            });
+          })
+          .finally(() => {
+            setIsGeneratingBcrypt(false);
+          });
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [input, cryptoJS, bcryptLib, saltRounds, toast]);
+
+  const generateHashes = useCallback(async () => {
+    if (!input.trim() || !cryptoJS) {
+      setHashes({ md5: "", sha1: "", sha256: "", sha512: "", bcrypt: "" });
+      return;
+    }
+
+    // Generate sync hashes immediately
     const syncHashes = {
-      md5: CryptoJS.MD5(input).toString(),
-      sha1: CryptoJS.SHA1(input).toString(),
-      sha256: CryptoJS.SHA256(input).toString(),
-      sha512: CryptoJS.SHA512(input).toString(),
+      md5: cryptoJS.MD5(input).toString(),
+      sha1: cryptoJS.SHA1(input).toString(),
+      sha256: cryptoJS.SHA256(input).toString(),
+      sha512: cryptoJS.SHA512(input).toString(),
       bcrypt: ""
     };
-
     setHashes(syncHashes);
 
     // Generate bcrypt hash asynchronously
-    setIsGeneratingBcrypt(true);
-    try {
-      const bcryptHash = await bcrypt.hash(input, saltRounds);
-      setHashes(prev => ({ ...prev, bcrypt: bcryptHash }));
-    } catch (error) {
-      console.error("Error generating bcrypt hash:", error);
-      toast({
-        title: "Error",
-        description: "Failed to generate bcrypt hash",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGeneratingBcrypt(false);
+    if (bcryptLib) {
+      setIsGeneratingBcrypt(true);
+      try {
+        const bcryptHash = await bcryptLib.hash(input, saltRounds);
+        setHashes(prev => ({ ...prev, bcrypt: bcryptHash }));
+      } catch (error) {
+        console.error("Error generating bcrypt hash:", error);
+        toast({
+          title: "Error",
+          description: "Failed to generate bcrypt hash",
+          variant: "destructive",
+        });
+      } finally {
+        setIsGeneratingBcrypt(false);
+      }
     }
-  }, [input, saltRounds, toast]);
+  }, [input, cryptoJS, bcryptLib, saltRounds, toast]);
 
   const copyAllHashes = useCallback(async () => {
     if (!hashes.sha256) return;
@@ -118,11 +190,16 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
       return;
     }
 
+    if (!cryptoJS || !bcryptLib) {
+      setVerificationResult("Crypto libraries not loaded yet");
+      return;
+    }
+
     const currentHashes = {
-      md5: CryptoJS.MD5(input).toString(),
-      sha1: CryptoJS.SHA1(input).toString(),
-      sha256: CryptoJS.SHA256(input).toString(),
-      sha512: CryptoJS.SHA512(input).toString()
+      md5: cryptoJS.MD5(input).toString(),
+      sha1: cryptoJS.SHA1(input).toString(),
+      sha256: cryptoJS.SHA256(input).toString(),
+      sha512: cryptoJS.SHA512(input).toString()
     };
 
     const hashLower = hashToVerify.toLowerCase();
@@ -140,7 +217,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
     // Check bcrypt if not found in sync hashes
     if (!matchFound) {
       try {
-        const isBcryptMatch = await bcrypt.compare(input, hashToVerify);
+        const isBcryptMatch = await bcryptLib.compare(input, hashToVerify);
         if (isBcryptMatch) {
           matchFound = true;
           matchType = "BCRYPT";
@@ -205,21 +282,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
               <Textarea
                 placeholder="Enter text to generate hashes..."
                 value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  // Auto-generate sync hashes as user types
-                  if (e.target.value.trim()) {
-                    setHashes({
-                      md5: CryptoJS.MD5(e.target.value).toString(),
-                      sha1: CryptoJS.SHA1(e.target.value).toString(),
-                      sha256: CryptoJS.SHA256(e.target.value).toString(),
-                      sha512: CryptoJS.SHA512(e.target.value).toString(),
-                      bcrypt: "" // Clear bcrypt until generated
-                    });
-                  } else {
-                    setHashes({ md5: "", sha1: "", sha256: "", sha512: "", bcrypt: "" });
-                  }
-                }}
+                onChange={(e) => setInput(e.target.value)}
                 className="w-full min-h-[120px] bg-muted/50 border-border/50 font-mono text-sm"
               />
             </div>
@@ -241,15 +304,30 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={generateHashes} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground">
-                <Hash className="h-4 w-4 mr-2" />
-                Generate Hashes
+              <Button 
+                onClick={generateHashes} 
+                disabled={isLoadingLibs}
+                className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+              >
+                {isLoadingLibs ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Hash className="h-4 w-4 mr-2" />
+                )}
+                {isLoadingLibs ? "Loading..." : "Generate Hashes"}
               </Button>
               <Button onClick={clearAll} variant="outline">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Clear
               </Button>
             </div>
+
+            {isLoadingLibs && (
+              <p className="text-sm text-muted-foreground">Loading crypto libraries...</p>
+            )}
+            {!isLoadingLibs && input && (
+              <p className="text-sm text-muted-foreground">Hashes auto-generate as you type</p>
+            )}
 
             {(hashes.md5 || hashes.sha1 || hashes.sha256 || hashes.sha512 || hashes.bcrypt) && (
               <div className="space-y-3 pt-2">
