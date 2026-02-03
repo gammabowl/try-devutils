@@ -1,6 +1,6 @@
 # TryDevUtils
 
-A comprehensive collection of developer utilities built with React, TypeScript and assisted by 🤖. This app provides offline-first tools for developers to handle common tasks like encoding/decoding, formatting, validation, and more.
+A handy collection of developer utilities built with React, TypeScript and assisted by 🤖. 
 
 ## 🚀 Quick Start
 
