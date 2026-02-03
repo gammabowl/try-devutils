@@ -53,7 +53,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
           import("bcryptjs")
         ]);
         setCryptoJS(cryptoModule.default);
-        setBcryptLib(bcryptModule.default);
+        setBcryptLib(bcryptModule);
       } catch (error) {
         console.error("Failed to load crypto libraries:", error);
         toast({
