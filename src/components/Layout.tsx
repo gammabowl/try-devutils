@@ -126,7 +126,7 @@ export function Layout() {
                       Why Choose TryDevUtils?
                     </DialogTitle>
                     <DialogDescription className="text-sm text-muted-foreground mt-2">
-                      Clean, fast, and privacy-focused developer tools
+                      Clean, fast, and privacy-focused developer utilities
                     </DialogDescription>
                   </DialogHeader>
 

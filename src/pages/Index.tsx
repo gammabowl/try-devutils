@@ -45,7 +45,7 @@ function ToolCard({ tool, isFavourite, onToggleFavourite }: ToolCardProps) {
         className={`absolute top-2 right-2 p-1.5 rounded-md transition-all ${
           isFavourite
             ? "text-red-500 bg-red-500/10"
-            : "text-muted-foreground/40 hover:text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100"
+            : "text-muted-foreground/40 hover:text-red-500 hover:bg-red-500/10"
         }`}
         title={isFavourite ? "Remove from favourites" : "Add to favourites"}
       >
