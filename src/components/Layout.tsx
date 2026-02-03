@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Sparkles, Info, Search, Keyboard } from "lucide-react";
+import { Sparkles, Info, Search, Keyboard, Shield, CheckCircle, Twitter } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -98,38 +98,74 @@ export function Layout() {
                     <Info className="h-4 w-4" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Why another dev utils?</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 text-sm text-muted-foreground">
-                    <p>
-                      Most developer utils websites are cluttered with ads and trackers. This project aims to provide quick to use essential utils in a clean, distraction-free interface.
-                    </p>
-                    <div className="border-t border-border/50 pt-3 mt-3">
-                      <h4 className="font-medium text-foreground mb-2">Privacy First</h4>
-                      <ul className="text-xs space-y-1">
-                        <li>• All processing happens locally in your browser</li>
-                        <li>• No external fonts or tracking scripts</li>
-                        <li>• No analytics or usage tracking</li>
-                        <li>• No ads or third-party services</li>
-                        <li>• Only localStorage for your preferences</li>
-                      </ul>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader className="text-center pb-2">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden">
+                      <img src="/logo.png" alt="TryDevUtils Logo" className="h-8 w-8 object-contain" />
                     </div>
-                    <p className="text-xs">
-                      Crafted by{" "}
-                      <a
-                        href="http://x.com/gammabowl"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-dev-primary hover:underline"
-                      >
-                        @gammabowl
-                      </a>
-                    </p>
-                    <p className="text-xs">
-                      <span className="italic">Assisted by Copilot</span> 🤖✨
-                    </p>
+                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Why Choose TryDevUtils?
+                    </DialogTitle>
+                    <DialogDescription className="text-sm text-muted-foreground mt-2">
+                      Clean, fast, and privacy-focused developer tools
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="space-y-6">
+                    <div className="rounded-lg bg-muted/50 p-4 border border-border/50">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Most developer utils websites are bloated with ads, trackers, and unnecessary scripts.
+                        This project delivers essential tools in a clean, distraction-free interface.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-foreground flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-green-600" />
+                        Privacy First Approach
+                      </h4>
+                      <div className="grid gap-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          <span>All processing happens locally in your browser</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          <span>No external fonts or tracking scripts</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          <span>No analytics or usage tracking</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          <span>No ads or third-party services</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          <span>Only localStorage for your preferences</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-border/50 pt-4 mt-4">
+                      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                        <span>Crafted by</span>
+                        <a
+                          href="http://x.com/gammabowl"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 text-dev-primary hover:underline font-medium"
+                        >
+                          <Twitter className="h-3 w-3" />
+                          @gammabowl
+                        </a>
+                        <span className="flex items-center gap-1">
+                          <span className="italic">Assisted by Copilot</span>
+                          <span className="text-lg">🤖✨</span>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
