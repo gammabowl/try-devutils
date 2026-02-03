@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Info } from "lucide-react";
+import { Search, Info, Globe } from "lucide-react";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface HttpStatusCode {
@@ -114,7 +114,7 @@ export function HttpStatusCodeReference() {
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <Info className="h-5 w-5 text-dev-primary" />
+          <Globe className="h-5 w-5 text-dev-primary" />
           HTTP Status Code Reference
         </CardTitle>
       </CardHeader>

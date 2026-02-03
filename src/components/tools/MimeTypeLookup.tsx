@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, ArrowRightLeft, FileType } from "lucide-react";
+import { Search, ArrowRightLeft, FileType, FileSearch } from "lucide-react";
 import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
@@ -160,7 +160,7 @@ export function MimeTypeLookup() {
     <Card className="tool-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
-          <FileType className="h-5 w-5 text-dev-primary" />
+          <FileSearch className="h-5 w-5 text-dev-primary" />
           MIME Type Lookup
         </CardTitle>
       </CardHeader>
