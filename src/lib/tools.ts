@@ -6,6 +6,7 @@ import {
   LazyHttpStatusCodeReference,
   LazyJsonFormatter,
   LazyJwtDecoder,
+  LazyKeyPairGenerator,
   LazyMarkdownPreview,
   LazyMimeTypeLookup,
   LazyNumberBaseConverter,
@@ -41,6 +42,7 @@ import {
   DecimalsArrowRight,
   Globe,
   FileType,
+  Key,
   LucideIcon,
   FileSearch,
 } from "lucide-react";
@@ -63,6 +65,7 @@ export const tools: Tool[] = [
   { id: "hash", label: "Hash Generator", icon: Hash, component: LazyHashGenerator, description: "Generate MD5, SHA1, SHA256, SHA512, Bcrypt hashes", color: "from-emerald-500 to-emerald-600", textColor: "text-emerald-600", bgColor: "bg-emerald-500/10" },
   { id: "json", label: "JSON Formatter", icon: Braces, component: LazyJsonFormatter, description: "Format, validate and minify JSON", color: "from-amber-500 to-amber-600", textColor: "text-amber-600", bgColor: "bg-amber-500/10" },
   { id: "jwt", label: "JWT Decoder/Encoder", icon: FileKeyIcon, component: LazyJwtDecoder, description: "Decode, Encode and validate JWT tokens", color: "from-indigo-500 to-indigo-600", textColor: "text-indigo-600", bgColor: "bg-indigo-500/10" },
+  { id: "keypair", label: "Key Pair Generator", icon: Key, component: LazyKeyPairGenerator, description: "Generate RSA/ECDSA key pairs for SSL & SSH", color: "from-red-800 to-red-900", textColor: "text-red-800", bgColor: "bg-red-800/10" },
   { id: "markdown", label: "Markdown", icon: FileText, component: LazyMarkdownPreview, description: "Live preview of markdown", color: "from-orange-500 to-orange-600", textColor: "text-orange-600", bgColor: "bg-orange-500/10" },
   { id: "numberbase", label: "Number Base Converter", icon: Binary, component: LazyNumberBaseConverter, description: "Convert between binary, octal, decimal, hex", color: "from-yellow-500 to-yellow-600", textColor: "text-yellow-600", bgColor: "bg-yellow-500/10" },
   { id: "regex", label: "RegExp Tester", icon: Regex, component: LazyRegExpTester, description: "Test and debug regular expressions", color: "from-blue-500 to-blue-600", textColor: "text-blue-600", bgColor: "bg-blue-500/10" },

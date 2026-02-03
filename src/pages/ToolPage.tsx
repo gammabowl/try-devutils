@@ -30,7 +30,7 @@ export function ToolPage() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-dev-primary text-dev-primary-foreground hover:bg-dev-primary/90 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to all tools
+          Back to all utils
         </Link>
       </div>
     );
@@ -50,7 +50,7 @@ export function ToolPage() {
           className="group inline-flex items-center gap-3 px-4 py-2 rounded-lg bg-muted/30 hover:bg-muted/60 border border-border/30 hover:border-border/60 transition-all duration-200"
         >
           <ArrowLeft className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-          <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">All tools</span>
+          <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">All utils</span>
           <span className="text-muted-foreground/40">|</span>
           <kbd className="px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-background border border-border/50 rounded shadow-sm">
             ESC

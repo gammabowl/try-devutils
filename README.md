@@ -1,29 +1,99 @@
-# Welcome to TryDevUtils project
+# TryDevUtils
 
-## Build & Run
+A comprehensive collection of developer utilities built with React, TypeScript and assisted by 🤖. This app provides offline-first tools for developers to handle common tasks like encoding/decoding, formatting, validation, and more.
 
-Follow these steps:
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm
+
+### Installation & Development
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
+cd try-devutils
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-## Technologies used for this project
+The app will be available at `http://localhost:8080` (or next available port).
 
-This project is built with:
+## 🛠️ Development Setup
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### IDE Configuration
+
+For the best development experience, we recommend using **Visual Studio Code** with the following extensions:
+
+#### Essential Extensions
+- **TypeScript and JavaScript Language Features** (built-in)
+- **ESLint** - JavaScript/TypeScript linting
+- **Prettier** - Code formatting
+- **Tailwind CSS IntelliSense** - CSS class autocomplete
+- **Auto Rename Tag** - HTML/JSX tag synchronization
+
+
+### Project Structure
+
+```
+src/
+├── components/
+│   ├── utils/          # Individual utility components
+│   └── ui/             # Reusable UI components (shadcn/ui)
+├── hooks/              # Custom React hooks
+├── lib/                # Utilities and configurations
+├── pages/              # Page components
+└── utils/              # Helper functions
+```
+
+### Available Scripts
+
+```sh
+# Development
+npm run dev              # Start development server
+npm run preview          # Preview production build locally
+
+# Building
+npm run build            # Production build
+npm run build:dev        # Development build
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run check            # Type check and build validation
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+#### 🐛 Bug Reports
+Found a bug? Help us fix it by using our [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md):
+
+#### 💡 Feature Requests
+Have an idea for a new developer tool? Use our [Feature Request template](.github/ISSUE_TEMPLATE/feature_request.md):
+
+
+## 🚀 Deployment & Hosting
+
+This app is deployed and hosted on **Vercel** with automatic deployments from the main branch.
+Push to `main` branch triggers deployment
+
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Inspired by various developer utils collections
+- Thanks to the open source community
+
+---
+
+Happy coding/vibe-coding! 🎉

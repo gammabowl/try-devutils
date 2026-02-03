@@ -28,11 +28,18 @@ interface CertificateInfo {
     algorithm: string;
     keySize?: number;
   };
+  subjectAlternativeNames?: string[];
+  keyUsage?: string[];
+  extendedKeyUsage?: string[];
   extensions?: Record<string, unknown>;
   fingerprints: {
     sha1?: string;
     sha256?: string;
+    sha384?: string;
+    sha512?: string;
   };
+  isExpired?: boolean;
+  daysUntilExpiry?: number;
 }
 
 export function SslCertificateDecoder({ initialContent, action }: SslCertificateDecoderProps) {
@@ -96,6 +103,33 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
 
       // Parse ASN.1 DER encoded certificate
       const certInfo = parseX509Certificate(bytes);
+      
+      // Calculate fingerprints
+      const calculateFingerprints = async (certBytes: Uint8Array) => {
+        const hashBuffer = async (algorithm: string) => {
+          const hash = await crypto.subtle.digest(algorithm, certBytes);
+          return Array.from(new Uint8Array(hash))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join(':')
+            .toUpperCase();
+        };
+
+        return {
+          sha1: await hashBuffer('SHA-1'),
+          sha256: await hashBuffer('SHA-256'),
+          sha384: await hashBuffer('SHA-384'),
+          sha512: await hashBuffer('SHA-512'),
+        };
+      };
+
+      const fingerprints = await calculateFingerprints(bytes);
+      certInfo.fingerprints = fingerprints;
+
+      // Calculate expiry status
+      const now = new Date();
+      certInfo.isExpired = now > certInfo.validity.notAfter;
+      certInfo.daysUntilExpiry = Math.floor((certInfo.validity.notAfter.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
       setDecoded(certInfo);
 
       toast({
@@ -106,6 +140,153 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
       setError(err instanceof Error ? err.message : "Failed to decode certificate");
       setDecoded(null);
     }
+  };
+
+  const parseSubjectAlternativeNames = (bytes: Uint8Array): string[] => {
+    const names: string[] = [];
+    let pos = 0;
+
+    const readTag = (): { tag: number; length: number } => {
+      const tag = bytes[pos++];
+      let length = bytes[pos++];
+      if (length & 0x80) {
+        const lenBytes = length & 0x7f;
+        length = 0;
+        for (let i = 0; i < lenBytes; i++) {
+          length = (length << 8) | bytes[pos++];
+        }
+      }
+      return { tag, length };
+    };
+
+    const skip = (length: number) => {
+      pos += length;
+    };
+
+    try {
+      const seqTag = readTag();
+      const end = pos + seqTag.length;
+
+      while (pos < end) {
+        const nameTag = readTag();
+        const nameEnd = pos + nameTag.length;
+
+        if (nameTag.tag === 0x82) { // dNSName [2]
+          const nameBytes = bytes.slice(pos, pos + nameTag.length);
+          names.push(new TextDecoder().decode(nameBytes));
+        } else if (nameTag.tag === 0x87) { // iPAddress [7]
+          const ipBytes = bytes.slice(pos, pos + nameTag.length);
+          if (ipBytes.length === 4) {
+            names.push(Array.from(ipBytes).join('.'));
+          } else if (ipBytes.length === 16) {
+            // IPv6 - convert to colon notation
+            const ipv6 = [];
+            for (let i = 0; i < 16; i += 2) {
+              ipv6.push(((ipBytes[i] << 8) | ipBytes[i + 1]).toString(16));
+            }
+            names.push(ipv6.join(':'));
+          }
+        } else if (nameTag.tag === 0x81) { // rfc822Name [1]
+          const emailBytes = bytes.slice(pos, pos + nameTag.length);
+          names.push(new TextDecoder().decode(emailBytes));
+        }
+
+        skip(nameTag.length);
+      }
+    } catch (e) {
+      console.warn('Failed to parse SAN:', e);
+    }
+
+    return names;
+  };
+
+  const parseKeyUsage = (bytes: Uint8Array): string[] => {
+    const usages: string[] = [];
+    if (bytes.length === 0) return usages;
+
+    const usageBits = bytes[0];
+    const keyUsageMap = [
+      'digitalSignature',
+      'nonRepudiation',
+      'keyEncipherment',
+      'dataEncipherment',
+      'keyAgreement',
+      'keyCertSign',
+      'crlSign',
+      'encipherOnly',
+      'decipherOnly'
+    ];
+
+    for (let i = 0; i < Math.min(keyUsageMap.length, 8); i++) {
+      if (usageBits & (1 << i)) {
+        usages.push(keyUsageMap[i]);
+      }
+    }
+
+    return usages;
+  };
+
+  const parseExtendedKeyUsage = (bytes: Uint8Array): string[] => {
+    const usages: string[] = [];
+    let pos = 0;
+
+    const readTag = (): { tag: number; length: number } => {
+      const tag = bytes[pos++];
+      let length = bytes[pos++];
+      if (length & 0x80) {
+        const lenBytes = length & 0x7f;
+        length = 0;
+        for (let i = 0; i < lenBytes; i++) {
+          length = (length << 8) | bytes[pos++];
+        }
+      }
+      return { tag, length };
+    };
+
+    const readOID = (length: number): string => {
+      const oidBytes = bytes.slice(pos, pos + length);
+      pos += length;
+      return oidBytes.map(b => b.toString()).join('.');
+    };
+
+    try {
+      const seqTag = readTag();
+      const end = pos + seqTag.length;
+
+      while (pos < end) {
+        const oidTag = readTag();
+        const oid = readOID(oidTag.length);
+
+        const ekuMap: { [key: string]: string } = {
+          '1.3.6.1.5.5.7.3.1': 'serverAuth',
+          '1.3.6.1.5.5.7.3.2': 'clientAuth',
+          '1.3.6.1.5.5.7.3.3': 'codeSigning',
+          '1.3.6.1.5.5.7.3.4': 'emailProtection',
+          '1.3.6.1.5.5.7.3.5': 'ipsecEndSystem',
+          '1.3.6.1.5.5.7.3.6': 'ipsecTunnel',
+          '1.3.6.1.5.5.7.3.7': 'ipsecUser',
+          '1.3.6.1.5.5.7.3.8': 'timeStamping',
+          '1.3.6.1.5.5.7.3.9': 'ocspSigning',
+          '1.3.6.1.4.1.311.10.3.3': 'msCodeInd',
+          '1.3.6.1.4.1.311.10.3.4': 'msCodeTreatAsSafe',
+          '1.3.6.1.4.1.311.10.3.5': 'msCTLSign',
+          '1.3.6.1.4.1.311.10.3.6': 'msSGC',
+          '1.3.6.1.4.1.311.10.3.7': 'msNT5Crypto',
+          '1.3.6.1.4.1.311.10.3.8': 'msNT5Crypto',
+          '1.3.6.1.4.1.311.10.3.9': 'msNT5Crypto',
+          '1.3.6.1.4.1.311.10.3.10': 'msNT5Crypto',
+          '1.3.6.1.4.1.311.10.3.11': 'msNT5Crypto',
+          '1.3.6.1.4.1.311.10.3.12': 'msNT5Crypto',
+          '1.3.6.1.4.1.311.10.3.13': 'msNT5Crypto'
+        };
+
+        usages.push(ekuMap[oid] || oid);
+      }
+    } catch (e) {
+      console.warn('Failed to parse EKU:', e);
+    }
+
+    return usages;
   };
 
   const parseX509Certificate = (bytes: Uint8Array): CertificateInfo => {
@@ -328,6 +509,56 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
       };
       const keyAlgorithm = pkMap[pkOid] || pkOid;
 
+      // Parse extensions if present
+      let subjectAlternativeNames: string[] = [];
+      let keyUsage: string[] = [];
+      let extendedKeyUsage: string[] = [];
+
+      try {
+        // Skip to extensions (if present)
+        while (pos < bytes.length) {
+          const tag = bytes[pos];
+          if (tag === 0xa3) { // [3] EXPLICIT extensions
+            readTag(); // Skip the [3] tag
+            const extensionsTag = readTag(); // SEQUENCE of extensions
+            const extensionsEnd = pos + extensionsTag.length;
+
+            while (pos < extensionsEnd) {
+              const extTag = readTag(); // SEQUENCE for each extension
+              const extEnd = pos + extTag.length;
+
+              const oidTag = readTag(); // OID
+              const oid = readOID(oidTag.length);
+
+              const criticalTag = readTag(); // BOOLEAN (critical flag)
+              const isCritical = bytes[pos - 1] !== 0; // Last byte of BOOLEAN
+
+              const valueTag = readTag(); // OCTET STRING
+              const valueStart = pos;
+              skip(valueTag.length);
+              const valueBytes = bytes.slice(valueStart, pos);
+
+              // Parse specific extensions
+              if (oid === '2.5.29.17') { // subjectAltName
+                subjectAlternativeNames = parseSubjectAlternativeNames(valueBytes);
+              } else if (oid === '2.5.29.15') { // keyUsage
+                keyUsage = parseKeyUsage(valueBytes);
+              } else if (oid === '2.5.29.37') { // extKeyUsage
+                extendedKeyUsage = parseExtendedKeyUsage(valueBytes);
+              }
+            }
+            break;
+          } else {
+            // Skip other optional fields
+            const skipTag = readTag();
+            skip(skipTag.length);
+          }
+        }
+      } catch (e) {
+        // Extensions parsing failed, continue without them
+        console.warn('Failed to parse extensions:', e);
+      }
+
       return {
         version,
         serialNumber: serialNumber.toUpperCase(),
@@ -341,6 +572,9 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
         subjectPublicKeyInfo: {
           algorithm: keyAlgorithm,
         },
+        subjectAlternativeNames,
+        keyUsage,
+        extendedKeyUsage,
         fingerprints: {},
       };
     } catch (e) {
@@ -512,6 +746,27 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
                     <span className="text-foreground font-mono">{formatDate(decoded.validity.notAfter)}</span>
                   </div>
                   <div className="grid grid-cols-[120px_1fr] gap-2">
+                    <span className="text-muted-foreground">Status:</span>
+                    <div className="flex items-center gap-2">
+                      {isExpired ? (
+                        <Badge variant="destructive" className="flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          Expired
+                        </Badge>
+                      ) : isNotYetValid ? (
+                        <Badge variant="secondary" className="flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          Not Yet Valid
+                        </Badge>
+                      ) : (
+                        <Badge variant="default" className="flex items-center gap-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          <CheckCircle className="h-3 w-3" />
+                          Valid
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-[120px_1fr] gap-2">
                     <span className="text-muted-foreground">Days Remaining:</span>
                     <span className="text-foreground font-mono">
                       {Math.max(0, Math.floor((decoded.validity.notAfter.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days
@@ -531,6 +786,95 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
                     <div className="grid grid-cols-[120px_1fr] gap-2">
                       <span className="text-muted-foreground">Key Size:</span>
                       <span className="text-foreground font-mono">{decoded.subjectPublicKeyInfo.keySize} bits</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {decoded.subjectAlternativeNames && decoded.subjectAlternativeNames.length > 0 && (
+                <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                  <h4 className="text-sm font-semibold mb-3 text-foreground">Subject Alternative Names</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {decoded.subjectAlternativeNames.map((name, idx) => (
+                      <Badge key={idx} variant="outline" className="font-mono text-xs">
+                        {name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {decoded.keyUsage && decoded.keyUsage.length > 0 && (
+                <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                  <h4 className="text-sm font-semibold mb-3 text-foreground">Key Usage</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {decoded.keyUsage.map((usage, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">
+                        {usage}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {decoded.extendedKeyUsage && decoded.extendedKeyUsage.length > 0 && (
+                <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                  <h4 className="text-sm font-semibold mb-3 text-foreground">Extended Key Usage</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {decoded.extendedKeyUsage.map((usage, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">
+                        {usage}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                <h4 className="text-sm font-semibold mb-3 text-foreground">Certificate Fingerprints</h4>
+                <div className="space-y-2 text-sm">
+                  {decoded.fingerprints.sha1 && (
+                    <div className="grid grid-cols-[80px_1fr_auto] gap-2 items-center">
+                      <span className="text-muted-foreground">SHA-1:</span>
+                      <span className="text-foreground font-mono text-xs break-all">{decoded.fingerprints.sha1}</span>
+                      <CopyButton
+                        text={decoded.fingerprints.sha1}
+                        className="flex-shrink-0"
+                        title="Copy SHA-1 fingerprint"
+                      />
+                    </div>
+                  )}
+                  {decoded.fingerprints.sha256 && (
+                    <div className="grid grid-cols-[80px_1fr_auto] gap-2 items-center">
+                      <span className="text-muted-foreground">SHA-256:</span>
+                      <span className="text-foreground font-mono text-xs break-all">{decoded.fingerprints.sha256}</span>
+                      <CopyButton
+                        text={decoded.fingerprints.sha256}
+                        className="flex-shrink-0"
+                        title="Copy SHA-256 fingerprint"
+                      />
+                    </div>
+                  )}
+                  {decoded.fingerprints.sha384 && (
+                    <div className="grid grid-cols-[80px_1fr_auto] gap-2 items-center">
+                      <span className="text-muted-foreground">SHA-384:</span>
+                      <span className="text-foreground font-mono text-xs break-all">{decoded.fingerprints.sha384}</span>
+                      <CopyButton
+                        text={decoded.fingerprints.sha384}
+                        className="flex-shrink-0"
+                        title="Copy SHA-384 fingerprint"
+                      />
+                    </div>
+                  )}
+                  {decoded.fingerprints.sha512 && (
+                    <div className="grid grid-cols-[80px_1fr_auto] gap-2 items-center">
+                      <span className="text-muted-foreground">SHA-512:</span>
+                      <span className="text-foreground font-mono text-xs break-all">{decoded.fingerprints.sha512}</span>
+                      <CopyButton
+                        text={decoded.fingerprints.sha512}
+                        className="flex-shrink-0"
+                        title="Copy SHA-512 fingerprint"
+                      />
                     </div>
                   )}
                 </div>

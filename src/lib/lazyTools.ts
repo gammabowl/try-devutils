@@ -2,26 +2,27 @@ import { lazy } from "react";
 
 // Lazy-loaded tool components with prefetch support
 const toolImports = {
-  base64: () => import("@/components/tools/Base64Converter"),
-  color: () => import("@/components/tools/ColorConverter"),
-  cron: () => import("@/components/tools/CronParser"),
-  hash: () => import("@/components/tools/HashGenerator"),
-  httpstatus: () => import("@/components/tools/HttpStatusCodeReference"),
-  json: () => import("@/components/tools/JsonFormatter"),
-  jwt: () => import("@/components/tools/JwtDecoder"),
-  markdown: () => import("@/components/tools/MarkdownPreview"),
-  mimetype: () => import("@/components/tools/MimeTypeLookup"),
-  numberbase: () => import("@/components/tools/NumberBaseConverter"),
-  regex: () => import("@/components/tools/RegExpTester"),
-  sql: () => import("@/components/tools/SqlFormatter"),
-  ssl: () => import("@/components/tools/SslCertificateDecoder"),
-  string: () => import("@/components/tools/StringAnalyser"),
-  diff: () => import("@/components/tools/TextDiff"),
-  timestamp: () => import("@/components/tools/TimestampConverter"),
-  url: () => import("@/components/tools/UrlEncoderDecoder"),
-  uuid: () => import("@/components/tools/UuidGeneratorDecoder"),
-  yaml: () => import("@/components/tools/YamlValidator"),
-  zlib: () => import("@/components/tools/ZlibCompressor"),
+  base64: () => import("@/components/utils/Base64Converter"),
+  color: () => import("@/components/utils/ColorConverter"),
+  cron: () => import("@/components/utils/CronParser"),
+  hash: () => import("@/components/utils/HashGenerator"),
+  httpstatus: () => import("@/components/utils/HttpStatusCodeReference"),
+  json: () => import("@/components/utils/JsonFormatter"),
+  jwt: () => import("@/components/utils/JwtDecoder"),
+  keypair: () => import("@/components/utils/KeyPairGenerator"),
+  markdown: () => import("@/components/utils/MarkdownPreview"),
+  mimetype: () => import("@/components/utils/MimeTypeLookup"),
+  numberbase: () => import("@/components/utils/NumberBaseConverter"),
+  regex: () => import("@/components/utils/RegExpTester"),
+  sql: () => import("@/components/utils/SqlFormatter"),
+  ssl: () => import("@/components/utils/SslCertificateDecoder"),
+  string: () => import("@/components/utils/StringAnalyser"),
+  diff: () => import("@/components/utils/TextDiff"),
+  timestamp: () => import("@/components/utils/TimestampConverter"),
+  url: () => import("@/components/utils/UrlEncoderDecoder"),
+  uuid: () => import("@/components/utils/UuidGeneratorDecoder"),
+  yaml: () => import("@/components/utils/YamlValidator"),
+  zlib: () => import("@/components/utils/ZlibCompressor"),
 } as const;
 
 export type ToolId = keyof typeof toolImports;
@@ -54,6 +55,7 @@ export const LazyHashGenerator = lazy(() => toolImports.hash().then(m => ({ defa
 export const LazyHttpStatusCodeReference = lazy(() => toolImports.httpstatus().then(m => ({ default: m.HttpStatusCodeReference })));
 export const LazyJsonFormatter = lazy(() => toolImports.json().then(m => ({ default: m.JsonFormatter })));
 export const LazyJwtDecoder = lazy(() => toolImports.jwt().then(m => ({ default: m.JwtDecoder })));
+export const LazyKeyPairGenerator = lazy(() => toolImports.keypair().then(m => ({ default: m.KeyPairGenerator })));
 export const LazyMarkdownPreview = lazy(() => toolImports.markdown().then(m => ({ default: m.MarkdownPreview })));
 export const LazyMimeTypeLookup = lazy(() => toolImports.mimetype().then(m => ({ default: m.MimeTypeLookup })));
 export const LazyNumberBaseConverter = lazy(() => toolImports.numberbase().then(m => ({ default: m.NumberBaseConverter })));

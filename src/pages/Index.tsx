@@ -131,7 +131,7 @@ const Index = () => {
         </div>
       )}
 
-      {/* All Tools Section */}
+      {/* All Utils Section */}
       <div className="space-y-4">
         {favouriteTools.length > 0 && (
           <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ const Index = () => {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-foreground">All Utilities</h3>
-              <p className="text-sm text-muted-foreground">Explore all available developer tools</p>
+              <p className="text-sm text-muted-foreground">Explore all available developer utilities</p>
             </div>
           </div>
         )}
