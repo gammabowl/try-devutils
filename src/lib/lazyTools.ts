@@ -6,9 +6,11 @@ const toolImports = {
   color: () => import("@/components/tools/ColorConverter"),
   cron: () => import("@/components/tools/CronParser"),
   hash: () => import("@/components/tools/HashGenerator"),
+  httpstatus: () => import("@/components/tools/HttpStatusCodeReference"),
   json: () => import("@/components/tools/JsonFormatter"),
   jwt: () => import("@/components/tools/JwtDecoder"),
   markdown: () => import("@/components/tools/MarkdownPreview"),
+  mimetype: () => import("@/components/tools/MimeTypeLookup"),
   numberbase: () => import("@/components/tools/NumberBaseConverter"),
   regex: () => import("@/components/tools/RegExpTester"),
   sql: () => import("@/components/tools/SqlFormatter"),
@@ -49,9 +51,11 @@ export const LazyBase64Converter = lazy(() => toolImports.base64().then(m => ({ 
 export const LazyColorConverter = lazy(() => toolImports.color().then(m => ({ default: m.ColorConverter })));
 export const LazyCronParser = lazy(() => toolImports.cron().then(m => ({ default: m.CronParser })));
 export const LazyHashGenerator = lazy(() => toolImports.hash().then(m => ({ default: m.HashGenerator })));
+export const LazyHttpStatusCodeReference = lazy(() => toolImports.httpstatus().then(m => ({ default: m.HttpStatusCodeReference })));
 export const LazyJsonFormatter = lazy(() => toolImports.json().then(m => ({ default: m.JsonFormatter })));
 export const LazyJwtDecoder = lazy(() => toolImports.jwt().then(m => ({ default: m.JwtDecoder })));
 export const LazyMarkdownPreview = lazy(() => toolImports.markdown().then(m => ({ default: m.MarkdownPreview })));
+export const LazyMimeTypeLookup = lazy(() => toolImports.mimetype().then(m => ({ default: m.MimeTypeLookup })));
 export const LazyNumberBaseConverter = lazy(() => toolImports.numberbase().then(m => ({ default: m.NumberBaseConverter })));
 export const LazyRegExpTester = lazy(() => toolImports.regex().then(m => ({ default: m.RegExpTester })));
 export const LazySqlFormatter = lazy(() => toolImports.sql().then(m => ({ default: m.SqlFormatter })));

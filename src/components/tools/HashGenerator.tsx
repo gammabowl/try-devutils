@@ -38,8 +38,8 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
   const [isGeneratingBcrypt, setIsGeneratingBcrypt] = useState(false);
   const [hashToVerify, setHashToVerify] = useState("");
   const [verificationResult, setVerificationResult] = useState<string>("");
-  const [cryptoJS, setCryptoJS] = useState<any>(null);
-  const [bcryptLib, setBcryptLib] = useState<any>(null);
+  const [cryptoJS, setCryptoJS] = useState<typeof import("crypto-js") | null>(null);
+  const [bcryptLib, setBcryptLib] = useState<typeof import("bcryptjs") | null>(null);
   const [isLoadingLibs, setIsLoadingLibs] = useState(false);
   const { toast } = useToast();
 
@@ -93,7 +93,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
           .then((bcryptHash: string) => {
             setHashes(prev => ({ ...prev, bcrypt: bcryptHash }));
           })
-          .catch((error: any) => {
+          .catch((error: unknown) => {
             console.error("Error generating bcrypt hash:", error);
             toast({
               title: "Error",

@@ -3,9 +3,11 @@ import {
   LazyColorConverter,
   LazyCronParser,
   LazyHashGenerator,
+  LazyHttpStatusCodeReference,
   LazyJsonFormatter,
   LazyJwtDecoder,
   LazyMarkdownPreview,
+  LazyMimeTypeLookup,
   LazyNumberBaseConverter,
   LazyRegExpTester,
   LazySqlFormatter,
@@ -37,7 +39,10 @@ import {
   Database,
   Link,
   DecimalsArrowRight,
+  Globe,
+  FileType,
   LucideIcon,
+  FileSearch,
 } from "lucide-react";
 
 export interface Tool {
@@ -69,5 +74,7 @@ export const tools: Tool[] = [
   { id: "url", label: "URL Encoder/Decoder", icon: Link, component: LazyUrlEncoderDecoder, description: "Encode and decode URL strings", color: "from-pink-500 to-pink-600", textColor: "text-pink-600", bgColor: "bg-pink-500/10" },
   { id: "uuid", label: "UUID Generator/Decoder", icon: FingerprintIcon, component: LazyUuidGeneratorDecoder, description: "Generate, validate, decode UUIDs", color: "from-cyan-500 to-cyan-600", textColor: "text-cyan-600", bgColor: "bg-cyan-500/10" },
   { id: "yaml", label: "YAML Validator", icon: FileCode, component: LazyYamlValidator, description: "Validate and convert YAML", color: "from-lime-500 to-lime-600", textColor: "text-lime-600", bgColor: "bg-lime-500/10" },
-  { id: "zlib", label: "Zlib Compressor/Decompressor", icon: Zap, component: LazyZlibCompressor, description: "Compress & decompress (zlib + Base64)", color: "from-slate-500 to-slate-600", textColor: "text-slate-600", bgColor: "bg-slate-500/10" }
+  { id: "zlib", label: "Zlib Compressor/Decompressor", icon: Zap, component: LazyZlibCompressor, description: "Compress & decompress (zlib + Base64)", color: "from-slate-500 to-slate-600", textColor: "text-slate-600", bgColor: "bg-slate-500/10" },
+  { id: "httpstatus", label: "HTTP Status Code Reference", icon: Globe, component: LazyHttpStatusCodeReference, description: "Lookup HTTP status codes and their meanings", color: "from-cyan-700 to-cyan-800", textColor: "text-cyan-700", bgColor: "bg-cyan-700/10" },
+  { id: "mimetype", label: "MIME Type Lookup", icon: FileSearch, component: LazyMimeTypeLookup, description: "Convert between file extensions and MIME types", color: "from-green-700 to-green-800", textColor: "text-green-700", bgColor: "bg-green-700/10" }
 ];
