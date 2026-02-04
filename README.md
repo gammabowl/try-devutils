@@ -6,7 +6,7 @@ A handy collection of developer utilities built with React, TypeScript and assis
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js (v22)
 - npm
 
 ### Installation & Development
@@ -19,6 +19,12 @@ npm run preview          # Preview production build locally
 # Building
 npm run build            # Production build
 npm run build:dev        # Development build
+
+# Tests
+npm run test             # Run Playwright browser tests (console errors on util pages)
+
+# CI build + tests
+npm run build:ci          # Build + Playwright tests (used by GitHub Actions)
 
 # Code Quality
 npm run lint             # Run ESLint
@@ -57,8 +63,15 @@ src/
 
 ## 🚀 Deployment & Hosting
 
-This app is deployed and hosted on **Vercel** with automatic deployments from the main branch.
-Push to `main` branch triggers deployment
+This app is deployed and hosted on **Vercel** via Git integration.
+
+**CI Build + Tests**
+- GitHub Actions runs a build + Playwright tests on every push and pull request.
+- The workflow must pass before merging to `main`.
+
+**Deployments**
+- Vercel creates **Preview Deployments** for non-main branches and pull requests.
+- Vercel creates **Production Deployments** from `main`.
 
 
 ## 📄 License

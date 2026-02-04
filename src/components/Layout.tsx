@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Sparkles, Info, Search, Keyboard, Shield, CheckCircle, Twitter, Home, EyeOff, Code, Cpu, Lock, Monitor } from "lucide-react";
+import { Sparkles, Info, Search, Keyboard, Shield, CheckCircle, Twitter, Home, EyeOff, Code, Cpu, Lock, Monitor, Bug } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -201,6 +201,15 @@ export function Layout() {
                 <Code className="h-4 w-4 text-purple-600" />
                 <span className="font-medium">Open source</span>
               </div>
+              <a
+                href="https://github.com/gammabowl/try-devutils/issues/new?template=bug_report.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Bug className="h-4 w-4 text-amber-600" />
+                <span className="font-medium">Report Issue</span>
+              </a>
             </div>
           </div>
         </div>
