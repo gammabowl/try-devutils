@@ -1,8 +1,8 @@
 
-import { ToolCard } from "./ToolCard";
+import { UtilCard } from "./UtilCard";
 import { Clock, LucideIcon } from "lucide-react";
 
-interface Tool {
+interface Util {
   id: string;
   label: string;
   icon: LucideIcon;
@@ -10,13 +10,13 @@ interface Tool {
   category: string;
 }
 
-interface RecentToolsProps {
-  recentTools: Tool[];
-  onToolSelect: (id: string) => void;
+interface RecentUtilsProps {
+  recentUtils: Util[];
+  onUtilSelect: (id: string) => void;
 }
 
-export const RecentTools = ({ recentTools, onToolSelect }: RecentToolsProps) => {
-  if (recentTools.length === 0) return null;
+export const RecentUtils = ({ recentUtils, onUtilSelect }: RecentUtilsProps) => {
+  if (recentUtils.length === 0) return null;
 
   return (
     <div className="mb-8">
@@ -26,12 +26,12 @@ export const RecentTools = ({ recentTools, onToolSelect }: RecentToolsProps) => 
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {recentTools.slice(0, 4).map((tool) => (
-          <ToolCard
-            key={tool.id}
-            {...tool}
+        {recentUtils.slice(0, 4).map((util) => (
+          <UtilCard
+            key={util.id}
+            {...util}
             isRecent={true}
-            onClick={onToolSelect}
+            onClick={onUtilSelect}
           />
         ))}
       </div>

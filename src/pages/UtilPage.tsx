@@ -1,13 +1,13 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, Suspense } from "react";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { tools } from "@/lib/tools";
+import { utils } from "@/lib/utils";
 
-export function ToolPage() {
-  const { toolId } = useParams<{ toolId: string }>();
+export function UtilPage() {
+  const { utilId } = useParams<{ utilId: string }>();
   const navigate = useNavigate();
   
-  const tool = tools.find((t) => t.id === toolId);
+  const util = utils.find((u) => u.id === utilId);
 
   // Handle ESC key to go back to grid
   useEffect(() => {
@@ -20,11 +20,11 @@ export function ToolPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [navigate]);
 
-  if (!tool) {
+  if (!util) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">Tool not found</h2>
-        <p className="text-muted-foreground">The tool "{toolId}" doesn't exist.</p>
+        <h2 className="text-2xl font-bold text-foreground">Util not found</h2>
+        <p className="text-muted-foreground">The util "{utilId}" doesn't exist.</p>
         <Link
           to="/"
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-dev-primary text-dev-primary-foreground hover:bg-dev-primary/90 transition-colors"
@@ -36,13 +36,34 @@ export function ToolPage() {
     );
   }
 
-  const ToolComponent = tool.component;
+  const UtilComponent = util.component;
 
-  // Special handling for tools that need navigation prop
-  const needsNavigate = toolId === "base64" || toolId === "zlib";
+  // Special handling for utils that need navigation prop
+  const needsNavigate = utilId === "base64" || utilId === "zlib";
+
+  // Set page title and meta description
+  useEffect(() => {
+    document.title = `TryDevUtils - ${util.label}`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', util.description);
+    }
+  }, [util]);
 
   return (
     <div className="space-y-6">
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": util.label,
+          "description": util.description,
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Web Browser",
+          "url": `https://trydevutils.com/util/${util.id}`
+        })}
+      </script>
       {/* Back navigation */}
       <div className="flex justify-center">
         <Link
@@ -58,7 +79,7 @@ export function ToolPage() {
         </Link>
       </div>
 
-      {/* Tool Component */}
+      {/* Util Component */}
       <div className="max-w-[1400px] mx-auto">
         <Suspense fallback={
           <div className="flex items-center justify-center py-20">
@@ -66,9 +87,9 @@ export function ToolPage() {
           </div>
         }>
           {needsNavigate ? (
-            <ToolComponent navigate={(id: string | null) => navigate(id ? `/${id}` : "/")} />
+            <UtilComponent navigate={(id: string | null) => navigate(id ? `/${id}` : "/")} />
           ) : (
-            <ToolComponent />
+            <UtilComponent />
           )}
         </Suspense>
       </div>

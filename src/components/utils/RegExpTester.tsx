@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Regex, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -183,7 +183,7 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
     setReplaceResult("");
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: testRegex,
     onClear: clearAll,
     onCopy: () => {

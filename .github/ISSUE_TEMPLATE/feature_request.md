@@ -25,7 +25,7 @@ Describe the tool/feature you'd like:
 - Any real-world examples?
 
 ## 🔄 Alternative Solutions
-Have you seen similar tools elsewhere? How does this differ?
+Have you seen similar utils elsewhere? How does this differ?
 
 ## 📱 Technical Considerations
 - Does this require new dependencies?
@@ -34,5 +34,5 @@ Have you seen similar tools elsewhere? How does this differ?
 
 ## 📎 Additional Context
 - Mockups, wireframes, or examples
-- Links to similar tools
+- Links to similar utils
 - Related issues or discussions

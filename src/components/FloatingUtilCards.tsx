@@ -4,25 +4,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ContentSuggestion } from "@/utils/contentDetector";
 import { ToolDefinition } from "@/utils/commandProcessor";
-import { InstantResults } from "./InstantResults";
 import { Sparkles, ArrowRight, Zap, Clock } from "lucide-react";
 
-interface FloatingToolCardsProps {
+interface FloatingUtilCardsProps {
   suggestions: ContentSuggestion[];
-  tools: ToolDefinition[];
+  utils: ToolDefinition[];
   content: string;
-  onToolSelect: (toolId: string, action?: string, content?: string) => void;
+  onUtilSelect: (utilId: string, action?: string, content?: string) => void;
 }
 
-export function FloatingToolCards({ suggestions, tools, content, onToolSelect }: FloatingToolCardsProps) {
-  const [hoveredTool, setHoveredTool] = useState<string | null>(null);
-  const [instantResults, setInstantResults] = useState<{[key: string]: boolean}>({});
+export function FloatingUtilCards({ suggestions, utils, content, onUtilSelect }: FloatingUtilCardsProps) {
+  const [hoveredUtil, setHoveredUtil] = useState<string | null>(null);
 
   if (suggestions.length === 0) return null;
 
-  const getToolById = (id: string) => tools.find(tool => tool.id === id);
+  const getUtilById = (id: string) => utils.find(util => util.id === id);
 
-  const canShowInstantResult = (toolId: string, action?: string) => {
+  const canShowInstantResult = (utilId: string, action?: string) => {
     const simpleOperations = {
       "jwt": ["decode"],
       "base64": ["decode"],
@@ -30,19 +28,11 @@ export function FloatingToolCards({ suggestions, tools, content, onToolSelect }:
       "json": ["format"],
       "timestamp": ["convert"]
     };
-    return simpleOperations[toolId]?.includes(action || "") || false;
+    return simpleOperations[utilId]?.includes(action || "") || false;
   };
 
-  const handleInstantResult = (suggestion: ContentSuggestion) => {
-    const key = `${suggestion.toolId}-${suggestion.action}`;
-    setInstantResults(prev => ({
-      ...prev,
-      [key]: true
-    }));
-  };
-
-  const handleOpenFullTool = (toolId: string, action?: string) => {
-    onToolSelect(toolId, action, content);
+  const handleOpenFullUtil = (utilId: string, action?: string) => {
+    onUtilSelect(utilId, action, content);
   };
 
   return (
@@ -61,24 +51,21 @@ export function FloatingToolCards({ suggestions, tools, content, onToolSelect }:
       {/* Tool Cards and Instant Results */}
       <div className="space-y-4">
         {suggestions.slice(0, 6).map((suggestion, index) => {
-          const tool = getToolById(suggestion.toolId);
-          if (!tool) return null;
+          const util = getUtilById(suggestion.toolId);
+          if (!util) return null;
 
-          const isHovered = hoveredTool === suggestion.toolId;
+          const isHovered = hoveredUtil === suggestion.toolId;
           const confidence = Math.round(suggestion.confidence * 100);
-          const resultKey = `${suggestion.toolId}-${suggestion.action}`;
-          const showingInstantResult = instantResults[resultKey];
           const canInstant = canShowInstantResult(suggestion.toolId, suggestion.action);
 
           return (
             <div key={`${suggestion.toolId}-${index}`} className="space-y-3">
-              {/* Original Tool Card */}
-              {!showingInstantResult && (
-                <Card
-                  className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg border-border/50 hover:border-dev-primary/50 bg-gradient-to-br from-card to-card/50"
-                  onMouseEnter={() => setHoveredTool(suggestion.toolId)}
-                  onMouseLeave={() => setHoveredTool(null)}
-                >
+              {/* Util Card */}
+              <Card
+                className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg border-border/50 hover:border-dev-primary/50 bg-gradient-to-br from-card to-card/50"
+                onMouseEnter={() => setHoveredUtil(suggestion.toolId)}
+                onMouseLeave={() => setHoveredUtil(null)}
+              >
                   <CardContent className="p-6 relative overflow-hidden">
                     {/* Confidence Indicator */}
                     <div className="absolute top-3 right-3">
@@ -99,14 +86,14 @@ export function FloatingToolCards({ suggestions, tools, content, onToolSelect }:
                       </div>
                     </div>
 
-                    {/* Tool Info */}
+                    {/* Util Info */}
                     <div className="space-y-3">
                       <div>
                         <h3 className="font-semibold text-foreground capitalize">
-                          {tool.name}
+                          {util.name}
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                          {tool.description}
+                          {util.description}
                         </p>
                       </div>
 
@@ -124,23 +111,13 @@ export function FloatingToolCards({ suggestions, tools, content, onToolSelect }:
 
                       {/* Action Buttons */}
                       <div className="flex gap-2">
-                        {canInstant && (
-                          <Button
-                            onClick={() => handleInstantResult(suggestion)}
-                            size="sm"
-                            className="flex-1 bg-dev-primary hover:bg-dev-primary/90 text-dev-primary-foreground"
-                          >
-                            <Clock className="h-4 w-4 mr-2" />
-                            Instant Result
-                          </Button>
-                        )}
                         <Button
-                          onClick={() => handleOpenFullTool(suggestion.toolId, suggestion.action)}
+                          onClick={() => handleOpenFullUtil(suggestion.toolId, suggestion.action)}
                           size="sm"
-                          className={`${canInstant ? 'flex-1' : 'w-full'} group-hover:bg-dev-primary group-hover:text-dev-primary-foreground transition-colors`}
+                          className="w-full group-hover:bg-dev-primary group-hover:text-dev-primary-foreground transition-colors"
                           variant={isHovered ? "default" : "outline"}
                         >
-                          <span>{canInstant ? "Full Tool" : "Use Tool"}</span>
+                          <span>Use Util</span>
                           <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                         </Button>
                       </div>
@@ -151,22 +128,12 @@ export function FloatingToolCards({ suggestions, tools, content, onToolSelect }:
                   </CardContent>
                 </Card>
               )}
-
-              {/* Instant Result */}
-              {showingInstantResult && (
-                <InstantResults
-                  suggestion={suggestion}
-                  tool={tool}
-                  content={content}
-                  onOpenFullTool={() => handleOpenFullTool(suggestion.toolId, suggestion.action)}
-                />
-              )}
             </div>
           );
         })}
       </div>
 
-      {/* Show All Tools Link */}
+      {/* Show All Utils Link */}
       {suggestions.length > 6 && (
         <div className="text-center">
           <Button variant="ghost" size="sm" className="text-dev-primary hover:text-dev-primary">

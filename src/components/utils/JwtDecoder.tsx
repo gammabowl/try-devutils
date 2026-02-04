@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FileKey as FileKeyIcon, AlertCircle, CheckCircle, Shield, Clock, ChevronDown, Maximize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 // JWT Registered Claims as per RFC 7519
@@ -453,7 +453,7 @@ const decodeJWT = useCallback((token: string) => {
     setError("");
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: () => decodeJWT(token),
     onClear: clearAll,
     onCopy: () => {

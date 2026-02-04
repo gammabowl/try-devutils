@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Key, AlertCircle, CheckCircle, Download, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface KeyPairGeneratorProps {
@@ -172,7 +172,7 @@ export function KeyPairGenerator({ initialContent, action }: KeyPairGeneratorPro
     setComment("");
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: generateKeyPair,
     onClear: clearAll,
   });

@@ -2,7 +2,7 @@
 import { LucideIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
-interface ToolCardProps {
+interface UtilCardProps {
   id: string;
   label: string;
   icon: LucideIcon;
@@ -12,7 +12,7 @@ interface ToolCardProps {
   onClick: (id: string) => void;
 }
 
-export const ToolCard = ({ 
+export const UtilCard = ({ 
   id, 
   label, 
   icon: IconComponent, 
@@ -20,7 +20,7 @@ export const ToolCard = ({
   category,
   isRecent = false,
   onClick 
-}: ToolCardProps) => {
+}: UtilCardProps) => {
   return (
     <Card
       onClick={() => onClick(id)}

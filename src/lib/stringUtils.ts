@@ -1,6 +1,6 @@
 /**
  * Utility helpers for string analysis and transformations.
- * These provide small, well-typed helpers used across tools.
+ * These provide small, well-typed helpers used across utils.
  */
 
 /**

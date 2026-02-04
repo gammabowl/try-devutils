@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format, fromUnixTime, getUnixTime, parseISO } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface TimestampConverterProps {
@@ -133,7 +133,7 @@ export function TimestampConverter({ initialContent, action }: TimestampConverte
     setUnitConversionResults({});
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: () => {
       if (activeMainTab === "from-timestamp") convertFromTimestamp();
       else if (activeMainTab === "to-timestamp") convertToTimestamp();

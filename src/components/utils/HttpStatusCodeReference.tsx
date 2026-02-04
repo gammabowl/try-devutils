@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Info, Globe } from "lucide-react";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface HttpStatusCode {
   code: number;
@@ -103,7 +103,7 @@ export function HttpStatusCodeReference() {
   }, [searchTerm, selectedCategory]);
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onClear: () => {
       setSearchTerm("");
       setSelectedCategory("All");

@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Binary, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 type Base = "2" | "8" | "10" | "16" | "32" | "64";
@@ -209,7 +209,7 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
   }, []);
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: convert,
     onClear: clearAll,
     onCopy: () => result && copyToClipboard(result),

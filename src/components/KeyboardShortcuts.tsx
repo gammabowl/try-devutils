@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useCallback, createContext, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { tools } from "@/lib/tools";
+import { utils } from "@/lib/utils";
 import { Keyboard } from "lucide-react";
 import {
   Dialog,
@@ -45,7 +45,7 @@ export function KeyboardShortcutsHelp({
       ],
     },
     {
-      category: "Tool Actions",
+      category: "Util Actions",
       items: [
         { keys: ["⌘", "Enter"], description: "Execute / Format / Convert" },
         { keys: ["⌘", "Shift", "C"], description: "Copy output to clipboard" },
@@ -149,8 +149,8 @@ export function useGlobalKeyboardShortcuts() {
       // Cmd/Ctrl + L to clear inputs
       if ((e.metaKey || e.ctrlKey) && e.key === "l" && !e.shiftKey) {
         // Don't prevent default as it might interfere with browser URL bar
-        // Instead, dispatch a custom event that tools can listen to
-        const clearEvent = new CustomEvent("devutils:clear");
+        // Instead, dispatch a custom event that utils can listen to
+        const clearEvent = new CustomEvent("trydevutils:clear");
         window.dispatchEvent(clearEvent);
         return;
       }
@@ -158,7 +158,7 @@ export function useGlobalKeyboardShortcuts() {
       // Cmd/Ctrl + Enter to execute
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
         e.preventDefault();
-        const executeEvent = new CustomEvent("devutils:execute");
+        const executeEvent = new CustomEvent("trydevutils:execute");
         window.dispatchEvent(executeEvent);
         return;
       }
@@ -169,7 +169,7 @@ export function useGlobalKeyboardShortcuts() {
         const selection = window.getSelection();
         if (!selection || selection.toString().length === 0) {
           e.preventDefault();
-          const copyEvent = new CustomEvent("devutils:copy");
+          const copyEvent = new CustomEvent("trydevutils:copy");
           window.dispatchEvent(copyEvent);
           return;
         }
@@ -183,8 +183,8 @@ export function useGlobalKeyboardShortcuts() {
   return { showHelp, setShowHelp };
 }
 
-// Custom hook for tools to use keyboard shortcuts
-export function useToolKeyboardShortcuts({
+// Custom hook for utils to use keyboard shortcuts
+export function useUtilKeyboardShortcuts({
   onExecute,
   onClear,
   onCopy,
@@ -199,19 +199,19 @@ export function useToolKeyboardShortcuts({
     const handleCopy = () => onCopy?.();
 
     if (onExecute) {
-      window.addEventListener("devutils:execute", handleExecute);
+      window.addEventListener("trydevutils:execute", handleExecute);
     }
     if (onClear) {
-      window.addEventListener("devutils:clear", handleClear);
+      window.addEventListener("trydevutils:clear", handleClear);
     }
     if (onCopy) {
-      window.addEventListener("devutils:copy", handleCopy);
+      window.addEventListener("trydevutils:copy", handleCopy);
     }
 
     return () => {
-      window.removeEventListener("devutils:execute", handleExecute);
-      window.removeEventListener("devutils:clear", handleClear);
-      window.removeEventListener("devutils:copy", handleCopy);
+      window.removeEventListener("trydevutils:execute", handleExecute);
+      window.removeEventListener("trydevutils:clear", handleClear);
+      window.removeEventListener("trydevutils:copy", handleCopy);
     };
   }, [onExecute, onClear, onCopy]);
 }

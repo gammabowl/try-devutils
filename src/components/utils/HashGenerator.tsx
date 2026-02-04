@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 // import CryptoJS from "crypto-js";
 // import bcrypt from "bcryptjs"; // Moved to dynamic imports
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface HashResult {
@@ -172,7 +172,7 @@ export function HashGenerator({ initialContent, action }: HashGeneratorProps) {
   }, []);
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: generateHashes,
     onClear: clearAll,
     onCopy: copyAllHashes,
