@@ -25,3 +25,9 @@ dist-ssr
 
 # file system
 .DS_Store
+
+# Test results and reports
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
