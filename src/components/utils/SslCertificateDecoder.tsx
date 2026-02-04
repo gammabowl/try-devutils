@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, AlertCircle, CheckCircle, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface SslCertificateDecoderProps {
@@ -596,7 +596,7 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
     setError("");
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: decodeCertificate,
     onClear: clearAll,
     onCopy: () => {

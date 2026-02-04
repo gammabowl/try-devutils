@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { tools, Tool } from "@/lib/tools";
-import { prefetchTool } from "@/lib/lazyTools";
+import { utils, Util } from "@/lib/utils";
+import { prefetchUtil } from "@/lib/lazyUtils";
 import { Keyboard, Heart } from "lucide-react";
 
 const FAVORITES_STORAGE_KEY = "try-devutils-favourites";
@@ -19,25 +19,25 @@ function saveFavorites(favorites: string[]) {
   localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
 }
 
-interface ToolCardProps {
-  tool: Tool;
+interface UtilCardProps {
+  util: Util;
   isFavourite: boolean;
-  onToggleFavourite: (toolId: string) => void;
+  onToggleFavourite: (utilId: string) => void;
 }
 
-function ToolCard({ tool, isFavourite, onToggleFavourite }: ToolCardProps) {
-  const IconComponent = tool.icon;
+function UtilCard({ util, isFavourite, onToggleFavourite }: UtilCardProps) {
+  const IconComponent = util.icon;
   
   const handleFavouriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onToggleFavourite(tool.id);
+    onToggleFavourite(util.id);
   };
 
   return (
     <Link
-      to={`/${tool.id}`}
-      onMouseEnter={() => prefetchTool(tool.id)}
+      to={`/${util.id}`}
+      onMouseEnter={() => prefetchUtil(util.id)}
       className="group cursor-pointer p-6 bg-card/50 border border-border/50 rounded-lg hover:bg-card/80 hover:border-dev-primary/50 transition-all duration-200 hover:shadow-md hover:scale-105 relative"
     >
       <button
@@ -52,12 +52,12 @@ function ToolCard({ tool, isFavourite, onToggleFavourite }: ToolCardProps) {
         <Heart className={`h-4 w-4 ${isFavourite ? "fill-current" : ""}`} />
       </button>
       <div className="flex flex-col items-center text-center space-y-3">
-        <div className={`p-3 rounded-lg ${tool.bgColor} group-hover:shadow-lg group-hover:shadow-current transition-all`}>
-          <IconComponent className={`h-8 w-8 ${tool.textColor}`} />
+        <div className={`p-3 rounded-lg ${util.bgColor} group-hover:shadow-lg group-hover:shadow-current transition-all`}>
+          <IconComponent className={`h-8 w-8 ${util.textColor}`} />
         </div>
         <div>
-          <h3 className="font-semibold text-foreground group-hover:text-foreground transition-colors">{tool.label}</h3>
-          <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
+          <h3 className="font-semibold text-foreground group-hover:text-foreground transition-colors">{util.label}</h3>
+          <p className="text-sm text-muted-foreground mt-1">{util.description}</p>
         </div>
       </div>
     </Link>
@@ -71,18 +71,18 @@ const Index = () => {
     setFavourites(getFavorites());
   }, []);
 
-  const toggleFavourite = (toolId: string) => {
+  const toggleFavourite = (utilId: string) => {
     setFavourites((prev) => {
-      const newFavourites = prev.includes(toolId)
-        ? prev.filter((id) => id !== toolId)
-        : [...prev, toolId];
+      const newFavourites = prev.includes(utilId)
+        ? prev.filter((id) => id !== utilId)
+        : [...prev, utilId];
       saveFavorites(newFavourites);
       return newFavourites;
     });
   };
 
-  const favouriteTools = tools.filter((tool) => favourites.includes(tool.id));
-  const otherTools = tools.filter((tool) => !favourites.includes(tool.id));
+  const favouriteUtils = utils.filter((util) => favourites.includes(util.id));
+  const otherUtils = utils.filter((util) => !favourites.includes(util.id));
 
   return (
     <div className="space-y-6">
@@ -105,7 +105,7 @@ const Index = () => {
       </div>
 
       {/* Favorites Section */}
-      {favouriteTools.length > 0 && (
+      {favouriteUtils.length > 0 && (
         <div className="space-y-4">
           <div className="border border-blue-200/30 dark:border-blue-800/30 rounded-xl p-6 bg-card/30">
             <div className="flex items-center gap-3 mb-4">
@@ -118,10 +118,10 @@ const Index = () => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {favouriteTools.map((tool) => (
-                <ToolCard
-                  key={tool.id}
-                  tool={tool}
+              {favouriteUtils.map((util) => (
+                <UtilCard
+                  key={util.id}
+                  util={util}
                   isFavourite={true}
                   onToggleFavourite={toggleFavourite}
                 />
@@ -133,7 +133,7 @@ const Index = () => {
 
       {/* All Utils Section */}
       <div className="space-y-4">
-        {favouriteTools.length > 0 && (
+        {favouriteUtils.length > 0 && (
           <div className="flex items-center gap-3">
             <div className="p-2 bg-muted/50 rounded-lg">
               <Keyboard className="h-5 w-5 text-muted-foreground" />
@@ -145,10 +145,10 @@ const Index = () => {
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {otherTools.map((tool) => (
-            <ToolCard
-              key={tool.id}
-              tool={tool}
+          {otherUtils.map((util) => (
+            <UtilCard
+              key={util.id}
+              util={util}
               isFavourite={false}
               onToggleFavourite={toggleFavourite}
             />

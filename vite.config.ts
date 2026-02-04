@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
   appType: 'spa',
   plugins: [
     react(),
-    VitePWA({
+    ...(mode === 'production' ? [VitePWA({
       registerType: 'autoUpdate',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => ({
         lang: 'en',
         dir: 'ltr'
       }
-    }),
+    })] : []),
   ].filter(Boolean),
   resolve: {
     alias: {

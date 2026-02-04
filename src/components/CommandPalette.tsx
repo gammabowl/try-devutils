@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { tools } from "@/lib/tools";
-import { prefetchTool } from "@/lib/lazyTools";
+import { utils } from "@/lib/utils";
+import { prefetchUtil } from "@/lib/lazyUtils";
 import { Command, Search, Keyboard } from "lucide-react";
 import {
   Dialog,
@@ -24,11 +24,11 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const filteredTools = tools.filter(
-    (tool) =>
-      tool.label.toLowerCase().includes(search.toLowerCase()) ||
-      tool.description.toLowerCase().includes(search.toLowerCase()) ||
-      tool.id.toLowerCase().includes(search.toLowerCase())
+  const filteredUtils = utils.filter(
+    (util) =>
+      util.label.toLowerCase().includes(search.toLowerCase()) ||
+      util.description.toLowerCase().includes(search.toLowerCase()) ||
+      util.id.toLowerCase().includes(search.toLowerCase())
   );
 
   // Reset state when opening
@@ -56,8 +56,8 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
   }, [selectedIndex]);
 
   const handleSelect = useCallback(
-    (toolId: string) => {
-      navigate(`/${toolId}`);
+    (utilId: string) => {
+      navigate(`/${utilId}`);
       onOpenChange(false);
     },
     [navigate, onOpenChange]
@@ -69,7 +69,7 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
         case "ArrowDown":
           e.preventDefault();
           setSelectedIndex((prev) =>
-            prev < filteredTools.length - 1 ? prev + 1 : prev
+            prev < filteredUtils.length - 1 ? prev + 1 : prev
           );
           break;
         case "ArrowUp":
@@ -78,8 +78,8 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
           break;
         case "Enter":
           e.preventDefault();
-          if (filteredTools[selectedIndex]) {
-            handleSelect(filteredTools[selectedIndex].id);
+          if (filteredUtils[selectedIndex]) {
+            handleSelect(filteredUtils[selectedIndex].id);
           }
           break;
         case "Escape":
@@ -88,7 +88,7 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
           break;
       }
     },
-    [filteredTools, selectedIndex, handleSelect, onOpenChange]
+    [filteredUtils, selectedIndex, handleSelect, onOpenChange]
   );
 
   return (
@@ -119,20 +119,20 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
           ref={listRef}
           className="max-h-[300px] overflow-y-auto p-2"
         >
-          {filteredTools.length === 0 ? (
+          {filteredUtils.length === 0 ? (
             <div className="py-6 text-center text-sm text-muted-foreground">
               No utilities found.
             </div>
           ) : (
-            filteredTools.map((tool, index) => {
-              const IconComponent = tool.icon;
+            filteredUtils.map((util, index) => {
+              const IconComponent = util.icon;
               return (
                 <div
-                  key={tool.id}
-                  onClick={() => handleSelect(tool.id)}
+                  key={util.id}
+                  onClick={() => handleSelect(util.id)}
                   onMouseEnter={() => {
                     setSelectedIndex(index);
-                    prefetchTool(tool.id);
+                    prefetchUtil(util.id);
                   }}
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 cursor-pointer transition-colors ${
                     index === selectedIndex
@@ -140,17 +140,17 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
                       : "hover:bg-accent/50"
                   }`}
                 >
-                  <div className={`p-2 rounded-md ${tool.bgColor}`}>
-                    <IconComponent className={`h-4 w-4 ${tool.textColor}`} />
+                  <div className={`p-2 rounded-md ${util.bgColor}`}>
+                    <IconComponent className={`h-4 w-4 ${util.textColor}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-sm">{tool.label}</div>
+                    <div className="font-medium text-sm">{util.label}</div>
                     <div className="text-xs text-muted-foreground truncate">
-                      {tool.description}
+                      {util.description}
                     </div>
                   </div>
                   <kbd className="hidden sm:inline-flex h-5 select-none items-center rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                    /{tool.id}
+                    /{util.id}
                   </kbd>
                 </div>
               );

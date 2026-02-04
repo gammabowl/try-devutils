@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, ArrowRightLeft, FileType, FileSearch } from "lucide-react";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -146,7 +146,7 @@ export function MimeTypeLookup() {
   };
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onClear: () => {
       setSearchTerm("");
       setSelectedCategory("All");

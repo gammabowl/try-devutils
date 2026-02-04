@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Fingerprint as FingerprintIcon, RefreshCw, Trash2, CheckCircle, AlertCircle, Download, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4, v1 as uuidv1, v3 as uuidv3, v5 as uuidv5, v6 as uuidv6, v7 as uuidv7 } from "uuid";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface DecodedUuid {
@@ -163,7 +163,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
     });
   }, [toast]);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: () => generateUuid(selectedVersion, count),
     onClear: clearAll,
     onCopy: () => {

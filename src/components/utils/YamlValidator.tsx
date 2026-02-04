@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
 import * as yaml from "js-yaml";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -135,7 +135,7 @@ settings:
     setStats(null);
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: validateYaml,
     onClear: clearAll,
     onCopy: () => {

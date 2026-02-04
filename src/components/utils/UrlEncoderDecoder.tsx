@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, ArrowRightLeft, CheckCircle } from "lucide-react";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -93,7 +93,7 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
     setOutput("");
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: process,
     onClear: clearAll,
     onCopy: () => { if (output) copyToClipboard(output); }

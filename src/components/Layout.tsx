@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Sparkles, Info, Search, Keyboard, Shield, CheckCircle, Twitter } from "lucide-react";
+import { Sparkles, Info, Search, Keyboard, Shield, CheckCircle, Twitter, Home, EyeOff, Code, Cpu, Lock, Monitor } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -87,33 +87,10 @@ export function Layout() {
                 <span className="text-xs text-muted-foreground whitespace-nowrap">No data leaves your browser</span>
               </div>
 
-              {/* Theme toggle */}
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 flex-1">
-        <Outlet />
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm mt-auto">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2 text-sm text-muted-foreground">
-              <span>All processing happens locally</span>
-              <span className="hidden sm:inline">•</span>
-              <span>No tracking, not even analytics</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-              <span>🚫 Ad-free</span>
-              <span>⚡ Lightning fast</span>
+              {/* Info dialog */}
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-auto p-1">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground" title="About TryDevUtils">
                     <Info className="h-4 w-4" />
                   </Button>
                 </DialogTrigger>
@@ -134,7 +111,7 @@ export function Layout() {
                     <div className="rounded-lg bg-muted/50 p-4 border border-border/50">
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         Most developer utils websites are bloated with ads, trackers, and unnecessary scripts.
-                        This project delivers essential tools in a clean, distraction-free interface.
+                        This project delivers essential utils in a clean, distraction-free interface.
                       </p>
                     </div>
 
@@ -188,6 +165,42 @@ export function Layout() {
                   </div>
                 </DialogContent>
               </Dialog>
+
+              {/* Theme toggle */}
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8 flex-1">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm mt-auto">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-3 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Monitor className="h-4 w-4 text-green-600" />
+                <span className="font-medium">All processing happens locally</span>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <EyeOff className="h-4 w-4 text-blue-600" />
+                <span className="font-medium">No tracking, not even analytics</span>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <span className="text-red-500">🚫</span>
+                <span className="font-medium">Ad-free</span>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Code className="h-4 w-4 text-purple-600" />
+                <span className="font-medium">Open source</span>
+              </div>
             </div>
           </div>
         </div>

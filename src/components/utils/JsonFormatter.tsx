@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Braces, Copy, AlertCircle, CheckCircle, WandSparkles, Minimize } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface JsonFormatterProps {
@@ -73,7 +73,7 @@ export function JsonFormatter({ initialContent, action }: JsonFormatterProps) {
   }, []);
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: () => formatJson(false),
     onClear: clearAll,
     onCopy: copyToClipboard,

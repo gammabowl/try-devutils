@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RotateCcw, Zap } from "lucide-react";
 import { toast } from "sonner";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 
 interface ZlibCompressorProps {
@@ -84,7 +84,7 @@ export function ZlibCompressor({ navigate }: ZlibCompressorProps) {
     setStats(null);
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: () => activeTab === "compress" ? compress() : decompress(),
     onClear: clearAll,
     onCopy: handleCopyToClipboard

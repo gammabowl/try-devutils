@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 // import ReactMarkdown from "react-markdown" // Moved to dynamic import
 import { FileText, Loader2 } from "lucide-react"
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts"
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts"
 import { CopyButton } from "@/components/ui/copy-button"
 import { useToast } from "@/hooks/use-toast"
 
@@ -43,7 +43,7 @@ export function MarkdownPreview() {
   }, [])
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onClear: clearAll,
     onCopy: copyToClipboard,
   })

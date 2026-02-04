@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FileDiff as FileDiffIcon, RotateCcw } from "lucide-react";
 import { diffLines, diffWords, Change } from "diff";
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 interface TextDiffProps {
   initialContent?: string;
@@ -36,7 +36,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
     setDiffResult([]);
   }, []);
 
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: calculateDiff,
     onClear: clearAll
   });

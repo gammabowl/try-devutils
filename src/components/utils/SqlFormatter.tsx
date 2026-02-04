@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Database, AlertCircle, CheckCircle, WandSparkles, Minimize, Copy, Loader2 } from "lucide-react";
 // import { format } from "sql-formatter"; // Moved to dynamic import
-import { useToolKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -117,7 +117,7 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
   }, []);
 
   // Keyboard shortcuts
-  useToolKeyboardShortcuts({
+  useUtilKeyboardShortcuts({
     onExecute: () => formatSql(false),
     onClear: clearAll,
     onCopy: copyToClipboard,
