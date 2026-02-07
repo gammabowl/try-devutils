@@ -500,7 +500,7 @@ export function UuidGeneratorDecoder({ initialContent, action }: UuidGeneratorPr
                   </div>
                 </div>
                 
-                <div className="space-y-2 pr-2">
+                <div className="space-y-2 max-h-[400px] overflow-auto pr-2">
                   {uuids.map((uuid) => {
                     const decoded = ['v1', 'v6', 'v7'].includes(uuid.version) ? decodeUuid(uuid.value) : null;
                     return (

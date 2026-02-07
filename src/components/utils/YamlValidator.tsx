@@ -170,12 +170,32 @@ settings:
           YAML Validator & Converter
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="space-y-2">
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap gap-2 mb-4">
+          <Button onClick={validateYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            <CheckCircle className="h-4 w-4 mr-2" />
+            Validate YAML
+          </Button>
+          <Button onClick={formatYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
+            <Wand2 className="h-4 w-4 mr-2" />
+            Format
+          </Button>
+          <Button onClick={loadExample} variant="outline" size="sm">
+            Example
+          </Button>
+          <Button onClick={clearAll} variant="outline" size="sm">
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Clear
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-foreground">
+                YAML Input
+              </label>
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-foreground">YAML Input</label>
                 {isValid !== null && (
                   <Badge className={isValid ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-red-500/10 text-red-600 border-red-500/20"}>
                     {isValid ? (
@@ -193,30 +213,18 @@ settings:
                 )}
                 {stats && (
                   <Badge variant="outline">
-                    {stats.lines}L · {stats.size}B
+                    {stats.lines} lines, {stats.size} bytes
                   </Badge>
                 )}
               </div>
-              <div className="flex items-center gap-1">
-                <Button onClick={validateYaml} size="sm" variant="outline">
-                  <CheckCircle className="h-3.5 w-3.5 mr-1" />
-                  Validate
-                </Button>
-                <Button onClick={formatYaml} size="sm" variant="outline">
-                  <Wand2 className="h-3.5 w-3.5 mr-1" />
-                  Format
-                </Button>
-                <Button onClick={loadExample} variant="ghost" size="sm">Example</Button>
-                <Button onClick={clearAll} variant="ghost" size="sm">
-                  <RotateCcw className="h-3.5 w-3.5" />
-                </Button>
-              </div>
             </div>
-            <div className="relative">
-              <Textarea
-                placeholder="Enter YAML content here..."
-                value={yamlInput}
-                onChange={(e) => {
+            <div className="space-y-3">
+              <div className="relative">
+                <div className="relative">
+                  <Textarea
+                    placeholder="Enter YAML content here..."
+                    value={yamlInput}
+                    onChange={(e) => {
                       setYamlInput(e.target.value);
                       // Auto-validate as user types
                       if (e.target.value.trim()) {
@@ -246,37 +254,49 @@ settings:
                       }
                     }}
                     className="w-full min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-20"
-              />
-              <CopyButton
-                text={yamlInput}
-                className="absolute right-2 top-2"
-                title="Copy YAML"
-              />
+                  />
+                  <CopyButton
+                    text={yamlInput}
+                    className="absolute right-8 top-3 z-10 px-2 py-0.5 rounded text-xs shadow transition-all"
+                    title="Copy YAML"
+                    style={{transform: 'translateY(-2px)'}}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-foreground">JSON Output</label>
+              <label className="text-sm font-medium text-foreground">
+                JSON Output
+              </label>
               {jsonOutput && (
-                <Button onClick={convertJsonToYaml} variant="outline" size="sm">
-                  ← To YAML
+                <Button
+                  onClick={convertJsonToYaml}
+                  variant="outline"
+                  size="sm"
+                >
+                  ← Convert to YAML
                 </Button>
               )}
             </div>
-            <div className="relative">
-              <Textarea
-                placeholder="JSON output will appear here..."
-                value={jsonOutput}
-                onChange={(e) => setJsonOutput(e.target.value)}
-                readOnly={!jsonOutput || isValid === true}
-                className="w-full min-h-[300px] font-mono text-sm bg-muted/30 border-border/50"
-              />
-              <CopyButton
-                text={jsonOutput}
-                className={`absolute right-2 top-2 ${!jsonOutput ? 'opacity-50 pointer-events-none' : ''}`}
-                title="Copy JSON"
-              />
+            <div className="space-y-3">
+              <div className="relative">
+                <Textarea
+                  placeholder="JSON representation will appear here..."
+                  value={jsonOutput}
+                  onChange={(e) => setJsonOutput(e.target.value)}
+                  readOnly={!jsonOutput || isValid === true}
+                  className="w-full min-h-[400px] font-mono text-sm bg-muted/30 border-border/50 pr-16"
+                />
+                <CopyButton
+                  text={jsonOutput}
+                  className={`absolute right-8 top-3 z-10 px-2 py-0.5 rounded text-xs shadow transition-all ${!jsonOutput ? 'opacity-50 pointer-events-none' : ''}`}
+                  title="Copy JSON"
+                  style={{transform: 'translateY(-2px)'}}
+                />
+              </div>
             </div>
           </div>
         </div>

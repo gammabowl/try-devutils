@@ -198,109 +198,122 @@ export function KeyPairGenerator({ initialContent, action }: KeyPairGeneratorPro
           Key Pair Generator
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="p-3 bg-muted/20 rounded-lg border border-border/50 space-y-3">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div>
-              <label className="block text-xs font-medium mb-1 text-muted-foreground">Format</label>
-              <Select value={format} onValueChange={setFormat}>
-                <SelectTrigger className="bg-background border-border/50 h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PEM">PEM</SelectItem>
-                  <SelectItem value="SSH">SSH</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-foreground">
+              Format
+            </label>
+            <Select value={format} onValueChange={setFormat}>
+              <SelectTrigger className="bg-muted/50 border-border/50">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="PEM">PEM</SelectItem>
+                <SelectItem value="SSH">SSH</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
+          <div>
+            <label className="block text-sm font-medium mb-2 text-foreground">
+              Algorithm
+            </label>
+            <Select value={algorithm} onValueChange={setAlgorithm}>
+              <SelectTrigger className="bg-muted/50 border-border/50">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {algorithmOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    <div>
+                      <div className="font-medium">{option.label}</div>
+                      <div className="text-xs text-muted-foreground">{option.description}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {algorithm === "RSA" && (
             <div>
-              <label className="block text-xs font-medium mb-1 text-muted-foreground">Algorithm</label>
-              <Select value={algorithm} onValueChange={setAlgorithm}>
-                <SelectTrigger className="bg-background border-border/50 h-9">
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Key Size
+              </label>
+              <Select value={keySize} onValueChange={setKeySize}>
+                <SelectTrigger className="bg-muted/50 border-border/50">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {algorithmOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                  {rsaKeySizes.map((size) => (
+                    <SelectItem key={size} value={size}>
+                      {size} bits
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+          )}
 
-            {algorithm === "RSA" && (
-              <div>
-                <label className="block text-xs font-medium mb-1 text-muted-foreground">Key Size</label>
-                <Select value={keySize} onValueChange={setKeySize}>
-                  <SelectTrigger className="bg-background border-border/50 h-9">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {rsaKeySizes.map((size) => (
-                      <SelectItem key={size} value={size}>
-                        {size} bits
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            {algorithm === "ECDSA" && (
-              <div>
-                <label className="block text-xs font-medium mb-1 text-muted-foreground">Curve</label>
-                <Select value={curve} onValueChange={setCurve}>
-                  <SelectTrigger className="bg-background border-border/50 h-9">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ecdsaCurves.map((curveOption) => (
-                      <SelectItem key={curveOption.value} value={curveOption.value}>
-                        {curveOption.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
+          {algorithm === "ECDSA" && (
             <div>
-              <label className="block text-xs font-medium mb-1 text-muted-foreground">Comment/Email</label>
-              <input
-                type="text"
-                placeholder="user@example.com (optional)"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="w-full h-9 px-3 bg-background border border-border/50 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-dev-primary/50 focus:border-dev-primary"
-              />
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                Curve
+              </label>
+              <Select value={curve} onValueChange={setCurve}>
+                <SelectTrigger className="bg-muted/50 border-border/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ecdsaCurves.map((curveOption) => (
+                    <SelectItem key={curveOption.value} value={curveOption.value}>
+                      {curveOption.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </div>
+          )}
+        </div>
 
-          <div className="flex gap-2">
-            <Button
-              onClick={generateKeyPair}
-              disabled={isGenerating}
-              size="sm"
-              className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
-            >
-              {isGenerating ? (
-                <>
-                  <div className="h-3.5 w-3.5 mr-1.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Generating…
-                </>
-              ) : (
-                <>
-                  <Key className="h-3.5 w-3.5 mr-1.5" />
-                  Generate Key Pair
-                </>
-              )}
-            </Button>
-            <Button onClick={clearAll} variant="outline" size="sm">
-              Clear
-            </Button>
-          </div>
+        <div>
+          <label className="block text-sm font-medium mb-2 text-foreground">
+            Comment/Email (optional)
+          </label>
+          <input
+            type="text"
+            placeholder="user@example.com or any identifier"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="w-full px-3 py-2 bg-muted/50 border border-border/50 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-dev-primary/50 focus:border-dev-primary"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Optional comment that will be added to the key files (PEM header or SSH comment)
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <Button
+            onClick={generateKeyPair}
+            disabled={isGenerating}
+            className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground"
+          >
+            {isGenerating ? (
+              <>
+                <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Key className="h-4 w-4 mr-2" />
+                Generate Key Pair
+              </>
+            )}
+          </Button>
+          <Button onClick={clearAll} variant="outline">
+            Clear
+          </Button>
         </div>
 
         {error && (
@@ -351,8 +364,7 @@ export function KeyPairGenerator({ initialContent, action }: KeyPairGeneratorPro
                 <Textarea
                   value={generatedKeys.privateKey}
                   readOnly
-                  rows={Math.max(8, generatedKeys.privateKey.split('\n').length + 1)}
-                  className="font-mono text-xs bg-muted/50 border-border/50"
+                  className="font-mono text-xs bg-muted/50 border-border/50 min-h-[200px]"
                 />
               </div>
 
@@ -377,8 +389,7 @@ export function KeyPairGenerator({ initialContent, action }: KeyPairGeneratorPro
                 <Textarea
                   value={generatedKeys.publicKey}
                   readOnly
-                  rows={Math.max(8, generatedKeys.publicKey.split('\n').length + 1)}
-                  className="font-mono text-xs bg-muted/50 border-border/50"
+                  className="font-mono text-xs bg-muted/50 border-border/50 min-h-[200px]"
                 />
               </div>
             </div>
@@ -393,6 +404,14 @@ export function KeyPairGenerator({ initialContent, action }: KeyPairGeneratorPro
           </div>
         )}
 
+        <div className="p-3 bg-muted/20 rounded-lg border border-border/50 text-sm text-muted-foreground space-y-2">
+          <div><strong>PEM Format:</strong> Standard for SSL/TLS certificates and web servers</div>
+          <div><strong>SSH Format:</strong> Single-line format for SSH authentication (public key only)</div>
+          <div><strong>RSA:</strong> Recommended for most applications. 2048-bit minimum for security.</div>
+          <div><strong>ECDSA:</strong> More efficient than RSA with equivalent security. P-256 is widely supported.</div>
+          <div><strong>Ed25519:</strong> Modern elliptic curve algorithm, but not supported in all browsers.</div>
+          <div><strong>Note:</strong> Keys are generated using your browser's Web Crypto API and never leave your device.</div>
+        </div>
       </CardContent>
     </Card>
   );

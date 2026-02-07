@@ -52,11 +52,10 @@ export function UtilPage() {
   }, [util]);
 
   const isDesktop = isTauri();
-  const IconComponent = util.icon;
 
   return (
     <div className={isDesktop ? "flex flex-col flex-1 min-h-0" : "space-y-6"}>
-      {/* Structured Data (web only) */}
+      {/* Structured Data */}
       {!isDesktop && (
         <script type="application/ld+json">
           {JSON.stringify({
@@ -70,8 +69,7 @@ export function UtilPage() {
           })}
         </script>
       )}
-
-      {/* Web: back navigation */}
+      {/* Back navigation */}
       {!isDesktop && (
         <div className="flex justify-center">
           <Link

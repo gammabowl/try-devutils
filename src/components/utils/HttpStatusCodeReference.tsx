@@ -2,8 +2,9 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Globe } from "lucide-react";
+import { Search, Info, Globe } from "lucide-react";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { isTauri } from "@/lib/platform";
 
 interface HttpStatusCode {
   code: number;
@@ -122,7 +123,7 @@ export function HttpStatusCodeReference() {
         {/* Search and Filter */}
         <div className="space-y-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by code, title, or description..."
               value={searchTerm}
@@ -146,29 +147,36 @@ export function HttpStatusCodeReference() {
         </div>
 
         {/* Results */}
-        <div className="space-y-1.5">
+        <div className={`space-y-3 ${isTauri() ? '' : 'max-h-96 overflow-y-auto'}`}>
           {filteredCodes.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground">
+            <div className="text-center py-8 text-muted-foreground">
               No status codes found matching your search.
             </div>
           ) : (
             filteredCodes.map((statusCode) => (
-              <div key={statusCode.code} className="flex items-start gap-3 px-3 py-2 rounded-md border border-border/50 hover:bg-muted/30 transition-colors">
-                <span className={`shrink-0 inline-flex items-center justify-center w-10 h-6 rounded text-xs font-bold text-white ${statusCode.color}`}>
-                  {statusCode.code}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <span className="text-sm font-medium text-foreground">{statusCode.title}</span>
-                  <span className="text-xs text-muted-foreground ml-2">{statusCode.description}</span>
+              <Card key={statusCode.code} className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className={`flex-shrink-0 w-12 h-12 rounded-lg ${statusCode.color} flex items-center justify-center`}>
+                    <span className="text-white font-bold text-lg">{statusCode.code}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-foreground">{statusCode.title}</h3>
+                      <Badge variant="secondary" className="text-xs">
+                        {statusCode.category}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{statusCode.description}</p>
+                  </div>
                 </div>
-              </div>
+              </Card>
             ))
           )}
         </div>
 
         {/* Stats */}
-        <div className="text-xs text-muted-foreground text-center">
-          Showing {filteredCodes.length} of {httpStatusCodes.length} status codes
+        <div className="text-sm text-muted-foreground text-center">
+          Showing {filteredCodes.length} of {httpStatusCodes.length} HTTP status codes
         </div>
       </CardContent>
     </Card>

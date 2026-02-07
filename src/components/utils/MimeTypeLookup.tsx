@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, ArrowRightLeft, FileSearch } from "lucide-react";
+import { Search, ArrowRightLeft, FileType, FileSearch } from "lucide-react";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { isTauri } from "@/lib/platform";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -106,7 +107,7 @@ export function MimeTypeLookup() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<string>("browse");
+  const [activeTab, setActiveTab] = useState<string>(isTauri() ? "browse" : "lookup");
   const { toast } = useToast();
 
   const categories = ["All", ...Array.from(new Set(mimeTypes.map(type => type.category)))];
@@ -237,10 +238,10 @@ export function MimeTypeLookup() {
           </TabsContent>
 
           {/* Browse All Tab */}
-          <TabsContent value="browse" className="space-y-3 pt-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="relative flex-1 min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <TabsContent value="browse" className="space-y-4 pt-4">
+            <div className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search MIME types..."
                   value={searchTerm}
@@ -248,39 +249,44 @@ export function MimeTypeLookup() {
                   className="pl-10"
                 />
               </div>
-              {categories.map((category) => (
-                <Badge
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  className="cursor-pointer hover:bg-muted"
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </Badge>
-              ))}
+
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Badge
+                    key={category}
+                    variant={selectedCategory === category ? "default" : "outline"}
+                    className="cursor-pointer hover:bg-muted"
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {category}
+                  </Badge>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-1">
+            <div className={`space-y-2 ${isTauri() ? '' : 'max-h-96 overflow-y-auto'}`}>
               {filteredTypes.map((type, index) => (
-                <div key={index} className="flex items-center justify-between px-3 py-1.5 rounded-md border border-border/50 hover:bg-muted/30 transition-colors">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="font-mono text-xs">
-                      {type.extension}
-                    </Badge>
-                    <span className="text-muted-foreground text-xs">→</span>
-                    <code className="text-xs font-mono text-foreground">
-                      {type.mimeType}
-                    </code>
+                <Card key={index} className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className="font-mono">
+                        {type.extension}
+                      </Badge>
+                      <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />
+                      <Badge variant="secondary" className="font-mono text-xs">
+                        {type.mimeType}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">{type.description}</span>
+                      <CopyButton text={`${type.extension} → ${type.mimeType}`} />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground hidden sm:inline">{type.description}</span>
-                    <CopyButton text={type.mimeType} />
-                  </div>
-                </div>
+                </Card>
               ))}
             </div>
 
-            <div className="text-xs text-muted-foreground text-center">
+            <div className="text-sm text-muted-foreground text-center">
               Showing {filteredTypes.length} of {mimeTypes.length} MIME types
             </div>
           </TabsContent>

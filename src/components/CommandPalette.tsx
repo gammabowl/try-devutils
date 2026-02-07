@@ -28,8 +28,7 @@ export function CommandPalette({ isOpen, onOpenChange }: CommandPaletteProps) {
     (util) =>
       util.label.toLowerCase().includes(search.toLowerCase()) ||
       util.description.toLowerCase().includes(search.toLowerCase()) ||
-      util.id.toLowerCase().includes(search.toLowerCase()) ||
-      util.category.toLowerCase().includes(search.toLowerCase())
+      util.id.toLowerCase().includes(search.toLowerCase())
   );
 
   // Reset state when opening

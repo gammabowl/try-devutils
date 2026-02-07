@@ -75,62 +75,62 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark theme — lifted backgrounds for readability, clear surface hierarchy */
-    --background: 224 28% 10%;
+    /* Dark theme colors - improved for readability */
+    --background: 222 47% 6%;
     --foreground: 210 40% 96%;
 
-    --card: 224 28% 13%;
+    --card: 222 47% 8%;
     --card-foreground: 210 40% 96%;
 
-    --popover: 224 28% 14%;
+    --popover: 222 47% 10%;
     --popover-foreground: 210 40% 96%;
 
     --primary: 210 40% 98%;
-    --primary-foreground: 224 28% 10%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 220 25% 18%;
+    --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 96%;
 
-    --muted: 220 25% 16%;
-    --muted-foreground: 215 20% 68%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 220 25% 18%;
+    --accent: 217 33% 17%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 20% 26%;
-    --input: 220 25% 20%;
+    --border: 217 33% 22%;
+    --input: 217 33% 18%;
     --ring: 214 80% 60%;
 
     /* Dark theme developer token colors - brighter for readability */
     --dev-primary: 214 100% 65%;
-    --dev-primary-foreground: 224 28% 10%;
+    --dev-primary-foreground: 222 47% 6%;
     --dev-secondary: 187 100% 50%;
     --dev-success: 142 76% 55%;
-    --dev-success-foreground: 224 28% 10%;
+    --dev-success-foreground: 222 47% 6%;
     --dev-warning: 38 100% 60%;
-    --dev-warning-foreground: 224 28% 10%;
+    --dev-warning-foreground: 222 47% 6%;
     --dev-error: 0 91% 65%;
-    --dev-error-foreground: 224 28% 10%;
+    --dev-error-foreground: 222 47% 6%;
 
-    /* Dark theme gradients */
+    /* Dark theme gradients - improved depth */
     --gradient-primary: linear-gradient(135deg, hsl(214 100% 65%), hsl(187 100% 50%));
-    --gradient-secondary: linear-gradient(135deg, hsl(224 28% 14%), hsl(224 28% 12%));
+    --gradient-secondary: linear-gradient(135deg, hsl(222 47% 10%), hsl(222 47% 8%));
     --gradient-accent: linear-gradient(135deg, hsl(214 100% 65% / 0.15), hsl(187 100% 50% / 0.10));
     
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.3);
-    --shadow-glow: 0 0 36px hsl(214 100% 65% / 0.15);
-    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.25);
+    --shadow-elegant: 0 10px 30px -10px hsl(214 100% 65% / 0.25);
+    --shadow-glow: 0 0 36px hsl(214 100% 65% / 0.20);
+    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
 
-    --sidebar-background: 224 28% 11%;
+    --sidebar-background: 222 47% 8%;
     --sidebar-foreground: 210 40% 96%;
     --sidebar-primary: 214 100% 65%;
-    --sidebar-primary-foreground: 224 28% 10%;
-    --sidebar-accent: 220 25% 18%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 33% 17%;
     --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 220 20% 24%;
+    --sidebar-border: 217 33% 22%;
     --sidebar-ring: 214 100% 65%;
   }
 }
@@ -405,7 +405,7 @@ All colors MUST be HSL.
 
   /* Dark mode border improvements */
   .dark .border-border\/50 {
-    border-color: hsl(220 20% 28% / 0.7);
+    border-color: hsl(217 33% 30% / 0.6);
   }
 
   /* Dark mode badge improvements */
@@ -438,8 +438,8 @@ All colors MUST be HSL.
   .dark input,
   .dark textarea,
   .dark select {
-    background-color: hsl(224 28% 8%);
-    border-color: hsl(220 20% 28%);
+    background-color: hsl(222 47% 10%);
+    border-color: hsl(217 33% 25%);
     color: hsl(210 40% 96%);
   }
 
@@ -452,23 +452,23 @@ All colors MUST be HSL.
 
   .dark input::placeholder,
   .dark textarea::placeholder {
-    color: hsl(215 20% 48%);
+    color: hsl(215 20% 50%);
   }
 
   /* Dark mode code/pre improvements */
   .dark pre,
   .dark code {
-    background-color: hsl(224 28% 8%);
-    border-color: hsl(220 20% 24%);
+    background-color: hsl(222 47% 8%);
+    border-color: hsl(217 33% 22%);
   }
 
   /* Dark mode table improvements */
   .dark table thead {
-    background-color: hsl(220 25% 15%);
+    background-color: hsl(217 33% 12%);
   }
 
   .dark table tbody tr:hover {
-    background-color: hsl(220 25% 17%);
+    background-color: hsl(217 33% 14%);
   }
 
   /* Dark mode alert/badge improvements */
@@ -587,12 +587,12 @@ All colors MUST be HSL.
   flex-shrink: 0;
 }
 
-/* Grid columns stretch */
-.desktop .tool-card .grid {
+/* Grid columns stretch — only when they hold resizable content (textareas/pre) */
+.desktop .tool-card .grid:has(textarea, pre, [contenteditable]) {
   flex: 1;
   min-height: 0;
 }
-.desktop .tool-card .grid > div {
+.desktop .tool-card .grid:has(textarea, pre, [contenteditable]) > div {
   display: flex;
   flex-direction: column;
   min-height: 0;
