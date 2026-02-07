@@ -94,51 +94,26 @@ export function StringAnalyser() {
           />
         </div>
 
-        {/* Statistics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-sm text-muted-foreground font-medium mb-1">Characters</div>
-            <div className="text-2xl font-bold text-dev-primary">{stats.length}</div>
+        {/* Statistics + Case Conversion */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-muted-foreground">Chars <strong className="text-foreground">{stats.length}</strong></span>
+            <span className="text-muted-foreground">Unique <strong className="text-foreground">{stats.charCount}</strong></span>
+            <span className="text-muted-foreground">Words <strong className="text-foreground">{stats.wordCount}</strong></span>
+            <span className="text-muted-foreground">Lines <strong className="text-foreground">{stats.lineCount}</strong></span>
+            <span className="text-muted-foreground">Size <strong className="text-foreground">{formatSize(stats.sizeBytes)}</strong></span>
           </div>
-          <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-sm text-muted-foreground font-medium mb-1">Unique Characters</div>
-            <div className="text-2xl font-bold text-dev-secondary">{stats.charCount}</div>
+          <div className="h-4 border-l border-border/50 hidden sm:block" />
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Button onClick={handleToLowerCase} variant="outline" size="sm">lowercase</Button>
+            <Button onClick={handleToUpperCase} variant="outline" size="sm">UPPERCASE</Button>
+            <Button onClick={handleToCamelCase} variant="outline" size="sm">camelCase</Button>
+            <Button onClick={handleToSnakeCase} variant="outline" size="sm">snake_case</Button>
+            <Button onClick={handleToKebabCase} variant="outline" size="sm">kebab-case</Button>
+            <Button onClick={handleClear} variant="ghost" size="sm" className="ml-auto">
+              <RotateCcw className="h-3.5 w-3.5" />
+            </Button>
           </div>
-          <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-sm text-muted-foreground font-medium mb-1">Words</div>
-            <div className="text-2xl font-bold text-dev-success">{stats.wordCount}</div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-sm text-muted-foreground font-medium mb-1">Lines</div>
-            <div className="text-2xl font-bold text-dev-warning">{stats.lineCount}</div>
-          </div>
-          <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
-            <div className="text-sm text-muted-foreground font-medium mb-1">Size</div>
-            <div className="text-2xl font-bold text-dev-accent">{formatSize(stats.sizeBytes)}</div>
-          </div>
-        </div>
-
-        {/* Case Conversion Buttons */}
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={handleToLowerCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            lowercase
-          </Button>
-          <Button onClick={handleToUpperCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            UPPERCASE
-          </Button>
-          <Button onClick={handleToCamelCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            camelCase
-          </Button>
-          <Button onClick={handleToSnakeCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            snake_case
-          </Button>
-          <Button onClick={handleToKebabCase} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            kebab-case
-          </Button>
-          <Button onClick={handleClear} variant="outline" size="sm" className="sm:ml-auto">
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Clear
-          </Button>
         </div>
 
         {/* Output Section */}
@@ -148,7 +123,7 @@ export function StringAnalyser() {
               Converted Text
             </label>
             <div className="relative">
-              <div className="p-4 pr-16 bg-muted/30 border border-border/50 rounded-lg font-mono text-sm text-foreground break-words max-h-64 overflow-auto">
+              <div className="p-4 pr-16 bg-muted/30 border border-border/50 rounded-lg font-mono text-sm text-foreground break-words">
                 {displayText}
               </div>
               <CopyButton
@@ -160,14 +135,6 @@ export function StringAnalyser() {
           </div>
         )}
 
-        {/* Info */}
-        <div className="text-sm text-muted-foreground space-y-1 pt-2">
-          <div><strong>Characters:</strong> Total number of characters (Unicode code points)</div>
-          <div><strong>Unique Characters:</strong> Count of distinct characters</div>
-          <div><strong>Words:</strong> Count of space-separated words</div>
-          <div><strong>Lines:</strong> Count of line breaks</div>
-          <div><strong>Size:</strong> Byte size of the string (UTF-8 encoded)</div>
-        </div>
       </CardContent>
     </Card>
   );

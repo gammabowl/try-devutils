@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nickelpack/nf-app/main/schema/capabilities.json",
+  "identifier": "main-capability",
+  "description": "Main capability for the desktop window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "shell:allow-open",
+    "clipboard-manager:allow-write-text",
+    "clipboard-manager:allow-read-text",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "dialog:allow-message",
+    "dialog:allow-ask",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "fs:default",
+    "os:default",
+    "process:default"
+  ]
+}

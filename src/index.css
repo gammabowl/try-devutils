@@ -75,62 +75,62 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark theme colors - improved for readability */
-    --background: 222 47% 6%;
+    /* Dark theme — lifted backgrounds for readability, clear surface hierarchy */
+    --background: 224 28% 10%;
     --foreground: 210 40% 96%;
 
-    --card: 222 47% 8%;
+    --card: 224 28% 13%;
     --card-foreground: 210 40% 96%;
 
-    --popover: 222 47% 10%;
+    --popover: 224 28% 14%;
     --popover-foreground: 210 40% 96%;
 
     --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
+    --primary-foreground: 224 28% 10%;
 
-    --secondary: 217 33% 17%;
+    --secondary: 220 25% 18%;
     --secondary-foreground: 210 40% 96%;
 
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 25% 16%;
+    --muted-foreground: 215 20% 68%;
 
-    --accent: 217 33% 17%;
+    --accent: 220 25% 18%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 22%;
-    --input: 217 33% 18%;
+    --border: 220 20% 26%;
+    --input: 220 25% 20%;
     --ring: 214 80% 60%;
 
     /* Dark theme developer token colors - brighter for readability */
     --dev-primary: 214 100% 65%;
-    --dev-primary-foreground: 222 47% 6%;
+    --dev-primary-foreground: 224 28% 10%;
     --dev-secondary: 187 100% 50%;
     --dev-success: 142 76% 55%;
-    --dev-success-foreground: 222 47% 6%;
+    --dev-success-foreground: 224 28% 10%;
     --dev-warning: 38 100% 60%;
-    --dev-warning-foreground: 222 47% 6%;
+    --dev-warning-foreground: 224 28% 10%;
     --dev-error: 0 91% 65%;
-    --dev-error-foreground: 222 47% 6%;
+    --dev-error-foreground: 224 28% 10%;
 
-    /* Dark theme gradients - improved depth */
+    /* Dark theme gradients */
     --gradient-primary: linear-gradient(135deg, hsl(214 100% 65%), hsl(187 100% 50%));
-    --gradient-secondary: linear-gradient(135deg, hsl(222 47% 10%), hsl(222 47% 8%));
+    --gradient-secondary: linear-gradient(135deg, hsl(224 28% 14%), hsl(224 28% 12%));
     --gradient-accent: linear-gradient(135deg, hsl(214 100% 65% / 0.15), hsl(187 100% 50% / 0.10));
     
-    --shadow-elegant: 0 10px 30px -10px hsl(214 100% 65% / 0.25);
-    --shadow-glow: 0 0 36px hsl(214 100% 65% / 0.20);
-    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -1px hsl(0 0% 0% / 0.3);
+    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.3);
+    --shadow-glow: 0 0 36px hsl(214 100% 65% / 0.15);
+    --shadow-card: 0 2px 8px -2px hsl(0 0% 0% / 0.25);
 
-    --sidebar-background: 222 47% 8%;
+    --sidebar-background: 224 28% 11%;
     --sidebar-foreground: 210 40% 96%;
     --sidebar-primary: 214 100% 65%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 217 33% 17%;
+    --sidebar-primary-foreground: 224 28% 10%;
+    --sidebar-accent: 220 25% 18%;
     --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 217 33% 22%;
+    --sidebar-border: 220 20% 24%;
     --sidebar-ring: 214 100% 65%;
   }
 }
@@ -405,7 +405,7 @@ All colors MUST be HSL.
 
   /* Dark mode border improvements */
   .dark .border-border\/50 {
-    border-color: hsl(217 33% 30% / 0.6);
+    border-color: hsl(220 20% 28% / 0.7);
   }
 
   /* Dark mode badge improvements */
@@ -438,8 +438,8 @@ All colors MUST be HSL.
   .dark input,
   .dark textarea,
   .dark select {
-    background-color: hsl(222 47% 10%);
-    border-color: hsl(217 33% 25%);
+    background-color: hsl(224 28% 8%);
+    border-color: hsl(220 20% 28%);
     color: hsl(210 40% 96%);
   }
 
@@ -452,23 +452,23 @@ All colors MUST be HSL.
 
   .dark input::placeholder,
   .dark textarea::placeholder {
-    color: hsl(215 20% 50%);
+    color: hsl(215 20% 48%);
   }
 
   /* Dark mode code/pre improvements */
   .dark pre,
   .dark code {
-    background-color: hsl(222 47% 8%);
-    border-color: hsl(217 33% 22%);
+    background-color: hsl(224 28% 8%);
+    border-color: hsl(220 20% 24%);
   }
 
   /* Dark mode table improvements */
   .dark table thead {
-    background-color: hsl(217 33% 12%);
+    background-color: hsl(220 25% 15%);
   }
 
   .dark table tbody tr:hover {
-    background-color: hsl(217 33% 14%);
+    background-color: hsl(220 25% 17%);
   }
 
   /* Dark mode alert/badge improvements */
@@ -515,3 +515,219 @@ All colors MUST be HSL.
     animation: fade-in 0.3s ease-out;
   }
 }
+
+/* ─── Desktop (Tauri) native-feel overrides ─── */
+.desktop {
+  font-size: 14px;
+  line-height: 1.5;
+  --radius: 0.375rem;
+  --shadow-card: none;
+  --shadow-elegant: none;
+  --shadow-glow: none;
+}
+
+/* Sharper corners globally */
+.desktop .rounded-lg { border-radius: 0.375rem; }
+.desktop .rounded-xl { border-radius: 0.5rem; }
+
+/* ── Tool-card: frameless, fills the pane ── */
+
+.desktop .tool-card > div:first-child:has(h3) { display: none; }
+
+.desktop .tool-card {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* CardContent stretches */
+.desktop .tool-card > div:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+}
+
+/* Examples / info footer sections sit at the bottom, don't stretch */
+.desktop .tool-card > .border-t,
+.desktop .tool-card > div:last-of-type:not(:last-child) {
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+/* ── Spacing: tighter but readable ── */
+
+.desktop .tool-card .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.75rem;
+}
+.desktop .tool-card .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.625rem;
+}
+.desktop .tool-card .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.5rem;
+}
+.desktop .tool-card .gap-6 { gap: 0.875rem; }
+.desktop .tool-card .gap-4 { gap: 0.625rem; }
+
+/* ── Flex chain: propagate stretch to textareas/pre ── */
+
+/* The top-level CardContent children that are containers should flex-col,
+   but NOT rows that are already flex-row, and NOT grids */
+.desktop .tool-card > div:last-child > div:not(.flex):not(.grid) {
+  display: flex;
+  flex-direction: column;
+}
+.desktop .tool-card > div:last-child > div.flex:not(.flex-col) {
+  flex-shrink: 0;
+}
+
+/* Grid columns stretch */
+.desktop .tool-card .grid {
+  flex: 1;
+  min-height: 0;
+}
+.desktop .tool-card .grid > div {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Any container wrapping a textarea or pre should stretch */
+.desktop .tool-card div:has(> textarea),
+.desktop .tool-card div:has(> pre) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.desktop .tool-card .relative:has(> textarea),
+.desktop .tool-card .relative:has(> pre) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Textareas fill available space */
+.desktop .tool-card textarea {
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.375rem;
+  flex: 1;
+  min-height: 150px !important;
+  resize: vertical;
+}
+
+/* Pre/output blocks fill available space */
+.desktop .tool-card pre {
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.625rem;
+  flex: 1;
+  min-height: 100px;
+  max-height: none !important;
+  overflow: auto;
+  border-radius: 0.375rem;
+}
+
+/* Fixed-height scroll areas should flex instead */
+.desktop .tool-card [class*="h-[400px]"],
+.desktop .tool-card [class*="h-[500px]"],
+.desktop .tool-card [class*="h-[600px]"] {
+  height: auto;
+  flex: 1;
+  min-height: 150px;
+  max-height: none;
+}
+
+/* Elements that must NOT stretch */
+.desktop .tool-card label,
+.desktop .tool-card .flex.flex-wrap,
+.desktop .tool-card [role="alert"],
+.desktop .tool-card > .border-t,
+.desktop .tool-card .text-sm.text-muted-foreground.space-y-1 {
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+/* ── Typography & controls ── */
+
+.desktop .tool-card label {
+  font-size: 0.8125rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.desktop .tool-card button {
+  border-radius: 0.3125rem;
+  font-size: 0.8125rem;
+}
+
+.desktop .tool-card input:not([type="checkbox"]):not([type="radio"]):not([type="color"]) {
+  font-size: 0.8125rem;
+  padding-block: 0.375rem;
+  padding-right: 0.625rem;
+  border-radius: 0.3125rem;
+}
+/* Only set padding-left when there's no explicit pl- class (i.e. no search icon) */
+.desktop .tool-card input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([class*="pl-"]) {
+  padding-left: 0.625rem;
+}
+
+.desktop .tool-card select {
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.3125rem;
+}
+
+/* Tabs */
+.desktop .tool-card [role="tablist"] {
+  height: auto;
+  padding: 2px;
+  flex-shrink: 0;
+}
+.desktop .tool-card [role="tab"] {
+  font-size: 0.8125rem;
+  padding: 0.3125rem 0.875rem;
+  border-radius: 0.25rem;
+}
+.desktop .tool-card .pt-4 {
+  padding-top: 0.5rem;
+}
+
+/* Tighter margins */
+.desktop .tool-card .mb-2 { margin-bottom: 0.25rem; }
+.desktop .tool-card .mb-3 { margin-bottom: 0.375rem; }
+.desktop .tool-card .mb-4 { margin-bottom: 0.5rem; }
+.desktop .tool-card .mt-3 { margin-top: 0.375rem; }
+.desktop .tool-card .mt-4 { margin-top: 0.5rem; }
+
+/* Examples footers */
+.desktop .tool-card [class*="py-4"][class*="px-6"] {
+  padding: 0.375rem 0.75rem;
+}
+
+/* ── General desktop overrides ── */
+
+/* Badges */
+.desktop [class*="Badge"],
+.desktop .inline-flex.items-center.rounded-full {
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.5rem;
+}
+
+/* Native scrollbars */
+.desktop ::-webkit-scrollbar { width: 8px; height: 8px; }
+.desktop ::-webkit-scrollbar-track { background: transparent; }
+.desktop ::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.2); border-radius: 4px; }
+.desktop ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.35); }
+
+/* No web-style hover effects */
+.desktop .hover\:scale-\[1\.03\]:hover,
+.desktop .hover\:scale-105:hover { transform: none !important; }
+.desktop .hover\:shadow-md:hover { box-shadow: none !important; }

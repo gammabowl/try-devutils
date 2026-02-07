@@ -277,7 +277,7 @@ export function SqlFormatter({ initialContent, action }: SqlFormatterProps) {
             </div>
 
             <div className="relative">
-              <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-auto max-h-[300px] border border-border/50 whitespace-pre-wrap pr-16">
+              <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-x-auto border border-border/50 whitespace-pre-wrap pr-16">
                 {output}
               </pre>
               <CopyButton

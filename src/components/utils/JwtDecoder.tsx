@@ -508,20 +508,7 @@ const decodeJWT = useCallback((token: string) => {
   };
 
   const getPayloadHeight = () => {
-    if (!decoded?.payload) return "max-h-32";
-    const payloadJson = formatJson(decoded.payload);
-    const lines = payloadJson.split('\n').length;
-    const claimsCount = Object.keys(decoded.payload).length;
-    
-    // For claims table: each claim takes ~2 lines, header takes 1 line
-    // Calculate based on total content size
-    const estimatedHeight = Math.min(claimsCount * 8 + 40, 500);
-    
-    if (estimatedHeight < 100) return "max-h-32";
-    if (estimatedHeight < 200) return "max-h-48";
-    if (estimatedHeight < 300) return "max-h-64";
-    if (estimatedHeight < 400) return "max-h-80";
-    return "max-h-screen";
+    return "";
   };
 
   const encodeJWT = () => {
@@ -639,7 +626,7 @@ const decodeJWT = useCallback((token: string) => {
                     <Textarea
                       value={token}
                       readOnly
-                      className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input resize-none pr-20"
+                      className="w-full sm:max-w-[720px] min-h-[200px] font-mono text-sm bg-background border-2 border-input pr-20"
                       placeholder="Your encoded JWT will appear here..."
                     />
                     <CopyButton
@@ -729,7 +716,7 @@ const decodeJWT = useCallback((token: string) => {
                     setToken(e.target.value);
                     decodeJWT(e.target.value);
                   }}
-                  className="w-full sm:max-w-[720px] h-[460px] font-mono text-sm bg-background border-2 border-input focus:border-ring resize-none"
+                  className="w-full sm:max-w-[720px] min-h-[200px] font-mono text-sm bg-background border-2 border-input focus:border-ring"
                 />
               </div>
 

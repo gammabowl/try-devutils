@@ -56,39 +56,39 @@ export function MarkdownPreview() {
           Markdown Preview
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <CardContent className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Editor Section */}
-          <div className="space-y-4">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-foreground">
-                Markdown Editor
+                Markdown
               </label>
-              <Button onClick={clearAll} variant="outline" size="sm">
-                Clear
-              </Button>
+              <div className="flex items-center gap-1">
+                <CopyButton
+                  text={markdown}
+                  className={!markdown ? 'opacity-50 pointer-events-none' : ''}
+                  title="Copy markdown"
+                />
+                <Button onClick={clearAll} variant="outline" size="sm">
+                  Clear
+                </Button>
+              </div>
             </div>
-            <div className="relative">
-              <Textarea
-                value={markdown}
-                onChange={(e) => setMarkdown(e.target.value)}
-                placeholder="Enter markdown here..."
-                className="w-full sm:max-w-[720px] min-h-[400px] font-mono text-sm bg-muted/50 border-border/50 pr-16"
-              />
-              <CopyButton
-                text={markdown}
-                className={`absolute right-2 top-2 ${!markdown ? 'opacity-50 pointer-events-none' : ''}`}
-                title="Copy markdown"
-              />
-            </div>
+            <Textarea
+              value={markdown}
+              onChange={(e) => setMarkdown(e.target.value)}
+              placeholder="Enter markdown here..."
+              className="w-full min-h-[300px] font-mono text-sm bg-muted/50 border-border/50"
+            />
           </div>
 
           {/* Preview Section */}
-          <div className="space-y-4">
-            <label className="block text-sm font-medium text-foreground">
-              Live Preview
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-foreground">
+              Preview
             </label>
-            <div className="prose dark:prose-invert max-w-none min-h-[400px] p-4 border rounded-md bg-muted/30 overflow-auto">
+            <div className="prose dark:prose-invert max-w-none min-h-[300px] p-4 border rounded-md bg-muted/30 overflow-auto">
               {ReactMarkdown ? (
                 <ReactMarkdown>{markdown}</ReactMarkdown>
               ) : (

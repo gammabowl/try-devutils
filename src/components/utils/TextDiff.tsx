@@ -47,7 +47,7 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
     return (
       <div className="space-y-2">
         <h4 className="text-sm font-semibold text-dev-primary">Differences</h4>
-        <div className="bg-muted/30 border border-border/50 rounded-md p-4 max-h-96 overflow-auto">
+        <div className="bg-muted/30 border border-border/50 rounded-md p-4">
           <pre className="text-sm font-mono whitespace-pre-wrap">
             {diffResult.map((part, index) => {
               const className = part.added 
@@ -90,8 +90,8 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
           Text Diff Checker
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex gap-2 mb-4">
+      <CardContent className="space-y-4 flex flex-col flex-1 min-h-0">
+        <div className="flex items-center gap-2">
           <Button
             onClick={() => setDiffType("lines")}
             variant={diffType === "lines" ? "default" : "outline"}
@@ -106,43 +106,41 @@ export function TextDiff({ initialContent, action }: TextDiffProps) {
           >
             Word Diff
           </Button>
+          <div className="flex-1" />
+          <Button onClick={calculateDiff} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4" size="sm">
+            <FileDiffIcon className="h-4 w-4 mr-2" />
+            Compare
+          </Button>
+          <Button onClick={clearAll} variant="outline" size="sm">
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Clear
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
+          <div className="flex flex-col min-h-0">
+            <label className="block text-sm font-medium mb-1.5 text-foreground">
               Original Text
             </label>
             <Textarea
               placeholder="Enter original text..."
               value={leftText}
               onChange={(e) => setLeftText(e.target.value)}
-              className="w-full min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full flex-1 min-h-[120px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
           
-          <div>
-            <label className="block text-sm font-medium mb-2 text-foreground">
+          <div className="flex flex-col min-h-0">
+            <label className="block text-sm font-medium mb-1.5 text-foreground">
               Modified Text
             </label>
             <Textarea
               placeholder="Enter modified text..."
               value={rightText}
               onChange={(e) => setRightText(e.target.value)}
-              className="w-full min-h-[200px] font-mono text-sm bg-muted/50 border-border/50"
+              className="w-full flex-1 min-h-[120px] font-mono text-sm bg-muted/50 border-border/50"
             />
           </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button onClick={calculateDiff} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
-            <FileDiffIcon className="h-4 w-4 mr-2" />
-            Compare Texts
-          </Button>
-          <Button onClick={clearAll} variant="outline" size="sm">
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Clear
-          </Button>
         </div>
 
         {renderDiff()}

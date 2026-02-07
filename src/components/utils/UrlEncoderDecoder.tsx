@@ -193,7 +193,7 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
               </Badge>
             </div>
             <div className="relative">
-              <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-auto max-h-[200px] border border-border/50 whitespace-pre-wrap break-all pr-16">
+              <pre className="bg-muted/50 p-3 rounded-md text-sm font-mono overflow-x-auto border border-border/50 whitespace-pre-wrap break-all pr-16">
                 {output}
               </pre>
               <CopyButton
