@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, ArrowRightLeft, FileType, FileSearch } from "lucide-react";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { isTauri } from "@/lib/platform";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -106,7 +107,7 @@ export function MimeTypeLookup() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<string>("lookup");
+  const [activeTab, setActiveTab] = useState<string>(isTauri() ? "browse" : "lookup");
   const { toast } = useToast();
 
   const categories = ["All", ...Array.from(new Set(mimeTypes.map(type => type.category)))];
@@ -263,7 +264,7 @@ export function MimeTypeLookup() {
               </div>
             </div>
 
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div className={`space-y-2 ${isTauri() ? '' : 'max-h-96 overflow-y-auto'}`}>
               {filteredTypes.map((type, index) => (
                 <Card key={index} className="p-3">
                   <div className="flex items-center justify-between">

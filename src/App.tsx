@@ -2,34 +2,43 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
+import { DesktopLayout } from "./components/DesktopLayout";
 import Index from "./pages/Index";
 import { UtilPage } from "./pages/UtilPage";
 import NotFound from "./pages/NotFound";
+import { isTauri } from "@/lib/platform";
 
 const queryClient = new QueryClient();
+
+/**
+ * Use HashRouter in Tauri (file:// protocol doesn't support history API),
+ * BrowserRouter for the web version.
+ */
+const Router = isTauri() ? HashRouter : BrowserRouter;
+const AppLayout = isTauri() ? DesktopLayout : Layout;
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter
+      <Router
         future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true,
         }}
       >
         <Routes>
-          <Route element={<Layout />}>
+          <Route element={<AppLayout />}>
             <Route path="/" element={<Index />} />
             <Route path="/:utilId" element={<UtilPage />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </TooltipProvider>
   </QueryClientProvider>
 );

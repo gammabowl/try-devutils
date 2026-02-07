@@ -31,3 +31,8 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+src-tauri/Cargo.lock

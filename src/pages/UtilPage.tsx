@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, Suspense } from "react";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { utils } from "@/lib/utils";
+import { isTauri } from "@/lib/platform";
 
 export function UtilPage() {
   const { utilId } = useParams<{ utilId: string }>();
@@ -50,37 +51,43 @@ export function UtilPage() {
     }
   }, [util]);
 
+  const isDesktop = isTauri();
+
   return (
-    <div className="space-y-6">
+    <div className={isDesktop ? "flex flex-col flex-1 min-h-0" : "space-y-6"}>
       {/* Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": util.label,
-          "description": util.description,
-          "applicationCategory": "DeveloperApplication",
-          "operatingSystem": "Web Browser",
-          "url": `https://trydevutils.com/util/${util.id}`
-        })}
-      </script>
+      {!isDesktop && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": util.label,
+            "description": util.description,
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Web Browser",
+            "url": `https://trydevutils.com/util/${util.id}`
+          })}
+        </script>
+      )}
       {/* Back navigation */}
-      <div className="flex justify-center">
-        <Link
-          to="/"
-          className="group inline-flex items-center gap-3 px-4 py-2 rounded-lg bg-muted/30 hover:bg-muted/60 border border-border/30 hover:border-border/60 transition-all duration-200"
-        >
-          <ArrowLeft className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-          <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">All utils</span>
-          <span className="text-muted-foreground/40">|</span>
-          <kbd className="px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-background border border-border/50 rounded shadow-sm">
-            ESC
-          </kbd>
-        </Link>
-      </div>
+      {!isDesktop && (
+        <div className="flex justify-center">
+          <Link
+            to="/"
+            className="group inline-flex items-center gap-3 px-4 py-2 rounded-lg bg-muted/30 hover:bg-muted/60 border border-border/30 hover:border-border/60 transition-all duration-200"
+          >
+            <ArrowLeft className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">All utils</span>
+            <span className="text-muted-foreground/40">|</span>
+            <kbd className="px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-background border border-border/50 rounded shadow-sm">
+              ESC
+            </kbd>
+          </Link>
+        </div>
+      )}
 
       {/* Util Component */}
-      <div className="max-w-[1400px] mx-auto">
+      <div className={isDesktop ? "flex-1 flex flex-col min-h-0" : "max-w-[1400px] mx-auto"}>
         <Suspense fallback={
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-dev-primary" />
