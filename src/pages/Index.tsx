@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { utils, Util } from "@/lib/utils";
 import { prefetchUtil } from "@/lib/lazyUtils";
-import { Keyboard, Heart } from "lucide-react";
+import { Keyboard, Heart, Monitor, Download } from "lucide-react";
 import { isTauri } from "@/lib/platform";
 
 const FAVORITES_STORAGE_KEY = "try-devutils-favourites";
@@ -176,11 +176,16 @@ const Index = () => {
             <kbd className="px-1.5 py-0.5 rounded border bg-background text-xs font-mono">?</kbd>
             <span>for shortcuts</span>
           </div>
-          <div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
-            <span>Hover over utils and click</span>
-            <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500" />
-            <span>to favourite them</span>
-          </div>
+          <a
+            href="https://github.com/gammabowl/try-devutils/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 hover:border-blue-500/40 px-3 py-1.5 rounded-full hover:text-foreground transition-all duration-200 group"
+          >
+            <Monitor className="h-3.5 w-3.5 text-blue-500" />
+            <span>Get the Desktop App</span>
+            <Download className="h-3 w-3 text-blue-500 group-hover:translate-y-0.5 transition-transform" />
+          </a>
         </div>
       </div>
 
