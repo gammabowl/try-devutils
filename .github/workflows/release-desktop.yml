@@ -1,0 +1,193 @@
+name: Release Desktop App
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 0.1.0)'
+        required: true
+        type: string
+      draft:
+        description: 'Create as draft release'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+env:
+  APP_NAME: TryDevUtils
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            label: macOS-arm64
+          - platform: macos-13
+            target: x86_64-apple-darwin
+            label: macOS-x64
+          - platform: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            label: Linux-x64
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+            label: Windows-x64
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      # Linux dependencies
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libgtk-3-dev \
+            libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY || '' }}
+        with:
+          args: --target ${{ matrix.target }}
+
+      # Collect artifacts with consistent naming
+      - name: Collect build artifacts (macOS)
+        if: startsWith(matrix.platform, 'macos')
+        run: |
+          mkdir -p artifacts
+          DMG=$(find src-tauri/target/${{ matrix.target }}/release/bundle/dmg -name "*.dmg" | head -1)
+          if [ -n "$DMG" ]; then
+            cp "$DMG" "artifacts/TryDevUtils_${{ github.event.inputs.version }}_${{ matrix.label }}.dmg"
+          fi
+
+      - name: Collect build artifacts (Linux)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          mkdir -p artifacts
+          DEB=$(find src-tauri/target/${{ matrix.target }}/release/bundle/deb -name "*.deb" | head -1)
+          APPIMAGE=$(find src-tauri/target/${{ matrix.target }}/release/bundle/appimage -name "*.AppImage" | head -1)
+          RPM=$(find src-tauri/target/${{ matrix.target }}/release/bundle/rpm -name "*.rpm" 2>/dev/null | head -1)
+          if [ -n "$DEB" ]; then
+            cp "$DEB" "artifacts/TryDevUtils_${{ github.event.inputs.version }}_${{ matrix.label }}.deb"
+          fi
+          if [ -n "$APPIMAGE" ]; then
+            cp "$APPIMAGE" "artifacts/TryDevUtils_${{ github.event.inputs.version }}_${{ matrix.label }}.AppImage"
+          fi
+          if [ -n "$RPM" ]; then
+            cp "$RPM" "artifacts/TryDevUtils_${{ github.event.inputs.version }}_${{ matrix.label }}.rpm"
+          fi
+
+      - name: Collect build artifacts (Windows)
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts
+          $msi = Get-ChildItem -Path "src-tauri\target\${{ matrix.target }}\release\bundle\msi" -Filter "*.msi" -Recurse | Select-Object -First 1
+          $nsis = Get-ChildItem -Path "src-tauri\target\${{ matrix.target }}\release\bundle\nsis" -Filter "*.exe" -Recurse | Select-Object -First 1
+          if ($msi) {
+            Copy-Item $msi.FullName "artifacts\TryDevUtils_${{ github.event.inputs.version }}_${{ matrix.label }}.msi"
+          }
+          if ($nsis) {
+            Copy-Item $nsis.FullName "artifacts\TryDevUtils_${{ github.event.inputs.version }}_${{ matrix.label }}_setup.exe"
+          }
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ matrix.label }}
+          path: artifacts/*
+          if-no-files-found: error
+
+  # Generate checksums and create release
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+          pattern: artifacts-*
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -lh all-artifacts/
+
+      - name: Generate checksums
+        run: |
+          cd all-artifacts
+          sha256sum * > ../checksums.txt
+          cat ../checksums.txt
+
+      - name: Move checksums
+        run: |
+          cp checksums.txt "all-artifacts/TryDevUtils_${{ github.event.inputs.version }}_checksums_sha256.txt"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: TryDevUtils v${{ github.event.inputs.version }}
+          draft: ${{ github.event.inputs.draft }}
+          generate_release_notes: true
+          files: all-artifacts/*
+          body: |
+            ## TryDevUtils Desktop v${{ github.event.inputs.version }}
+
+            Essential developer utilities — offline, private, open source.
+
+            ### Downloads
+
+            | Platform | File |
+            |----------|------|
+            | 🍎 macOS (Apple Silicon) | `TryDevUtils_${{ github.event.inputs.version }}_macOS-arm64.dmg` |
+            | 🍎 macOS (Intel) | `TryDevUtils_${{ github.event.inputs.version }}_macOS-x64.dmg` |
+            | 🐧 Linux (deb) | `TryDevUtils_${{ github.event.inputs.version }}_Linux-x64.deb` |
+            | 🐧 Linux (AppImage) | `TryDevUtils_${{ github.event.inputs.version }}_Linux-x64.AppImage` |
+            | 🪟 Windows (MSI) | `TryDevUtils_${{ github.event.inputs.version }}_Windows-x64.msi` |
+            | 🪟 Windows (Setup) | `TryDevUtils_${{ github.event.inputs.version }}_Windows-x64_setup.exe` |
+
+            ### Verify checksums
+
+            ```bash
+            sha256sum -c TryDevUtils_${{ github.event.inputs.version }}_checksums_sha256.txt
+            ```
+
+            ### What's included
+            - All processing happens locally — no data leaves your machine
+            - No tracking, no analytics, no ads
+            - Open source under MIT license

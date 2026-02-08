@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { utils, Util } from "@/lib/utils";
 import { prefetchUtil } from "@/lib/lazyUtils";
 import { Keyboard, Heart } from "lucide-react";
+import { isTauri } from "@/lib/platform";
 
 const FAVORITES_STORAGE_KEY = "try-devutils-favourites";
 
@@ -23,9 +24,10 @@ interface UtilCardProps {
   util: Util;
   isFavourite: boolean;
   onToggleFavourite: (utilId: string) => void;
+  compact?: boolean;
 }
 
-function UtilCard({ util, isFavourite, onToggleFavourite }: UtilCardProps) {
+function UtilCard({ util, isFavourite, onToggleFavourite, compact }: UtilCardProps) {
   const IconComponent = util.icon;
   
   const handleFavouriteClick = (e: React.MouseEvent) => {
@@ -34,6 +36,40 @@ function UtilCard({ util, isFavourite, onToggleFavourite }: UtilCardProps) {
     onToggleFavourite(util.id);
   };
 
+  // Desktop: compact card-style layout
+  if (compact) {
+    return (
+      <Link
+        to={`/${util.id}`}
+        onMouseEnter={() => prefetchUtil(util.id)}
+        className="group cursor-pointer bg-card/60 border border-border/40 rounded-lg hover:bg-accent/60 hover:border-border/60 transition-all duration-200 relative overflow-hidden p-4"
+      >
+        <button
+          onClick={handleFavouriteClick}
+          className={`absolute top-1.5 right-1.5 p-1 rounded-md transition-all z-10 ${
+            isFavourite
+              ? "text-red-500 bg-red-500/10"
+              : "text-muted-foreground/30 hover:text-red-500 hover:bg-red-500/10"
+          }`}
+          title={isFavourite ? "Remove from favourites" : "Add to favourites"}
+        >
+          <Heart className={`h-3.5 w-3.5 ${isFavourite ? "fill-current" : ""}`} />
+        </button>
+        <div className="flex flex-col items-center text-center space-y-2 min-w-0">
+          <div className={`p-2.5 rounded-lg ${util.bgColor} shrink-0`}>
+            <IconComponent className={`h-6 w-6 ${util.textColor}`} />
+          </div>
+          <div className="min-w-0 w-full">
+            <h3 className="text-sm font-semibold text-foreground leading-tight truncate">{util.label}</h3>
+            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 leading-snug">{util.description}</p>
+            <span className="sr-only">{util.category}</span>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  // Web: original card style
   return (
     <Link
       to={`/${util.id}`}
@@ -66,6 +102,7 @@ function UtilCard({ util, isFavourite, onToggleFavourite }: UtilCardProps) {
 
 const Index = () => {
   const [favourites, setFavourites] = useState<string[]>([]);
+  const isDesktop = isTauri();
 
   useEffect(() => {
     setFavourites(getFavorites());
@@ -83,7 +120,50 @@ const Index = () => {
 
   const favouriteUtils = utils.filter((util) => favourites.includes(util.id));
   const otherUtils = utils.filter((util) => !favourites.includes(util.id));
+  const desktopSortedOtherUtils = [...otherUtils].sort((a, b) => a.label.localeCompare(b.label));
 
+  const desktopGridCols = "grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5";
+  const webGridCols = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+
+  if (isDesktop) {
+    return (
+      <div className="space-y-5 flex-1">
+        {/* Favorites Section */}
+        {favouriteUtils.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500" />
+              <h3 className="text-sm font-semibold text-foreground">Favourites</h3>
+              <span className="text-[11px] text-muted-foreground/60 bg-muted/50 px-1.5 py-0.5 rounded-full">{favouriteUtils.length}</span>
+            </div>
+            <div className={`grid ${desktopGridCols} gap-3`}>
+              {favouriteUtils.map((util) => (
+                <UtilCard key={util.id} util={util} isFavourite={true} onToggleFavourite={toggleFavourite} compact />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* All Utils */}
+        <div className="space-y-2">
+          {favouriteUtils.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Keyboard className="h-3.5 w-3.5 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-foreground">All Utilities</h3>
+              <span className="text-[11px] text-muted-foreground/60 bg-muted/50 px-1.5 py-0.5 rounded-full">{desktopSortedOtherUtils.length}</span>
+            </div>
+          )}
+          <div className={`grid ${desktopGridCols} gap-3`}>
+            {desktopSortedOtherUtils.map((util) => (
+              <UtilCard key={util.id} util={util} isFavourite={false} onToggleFavourite={toggleFavourite} compact />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Web: original layout from main
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -117,7 +197,7 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">Quick access to your most-used utilities</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className={`grid ${webGridCols} gap-4`}>
               {favouriteUtils.map((util) => (
                 <UtilCard
                   key={util.id}
@@ -144,7 +224,7 @@ const Index = () => {
             </div>
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className={`grid ${webGridCols} gap-4`}>
           {otherUtils.map((util) => (
             <UtilCard
               key={util.id}

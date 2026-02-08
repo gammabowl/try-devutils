@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Info, Globe } from "lucide-react";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { isTauri } from "@/lib/platform";
 
 interface HttpStatusCode {
   code: number;
@@ -146,7 +147,7 @@ export function HttpStatusCodeReference() {
         </div>
 
         {/* Results */}
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        <div className={`space-y-3 ${isTauri() ? '' : 'max-h-96 overflow-y-auto'}`}>
           {filteredCodes.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               No status codes found matching your search.

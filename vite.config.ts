@@ -4,20 +4,33 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { VitePWA } from "vite-plugin-pwa";
 
+const host = process.env.TAURI_DEV_HOST;
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // Tauri dev server uses 1420 by default; web dev stays on 8080
   server: {
-    host: "::",
-    port: 8080,
+    host: host || "::",
+    port: host ? 1420 : 8080,
+    strictPort: true,
+    hmr: host ? { protocol: "ws", host, port: 1421 } : undefined,
+    watch: {
+      ignored: ["**/src-tauri/**"],
+    },
   },
   preview: {
     port: 8080,
   },
   // Ensure SPA routing works - Vite serves index.html for all routes by default
   appType: 'spa',
+  // Don't clear terminal when Tauri is running alongside
+  clearScreen: false,
+  // Expose TAURI_ env variables to the frontend
+  envPrefix: ["VITE_", "TAURI_"],
   plugins: [
     react(),
-    ...(mode === 'production' ? [VitePWA({
+    // Only enable PWA for production web builds (not Tauri)
+    ...(mode === 'production' && !process.env.TAURI_ENV_PLATFORM ? [VitePWA({
       registerType: 'autoUpdate',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
