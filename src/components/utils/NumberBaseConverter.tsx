@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Binary, AlertCircle, ArrowDown, RotateCcw } from "lucide-react";
+import { Binary, AlertCircle, ArrowDown, RotateCcw, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -218,10 +218,33 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <Binary className="h-5 w-5 text-dev-primary" />
-          Number Base Converter
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Binary className="h-5 w-5 text-dev-primary" />
+            Number Base Converter
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                {examples.map((example, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-mono text-sm text-foreground">{bases[example.base].prefix}{example.value}</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button onClick={() => { setFromBase(example.base); setInput(example.value); }} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -364,43 +387,7 @@ export function NumberBaseConverter({ initialContent }: NumberBaseConverterProps
         )}
       </CardContent>
 
-      <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible defaultOpen={false} className="w-full">
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start">
-              Examples
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 mt-2">
-            {examples.map((example, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-2 bg-muted rounded-md"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="font-mono text-sm text-foreground">
-                    {bases[example.base].prefix}{example.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {example.desc}
-                  </div>
-                </div>
-                <Button
-                  onClick={() => {
-                    setFromBase(example.base);
-                    setInput(example.value);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="ml-2 flex-shrink-0"
-                >
-                  Use
-                </Button>
-              </div>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
+
     </Card>
   );
 }

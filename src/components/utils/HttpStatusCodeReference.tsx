@@ -147,7 +147,7 @@ export function HttpStatusCodeReference() {
         </div>
 
         {/* Results */}
-        <div className={`space-y-3 ${isTauri() ? '' : 'max-h-96 overflow-y-auto'}`}>
+        <div className={`space-y-3 ${isTauri() ? '' : 'max-h-[600px] overflow-y-auto'}`}>
           {filteredCodes.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               No status codes found matching your search.

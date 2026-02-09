@@ -27,14 +27,11 @@ export function Layout() {
 
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/logo.png" alt="TryDevUtils Logo" className="h-9 w-9 rounded-lg" />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">TryDevUtils</h1>
-                <p className="text-sm text-muted-foreground">Essential developer utilities — web & desktop</p>
-              </div>
+        <div className="container mx-auto px-4 py-3 sm:py-6">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Link to="/" className="flex items-center gap-1 sm:gap-2 hover:opacity-80 transition-opacity">
+              <img src="/logo.png" alt="TryDevUtils Logo" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg" />
+              <h1 className="text-lg sm:text-2xl font-bold text-foreground">TryDevUtils</h1>
             </Link>
             <div className="ml-auto flex items-center gap-1">
               {/* Action buttons group */}
@@ -178,44 +175,49 @@ export function Layout() {
 
       {/* Footer */}
       <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm mt-auto">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-3 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
+        <div className="container mx-auto px-4 py-2 md:py-3">
+          <div className="flex items-center justify-between gap-2 md:gap-4">
+            {/* Compact footer for all except desktop */}
+            <div className="flex items-center gap-2 lg:gap-6 text-sm">
+              <span className="font-medium lg:hidden text-xs">Local . Private . Ad-free . Opensource</span>
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="All processing happens locally">
                 <Monitor className="h-4 w-4 text-green-600" />
                 <span className="font-medium">All processing happens locally</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="No tracking, not even analytics">
                 <EyeOff className="h-4 w-4 text-blue-600" />
                 <span className="font-medium">No tracking, not even analytics</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="text-red-500">🚫</span>
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="Ad-free">
+                <span className="text-red-500 text-sm">🚫</span>
                 <span className="font-medium">Ad-free</span>
               </div>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="Open source">
                 <Code className="h-4 w-4 text-purple-600" />
                 <span className="font-medium">Open source</span>
               </div>
+            </div>
+            {/* Links - always visible */}
+            <div className="flex items-center gap-2 md:gap-6 text-sm">
               <a
                 href="https://github.com/gammabowl/try-devutils/issues/new?template=feature_request.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                title="Feature Request"
               >
                 <Lightbulb className="h-4 w-4 text-yellow-500" />
-                <span className="font-medium">Feature Request</span>
+                <span className="font-medium hidden md:inline">Feature Request</span>
               </a>
               <a
                 href="https://github.com/gammabowl/try-devutils/issues/new?template=bug_report.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                title="Report Bug"
               >
                 <Bug className="h-4 w-4 text-red-500" />
-                <span className="font-medium">Report Bug</span>
+                <span className="font-medium hidden md:inline">Report Bug</span>
               </a>
             </div>
           </div>

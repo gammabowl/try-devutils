@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Palette, RotateCcw, Pipette } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { Palette, RotateCcw, Pipette, BookOpen } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
@@ -34,7 +34,6 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
     hsv: "hsv(217, 76%, 96%)"
   });
   const [error, setError] = useState("");
-  const [examplesOpen, setExamplesOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -242,10 +241,36 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <Palette className="h-5 w-5 text-dev-primary" />
-          Colour Converter
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Palette className="h-5 w-5 text-dev-primary" />
+            Colour Converter
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                All Formats
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                {Object.entries(colorValues).map(([format, value]) => (
+                  <div key={format} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="w-6 h-6 rounded border border-border/50 flex-shrink-0" style={{ backgroundColor: format === 'hex' ? value : inputColor }} />
+                      <div className="min-w-0">
+                        <div className="text-xs font-medium text-foreground uppercase">{format}</div>
+                        <div className="text-xs text-muted-foreground font-mono truncate">{value}</div>
+                      </div>
+                    </div>
+                    <CopyButton text={value} title={`Copy ${format}`} />
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <Tabs defaultValue="convert" className="w-full">
@@ -330,44 +355,7 @@ export function ColorConverter({ initialContent, action }: ColorConverterProps) 
         </Tabs>
       </CardContent>
 
-      {/* Color Values section moved outside CardContent */}
-      <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible open={examplesOpen} onOpenChange={setExamplesOpen} className="w-full">
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start">
-              {examplesOpen ? "▼" : "▶"} Examples
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 mt-2">
-            {Object.entries(colorValues).map(([format, value]) => (
-              <div 
-                key={format} 
-                className="flex items-center justify-between p-2 bg-muted rounded-md"
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <div 
-                    className="w-8 h-8 rounded border border-border/50"
-                    style={{ backgroundColor: format === 'hex' ? value : inputColor }}
-                  />
-                  <div>
-                    <div className="text-sm font-medium text-foreground uppercase">
-                      {format}
-                    </div>
-                    <div className="text-sm text-muted-foreground font-mono">
-                      {value}
-                    </div>
-                  </div>
-                </div>
-                <CopyButton
-                  text={value}
-                  className="ml-2 flex-shrink-0"
-                  title={`Copy ${format}`}
-                />
-              </div>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
+
     </Card>
   );
 }

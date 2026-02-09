@@ -107,7 +107,7 @@ export function MimeTypeLookup() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<string>(isTauri() ? "browse" : "lookup");
+  const [activeTab, setActiveTab] = useState<string>("browse");
   const { toast } = useToast();
 
   const categories = ["All", ...Array.from(new Set(mimeTypes.map(type => type.category)))];
@@ -264,7 +264,7 @@ export function MimeTypeLookup() {
               </div>
             </div>
 
-            <div className={`space-y-2 ${isTauri() ? '' : 'max-h-96 overflow-y-auto'}`}>
+            <div className={`space-y-2 ${isTauri() ? '' : 'max-h-[600px] overflow-y-auto'}`}>
               {filteredTypes.map((type, index) => (
                 <Card key={index} className="p-3">
                   <div className="flex items-center justify-between">

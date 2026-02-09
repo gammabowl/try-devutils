@@ -4,7 +4,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2 } from "lucide-react";
+import { FileCode, CheckCircle, AlertCircle, RotateCcw, Wand2, BookOpen } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import * as yaml from "js-yaml";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -165,10 +166,31 @@ settings:
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <FileCode className="h-5 w-5 text-dev-primary" />
-          YAML Validator & Converter
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <FileCode className="h-5 w-5 text-dev-primary" />
+            YAML Validator & Converter
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                <div className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm text-foreground">Server config</div>
+                    <div className="text-xs text-muted-foreground">Server, database, features & settings</div>
+                  </div>
+                  <Button onClick={loadExample} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2 mb-4">
@@ -179,9 +201,6 @@ settings:
           <Button onClick={formatYaml} className="bg-dev-primary hover:bg-dev-primary/80 text-dev-primary-foreground px-4">
             <Wand2 className="h-4 w-4 mr-2" />
             Format
-          </Button>
-          <Button onClick={loadExample} variant="outline" size="sm">
-            Example
           </Button>
           <Button onClick={clearAll} variant="outline" size="sm">
             <RotateCcw className="h-4 w-4 mr-2" />

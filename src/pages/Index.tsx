@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { utils, Util } from "@/lib/utils";
+import { utils, Util, utilCategories } from "@/lib/utils";
 import { prefetchUtil } from "@/lib/lazyUtils";
 import { Keyboard, Heart, Monitor, Download } from "lucide-react";
 import { isTauri } from "@/lib/platform";
@@ -106,6 +106,8 @@ const Index = () => {
 
   useEffect(() => {
     setFavourites(getFavorites());
+    // Set page title when on the grid
+    document.title = "TryDevUtils – Essential developer utilities — web & desktop";
   }, []);
 
   const toggleFavourite = (utilId: string) => {
@@ -120,7 +122,12 @@ const Index = () => {
 
   const favouriteUtils = utils.filter((util) => favourites.includes(util.id));
   const otherUtils = utils.filter((util) => !favourites.includes(util.id));
-  const desktopSortedOtherUtils = [...otherUtils].sort((a, b) => a.label.localeCompare(b.label));
+
+  // Arrange otherUtils by category, so similar categories are adjacent
+  const categorizedOtherUtils = utilCategories
+    .map((cat) => otherUtils.filter((util) => util.category === cat))
+    .flat();
+  const desktopSortedOtherUtils = categorizedOtherUtils;
 
   const desktopGridCols = "grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5";
   const webGridCols = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
@@ -176,11 +183,13 @@ const Index = () => {
             <kbd className="px-1.5 py-0.5 rounded border bg-background text-xs font-mono">?</kbd>
             <span>for shortcuts</span>
           </div>
+          {/* Show Get the Desktop App pill only on desktop */}
           <a
             href="https://github.com/gammabowl/try-devutils/releases"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 hover:border-blue-500/40 px-3 py-1.5 rounded-full hover:text-foreground transition-all duration-200 group"
+            className="hidden lg:inline-flex items-center gap-2 text-sm text-muted-foreground bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 hover:border-blue-500/40 px-3 py-1.5 rounded-full hover:text-foreground transition-all duration-200 group"
+            aria-label="Download desktop app for macOS, Windows, and Linux"
           >
             <Monitor className="h-3.5 w-3.5 text-blue-500" />
             <span>Get the Desktop App</span>
@@ -230,14 +239,17 @@ const Index = () => {
           </div>
         )}
         <div className={`grid ${webGridCols} gap-4`}>
-          {otherUtils.map((util) => (
-            <UtilCard
-              key={util.id}
-              util={util}
-              isFavourite={false}
-              onToggleFavourite={toggleFavourite}
-            />
-          ))}
+          {utilCategories
+            .map((cat) => otherUtils.filter((util) => util.category === cat))
+            .flat()
+            .map((util) => (
+              <UtilCard
+                key={util.id}
+                util={util}
+                isFavourite={false}
+                onToggleFavourite={toggleFavourite}
+              />
+            ))}
         </div>
       </div>
     </div>
