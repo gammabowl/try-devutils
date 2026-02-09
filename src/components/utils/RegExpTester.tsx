@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Regex, AlertCircle, CheckCircle, FileText, Sparkles } from "lucide-react";
+import { Regex, AlertCircle, CheckCircle, FileText, Sparkles, BookOpen } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -227,10 +228,33 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <Regex className="h-5 w-5 text-dev-primary" />
-          RegExp Tester
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Regex className="h-5 w-5 text-dev-primary" />
+            RegExp Tester
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                {examples.map((example, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-mono text-sm text-foreground truncate">/{example.pattern}/</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button onClick={() => loadExample(example)} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
@@ -238,20 +262,6 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
             <label className="block text-sm font-medium text-foreground">
               Regular Expression Pattern
             </label>
-            <div className="flex gap-1">
-              {examples.slice(0, 3).map((example, idx) => (
-                <Button
-                  key={idx}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => loadExample(example)}
-                  className="text-xs h-7"
-                >
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  {example.desc}
-                </Button>
-              ))}
-            </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground font-mono text-lg">/</span>
@@ -445,26 +455,6 @@ export function RegExpTester({ initialContent, action }: RegExpTesterProps) {
             <div>x|y = x or y</div>
           </div>
         </div>
-
-        {examples.length > 3 && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-foreground">More Examples</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {examples.slice(3).map((example, idx) => (
-                <Button
-                  key={idx}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => loadExample(example)}
-                  className="text-xs justify-start h-auto py-2"
-                >
-                  <FileText className="h-3 w-3 mr-2 flex-shrink-0" />
-                  <span className="truncate">{example.desc}</span>
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

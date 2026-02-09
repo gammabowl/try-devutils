@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, AlertCircle, CheckCircle, HelpCircle } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { Calendar, AlertCircle, CheckCircle, HelpCircle, BookOpen } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
@@ -107,7 +107,6 @@ export function CronParser({ initialContent, action }: CronParserProps) {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [nextRuns, setNextRuns] = useState<string[]>([]);
-  const [examplesOpen, setExamplesOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -249,10 +248,33 @@ export function CronParser({ initialContent, action }: CronParserProps) {
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <Calendar className="h-5 w-5 text-dev-primary" />
-          Cron Expression Parser
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Calendar className="h-5 w-5 text-dev-primary" />
+            Cron Expression Parser
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                {examples.map((example) => (
+                  <div key={example.cron} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-mono text-sm text-foreground">{example.cron}</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button onClick={() => loadExample(example.cron)} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Two column layout for input and syntax guide */}
@@ -331,38 +353,6 @@ export function CronParser({ initialContent, action }: CronParserProps) {
                 </div>
               </div>
             )}
-
-            {/* Examples */}
-            <Collapsible open={examplesOpen} onOpenChange={setExamplesOpen} className="w-full">
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start px-0 hover:bg-transparent">
-                  <span className="text-sm text-muted-foreground">
-                    {examplesOpen ? "▼" : "▶"} Examples
-                  </span>
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-1.5 mt-2">
-                {examples.map((example) => (
-                  <div 
-                    key={example.cron} 
-                    className="flex items-center justify-between p-2 bg-muted/30 rounded-md border border-border/50"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="font-mono text-sm text-foreground">{example.cron}</div>
-                      <div className="text-xs text-muted-foreground">{example.desc}</div>
-                    </div>
-                    <Button
-                      onClick={() => loadExample(example.cron)}
-                      variant="outline"
-                      size="sm"
-                      className="ml-2 flex-shrink-0 h-7 text-xs"
-                    >
-                      Use
-                    </Button>
-                  </div>
-                ))}
-              </CollapsibleContent>
-            </Collapsible>
           </div>
 
           {/* Right column - Syntax Guide */}

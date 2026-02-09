@@ -284,41 +284,52 @@ export function DesktopLayout() {
         </main>
       </div>
 
-      {/* Status bar */}
-      <footer className="border-t border-border/50 bg-card/40 h-8 px-4 shrink-0 select-none flex items-center justify-between text-xs text-muted-foreground/70">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <Monitor className="h-3 w-3 text-green-600" />
-            <span>All processing happens locally</span>
+      {/* Footer (same as web desktop view) */}
+      <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm mt-auto">
+        <div className="container mx-auto px-4 py-2 md:py-3">
+          <div className="flex items-center justify-between gap-2 md:gap-4">
+            <div className="flex items-center gap-2 lg:gap-6 text-sm">
+              <span className="font-medium lg:hidden text-xs">Local . Private . Ad-free . Opensource</span>
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="All processing happens locally">
+                <Monitor className="h-4 w-4 text-green-600" />
+                <span className="font-medium">All processing happens locally</span>
+              </div>
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="No tracking, not even analytics">
+                <EyeOff className="h-4 w-4 text-blue-600" />
+                <span className="font-medium">No tracking, not even analytics</span>
+              </div>
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="Ad-free">
+                <span className="text-red-500 text-sm">🚫</span>
+                <span className="font-medium">Ad-free</span>
+              </div>
+              <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground" title="Open source">
+                <Code className="h-4 w-4 text-purple-600" />
+                <span className="font-medium">Open source</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 md:gap-6 text-sm">
+              <a
+                href="https://github.com/gammabowl/try-devutils/issues/new?template=feature_request.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                title="Feature Request"
+              >
+                <Lightbulb className="h-4 w-4 text-yellow-500" />
+                <span className="font-medium hidden md:inline">Feature Request</span>
+              </a>
+              <a
+                href="https://github.com/gammabowl/try-devutils/issues/new?template=bug_report.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                title="Report Bug"
+              >
+                <Bug className="h-4 w-4 text-red-500" />
+                <span className="font-medium hidden md:inline">Report Bug</span>
+              </a>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <EyeOff className="h-3 w-3 text-blue-600" />
-            <span>No tracking, not even analytics</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-red-500 text-[10px]">🚫</span>
-            <span>Ad-free</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <Code className="h-3 w-3 text-purple-600" />
-            <span>Open source</span>
-          </div>
-          <button
-            onClick={() => window.open("https://github.com/gammabowl/try-devutils/issues/new?template=feature_request.md", "_blank")}
-            className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-          >
-            <Lightbulb className="h-3 w-3 text-yellow-500" />
-            <span>Feature Request</span>
-          </button>
-          <button
-            onClick={() => window.open("https://github.com/gammabowl/try-devutils/issues/new?template=bug_report.md", "_blank")}
-            className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-          >
-            <Bug className="h-3 w-3 text-red-500" />
-            <span>Report Bug</span>
-          </button>
         </div>
       </footer>
     </div>

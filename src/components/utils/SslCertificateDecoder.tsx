@@ -4,7 +4,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, AlertCircle, CheckCircle, FileText } from "lucide-react";
+import { ShieldCheck, AlertCircle, CheckCircle, FileText, BookOpen } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -614,29 +615,39 @@ HMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <ShieldCheck className="h-5 w-5 text-dev-primary" />
-          SSL Certificate Decoder
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <ShieldCheck className="h-5 w-5 text-dev-primary" />
+            SSL Certificate Decoder
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                {examples.map((example, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm text-foreground">{example.desc}</div>
+                    </div>
+                    <Button onClick={() => setInput(example.cert)} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2">
             <label className="block text-sm font-medium text-foreground">
               Certificate (PEM format)
             </label>
-            {examples.map((example, idx) => (
-              <Button
-                key={idx}
-                variant="ghost"
-                size="sm"
-                onClick={() => setInput(example.cert)}
-                className="text-xs"
-              >
-                <FileText className="h-3 w-3 mr-1" />
-                {example.desc}
-              </Button>
-            ))}
           </div>
           <Textarea
             placeholder="Paste your SSL certificate here (including -----BEGIN CERTIFICATE----- and -----END CERTIFICATE-----)"

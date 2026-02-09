@@ -3,9 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link, ArrowRightLeft, CheckCircle } from "lucide-react";
+import { Link, ArrowRightLeft, CheckCircle, BookOpen } from "lucide-react";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
@@ -20,7 +20,6 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
   const [output, setOutput] = useState("");
   const [mode, setMode] = useState<"encode" | "decode">("decode");
   const [encodeMode, setEncodeMode] = useState<"component" | "full">("component");
-  const [examplesOpen, setExamplesOpen] = useState(false);
 
   const { toast } = useToast();
 
@@ -102,10 +101,33 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <Link className="h-5 w-5 text-dev-primary" />
-          URL Encoder/Decoder
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <Link className="h-5 w-5 text-dev-primary" />
+            URL Encoder/Decoder
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-3" align="end">
+              <div className="space-y-1">
+                {examples.map((example, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-mono text-sm text-foreground truncate">{mode === "decode" ? example.encoded : example.decoded}</div>
+                      <div className="text-xs text-muted-foreground">{example.desc}</div>
+                    </div>
+                    <Button onClick={() => setInput(mode === "decode" ? example.encoded : example.decoded)} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <Tabs value={mode} onValueChange={(v) => setMode(v as "encode" | "decode")}>
@@ -229,40 +251,7 @@ export function UrlEncoderDecoder({ initialContent }: UrlEncoderDecoderProps) {
         </div>
       </CardContent>
 
-      <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible open={examplesOpen} onOpenChange={setExamplesOpen} className="w-full">
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start">
-              {examplesOpen ? "▼" : "▶"} Examples
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 mt-2">
-            {examples.map((example, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-2 bg-muted rounded-md"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="font-mono text-sm text-foreground truncate">
-                    {mode === "decode" ? example.encoded : example.decoded}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {example.desc}
-                  </div>
-                </div>
-                <Button
-                  onClick={() => setInput(mode === "decode" ? example.encoded : example.decoded)}
-                  variant="outline"
-                  size="sm"
-                  className="ml-2 flex-shrink-0"
-                >
-                  Use
-                </Button>
-              </div>
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
+
     </Card>
   );
 }

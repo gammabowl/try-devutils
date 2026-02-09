@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DecimalsArrowRight, ArrowUpDown } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { DecimalsArrowRight, ArrowUpDown, BookOpen } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useToast } from "@/hooks/use-toast";
@@ -106,10 +106,50 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
   return (
     <Card className="tool-card">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <DecimalsArrowRight className="h-5 w-5 text-dev-primary" />
-          Base64 Encoder/Decoder
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <DecimalsArrowRight className="h-5 w-5 text-dev-primary" />
+            Base64 Encoder/Decoder
+          </CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="text-xs gap-1.5">
+                <BookOpen className="h-3.5 w-3.5" />
+                Examples
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-0" align="end">
+              <Tabs defaultValue="encode" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 rounded-b-none">
+                  <TabsTrigger value="encode">Text Examples</TabsTrigger>
+                  <TabsTrigger value="decode">Base64 Examples</TabsTrigger>
+                </TabsList>
+                <TabsContent value="encode" className="space-y-1 p-3 mt-0">
+                  {examples.encode.map((example, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                      <div className="min-w-0">
+                        <div className="text-sm text-foreground truncate font-mono">{example.text}</div>
+                        <div className="text-xs text-muted-foreground">{example.desc}</div>
+                      </div>
+                      <Button onClick={() => setInput(example.text)} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                    </div>
+                  ))}
+                </TabsContent>
+                <TabsContent value="decode" className="space-y-1 p-3 mt-0">
+                  {examples.decode.map((example, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md gap-2">
+                      <div className="min-w-0">
+                        <div className="font-mono text-sm text-foreground truncate">{example.text}</div>
+                        <div className="text-xs text-muted-foreground">{example.desc}</div>
+                      </div>
+                      <Button onClick={() => setInput(example.text)} variant="outline" size="sm" className="h-7 text-xs flex-shrink-0">Use</Button>
+                    </div>
+                  ))}
+                </TabsContent>
+              </Tabs>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Cross-link to Zlib compressor */}
@@ -211,60 +251,7 @@ export function Base64Converter({ initialContent, action, navigate }: Base64Conv
         )}
       </CardContent>
 
-      {/* Examples section moved outside CardContent */}
-      <div className="border-t border-border/50 px-6 py-4">
-        <Collapsible defaultOpen={false} className="w-full">
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start">
-              Examples
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 mt-2">
-            <Tabs defaultValue="encode" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="encode">Text Examples</TabsTrigger>
-                <TabsTrigger value="decode">Base64 Examples</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="encode" className="space-y-2 mt-2">
-                {examples.encode.map((example, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                    <div>
-                      <div className="text-sm text-foreground">{example.text}</div>
-                      <div className="text-sm text-muted-foreground">{example.desc}</div>
-                    </div>
-                    <Button
-                      onClick={() => setInput(example.text)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Use
-                    </Button>
-                  </div>
-                ))}
-              </TabsContent>
-              
-              <TabsContent value="decode" className="space-y-2 mt-2">
-                {examples.decode.map((example, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                    <div>
-                      <div className="font-mono text-sm text-foreground">{example.text}</div>
-                      <div className="text-sm text-muted-foreground">{example.desc}</div>
-                    </div>
-                    <Button
-                      onClick={() => setInput(example.text)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Use
-                    </Button>
-                  </div>
-                ))}
-              </TabsContent>
-            </Tabs>
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
+
     </Card>
   );
 }
