@@ -271,14 +271,14 @@ export function DesktopLayout() {
           {/* Sidebar footer */}
           {!sidebarCollapsed && (
             <div className="border-t border-border/30 p-2 text-[10px] text-muted-foreground/50 text-center shrink-0">
-              v0.1.0 · Desktop
+              v0.1.3 · Desktop
             </div>
           )}
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 overflow-hidden bg-background flex flex-col">
-          <div className="px-4 py-3 flex-1 flex flex-col min-h-0 overflow-auto">
+        <main className="flex-1 overflow-hidden bg-background flex flex-col min-h-0">
+          <div className="px-4 py-3 flex-1 flex flex-col min-h-0 overflow-hidden">
             <Outlet />
           </div>
         </main>

@@ -152,7 +152,7 @@ export function Layout() {
                           @gammabowl
                         </a>
                         <span className="flex items-center gap-1">
-                          <span className="italic">Assisted by Copilot</span>
+                          <span className="italic">Assisted by</span>
                           <span className="text-lg">🤖✨</span>
                         </span>
                       </div>
