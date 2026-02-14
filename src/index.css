@@ -52,6 +52,14 @@ All colors MUST be HSL.
     --dev-error: 0 78% 50%;
     --dev-error-foreground: 210 40% 98%;
 
+    /* Syntax highlighting */
+    --syntax-key: 220 70% 45%;
+    --syntax-string: 150 60% 35%;
+    --syntax-number: 30 80% 45%;
+    --syntax-boolean: 280 60% 45%;
+    --syntax-null: 0 60% 50%;
+    --syntax-bracket: 220 10% 50%;
+
     /* Gradients - improved contrast */
     --gradient-primary: linear-gradient(135deg, hsl(214 90% 50%), hsl(197 85% 45%));
     --gradient-secondary: linear-gradient(135deg, hsl(0 0% 100% / 0.95), hsl(214 20% 96% / 0.98));
@@ -516,6 +524,13 @@ All colors MUST be HSL.
   }
 }
 
+.syntax-highlight .syntax-key { color: hsl(var(--syntax-key)); }
+.syntax-highlight .syntax-string { color: hsl(var(--syntax-string)); }
+.syntax-highlight .syntax-number { color: hsl(var(--syntax-number)); }
+.syntax-highlight .syntax-boolean { color: hsl(var(--syntax-boolean)); font-weight: 600; }
+.syntax-highlight .syntax-null { color: hsl(var(--syntax-null)); font-style: italic; }
+.syntax-highlight .syntax-bracket { color: hsl(var(--syntax-bracket)); font-weight: 600; }
+
 /* ─── Desktop (Tauri) native-feel overrides ─── */
 .desktop {
   font-size: 14px;
@@ -543,6 +558,7 @@ All colors MUST be HSL.
   display: flex;
   flex-direction: column;
   min-height: 0;
+  height: 100%;
 }
 
 /* CardContent stretches */
@@ -552,6 +568,7 @@ All colors MUST be HSL.
   flex-direction: column;
   min-height: 0;
   padding: 0;
+  height: 100%;
 }
 
 /* Examples / info footer sections sit at the bottom, don't stretch */
@@ -612,6 +629,13 @@ All colors MUST be HSL.
   flex-direction: column;
   flex: 1;
   min-height: 0;
+}
+
+/* Keep code editor line numbers aligned horizontally */
+.desktop .tool-card .codeeditor-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 /* Textareas fill available space */
