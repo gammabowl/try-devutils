@@ -10,6 +10,17 @@ export function isTauri(): boolean {
 }
 
 /**
+ * Returns true if the app is running as a browser extension (Chrome/Chromium/Firefox).
+ */
+export function isExtension(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.location.protocol === "chrome-extension:" ||
+    window.location.protocol === "moz-extension:"
+  );
+}
+
+/**
  * Returns the current platform: 'macos' | 'windows' | 'linux' | 'web'
  */
 export function getPlatformSync(): "macos" | "windows" | "linux" | "web" {

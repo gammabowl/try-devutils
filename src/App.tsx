@@ -8,15 +8,15 @@ import { DesktopLayout } from "./components/DesktopLayout";
 import Index from "./pages/Index";
 import { UtilPage } from "./pages/UtilPage";
 import NotFound from "./pages/NotFound";
-import { isTauri } from "@/lib/platform";
+import { isExtension, isTauri } from "@/lib/platform";
 
 const queryClient = new QueryClient();
 
 /**
- * Use HashRouter in Tauri (file:// protocol doesn't support history API),
+ * Use HashRouter in Tauri/extension (no History API),
  * BrowserRouter for the web version.
  */
-const Router = isTauri() ? HashRouter : BrowserRouter;
+const Router = isTauri() || isExtension() ? HashRouter : BrowserRouter;
 const AppLayout = isTauri() ? DesktopLayout : Layout;
 
 const App = () => (

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { utils, Util, utilCategories } from "@/lib/utils";
 import { prefetchUtil } from "@/lib/lazyUtils";
-import { Keyboard, Heart, Monitor, Download } from "lucide-react";
-import { isTauri } from "@/lib/platform";
+import { Keyboard, Heart, Monitor, Download, Search } from "lucide-react";
+import { isExtension, isTauri } from "@/lib/platform";
 
 const FAVORITES_STORAGE_KEY = "try-devutils-favourites";
 
@@ -102,7 +102,10 @@ function UtilCard({ util, isFavourite, onToggleFavourite, compact }: UtilCardPro
 
 const Index = () => {
   const [favourites, setFavourites] = useState<string[]>([]);
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("All");
   const isDesktop = isTauri();
+  const extensionMode = isExtension();
 
   useEffect(() => {
     setFavourites(getFavorites());
@@ -131,6 +134,139 @@ const Index = () => {
 
   const desktopGridCols = "grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5";
   const webGridCols = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+
+  if (extensionMode) {
+    const categories = ["All", ...utilCategories];
+    const normalizedQuery = query.trim().toLowerCase();
+
+    const matchesQuery = (util: Util) => {
+      if (!normalizedQuery) return true;
+      return (
+        util.label.toLowerCase().includes(normalizedQuery) ||
+        util.description.toLowerCase().includes(normalizedQuery) ||
+        util.category.toLowerCase().includes(normalizedQuery)
+      );
+    };
+
+    const matchesCategory = (util: Util) =>
+      activeCategory === "All" || util.category === activeCategory;
+
+    const filteredFavourites = favouriteUtils
+      .filter(matchesQuery)
+      .filter(matchesCategory);
+
+    const filteredOtherUtils = otherUtils
+      .filter(matchesQuery)
+      .filter(matchesCategory);
+
+    return (
+      <div className="flex gap-4">
+        <aside className="w-56 shrink-0 hidden lg:block">
+          <div className="sticky top-[72px] space-y-4">
+            <div>
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                Categories
+              </div>
+              <div className="space-y-1">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`w-full text-left px-2.5 py-1.5 rounded-md text-sm transition-colors ${
+                      activeCategory === category
+                        ? "bg-muted text-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {favouriteUtils.length > 0 && (
+              <div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                  Favourites
+                </div>
+                <div className="space-y-1">
+                  {favouriteUtils.slice(0, 6).map((util) => (
+                    <Link
+                      key={util.id}
+                      to={`/${util.id}`}
+                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    >
+                      <util.icon className={`h-4 w-4 ${util.textColor}`} />
+                      <span className="truncate">{util.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </aside>
+
+        <section className="flex-1 space-y-4">
+          <div className="flex items-center gap-2 bg-card/60 border border-border/50 rounded-lg px-3 py-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search utilities, categories, or descriptions"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            />
+            <div className="hidden md:flex items-center gap-1 text-[10px] text-muted-foreground border border-border/60 rounded px-1.5 py-0.5">
+              ⌘K
+            </div>
+          </div>
+
+          {favouriteUtils.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500" />
+                <h3 className="text-sm font-semibold text-foreground">Favourites</h3>
+                <span className="text-[11px] text-muted-foreground/60 bg-muted/50 px-1.5 py-0.5 rounded-full">
+                  {filteredFavourites.length}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                {filteredFavourites.map((util) => (
+                  <UtilCard
+                    key={util.id}
+                    util={util}
+                    isFavourite={true}
+                    onToggleFavourite={toggleFavourite}
+                    compact
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Keyboard className="h-3.5 w-3.5 text-muted-foreground" />
+              <h3 className="text-sm font-semibold text-foreground">All Utilities</h3>
+              <span className="text-[11px] text-muted-foreground/60 bg-muted/50 px-1.5 py-0.5 rounded-full">
+                {filteredOtherUtils.length}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+              {filteredOtherUtils.map((util) => (
+                <UtilCard
+                  key={util.id}
+                  util={util}
+                  isFavourite={false}
+                  onToggleFavourite={toggleFavourite}
+                  compact
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (isDesktop) {
     return (

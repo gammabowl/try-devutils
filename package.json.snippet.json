@@ -1,0 +1,5 @@
+"scripts": {
+  "build": "vite build",
+  "build:extension": "vite build --mode extension",
+  "extension:prepare": "npm run build:extension && cp extension/manifest.json dist-extension/manifest.json"
+}

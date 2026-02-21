@@ -18,7 +18,9 @@
     "check": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "npm run build && vite preview"
+    "preview": "npm run build && vite preview",
+    "build:extension": "vite build --mode extension",
+    "extension:prepare": "vite build --mode extension && cp extension/manifest.json dist-extension/ && cp -r extension/icons dist-extension/ && rm -f dist-extension/_redirects"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -74,7 +76,7 @@
     "fflate": "^0.8.2",
     "hono": "^4.11.10",
     "input-otp": "^1.2.4",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
     "js-yaml": "^4.1.0",
     "jsonlint-mod": "^1.7.6",

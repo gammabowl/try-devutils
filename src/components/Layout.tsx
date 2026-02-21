@@ -12,10 +12,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { CommandPalette, useCommandPalette } from "@/components/CommandPalette";
 import { KeyboardShortcutsHelp, useGlobalKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { isExtension } from "@/lib/platform";
 
 export function Layout() {
   const { isOpen, setIsOpen } = useCommandPalette();
   const { showHelp, setShowHelp } = useGlobalKeyboardShortcuts();
+  const extensionMode = isExtension();
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -169,7 +171,7 @@ export function Layout() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 flex-1">
+      <main className={extensionMode ? "max-w-6xl mx-auto w-full px-4 py-4 flex-1" : "container mx-auto px-4 py-8 flex-1"}>
         <Outlet />
       </main>
 
