@@ -8,6 +8,7 @@ import { DesktopLayout } from "./components/DesktopLayout";
 import Index from "./pages/Index";
 import { UtilPage } from "./pages/UtilPage";
 import NotFound from "./pages/NotFound";
+import PrivacyRedirect from "./pages/PrivacyRedirect";
 import { isExtension, isTauri } from "@/lib/platform";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ const queryClient = new QueryClient();
  */
 const Router = isTauri() || isExtension() ? HashRouter : BrowserRouter;
 const AppLayout = isTauri() ? DesktopLayout : Layout;
+const isWeb = !isTauri() && !isExtension();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -33,6 +35,8 @@ const App = () => (
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Index />} />
+            {isWeb && <Route path="/privacy" element={<PrivacyRedirect />} />}
+            {isWeb && <Route path="/privacy/" element={<PrivacyRedirect />} />}
             <Route path="/:utilId" element={<UtilPage />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
