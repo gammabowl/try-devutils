@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getVersion } from "@tauri-apps/api/app";
 
 const FAVORITES_STORAGE_KEY = "try-devutils-favourites";
 
@@ -35,6 +36,7 @@ export function DesktopLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarFilter, setSidebarFilter] = useState("");
   const [favourites, setFavourites] = useState<string[]>(getFavorites());
+  const [appVersion, setAppVersion] = useState<string | null>(null);
   const filterInputRef = useRef<HTMLInputElement>(null);
   const platform = getPlatformSync();
   const modKey = getModifierKey();
@@ -45,6 +47,14 @@ export function DesktopLayout() {
     const handleStorage = () => setFavourites(getFavorites());
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
+  useEffect(() => {
+    getVersion()
+      .then((version) => setAppVersion(version))
+      .catch(() => {
+        // Best effort; keep footer readable even if version fetch fails.
+      });
   }, []);
 
   // Active util
@@ -271,7 +281,7 @@ export function DesktopLayout() {
           {/* Sidebar footer */}
           {!sidebarCollapsed && (
             <div className="border-t border-border/30 p-2 text-[10px] text-muted-foreground/50 text-center shrink-0">
-              v0.1.3 · Desktop
+              {appVersion ? `v${appVersion} · Desktop` : "Desktop"}
             </div>
           )}
         </aside>
