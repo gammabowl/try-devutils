@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "TryDevUtils",
   "description": "Essential developer utilities",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "homepage_url": "https://www.trydevutils.com",
   "action": {
     "default_title": "TryDevUtils"

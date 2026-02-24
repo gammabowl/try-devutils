@@ -1,7 +1,7 @@
 {
   "name": "trydevutils-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.4",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -11,16 +11,17 @@
     "build:frontend": "vite build",
     "build:ci": "vite build && npm run test:ci",
     "tauri": "tauri",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build",
+    "tauri:dev": "npm run sync:version && tauri dev",
+    "tauri:build": "npm run sync:version && tauri build",
     "test": "vite preview --port 3000 --host & sleep 5 && npx playwright test",
     "test:ci": "npx playwright install --with-deps chromium && vite preview --port 3000 --host & sleep 5 && npx playwright test --reporter=line",
     "check": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "npm run build && vite preview",
-    "build:extension": "vite build --mode extension",
-    "extension:prepare": "vite build --mode extension && cp extension/manifest.json dist-extension/ && cp -r extension/icons dist-extension/ && rm -f dist-extension/_redirects"
+    "build:extension": "npm run sync:version && vite build --mode extension",
+    "extension:prepare": "npm run sync:version && vite build --mode extension && cp extension/manifest.json dist-extension/ && cp -r extension/icons dist-extension/ && rm -f dist-extension/_redirects",
+    "sync:version": "node scripts/sync-version.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -103,6 +104,7 @@
     "@playwright/test": "^1.58.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tauri-apps/cli": "^2.10.0",
+    "@types/chrome": "^0.0.268",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
