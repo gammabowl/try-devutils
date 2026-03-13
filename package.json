@@ -91,7 +91,7 @@
     "react-resizable-panels": "^2.1.3",
     "react-router-dom": "^6.26.2",
     "recharts": "^2.15.4",
-    "sonner": "^1.5.0",
+    "sonner": "^2.0.7",
     "sql-formatter": "^15.7.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
