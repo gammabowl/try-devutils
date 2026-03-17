@@ -12,6 +12,8 @@ updates:
 
     groups:
       non-breaking-dependencies:
+        patterns:
+          - "*"
         update-types:
           - "minor"
           - "patch"
