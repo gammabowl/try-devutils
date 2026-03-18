@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ContentSuggestion } from "@/utils/contentDetector";
 import { ToolDefinition } from "@/utils/commandProcessor";
-import { Sparkles, ArrowRight, Zap, Clock } from "lucide-react";
+import { Sparkles, ArrowRight, Zap } from "lucide-react";
 
 interface FloatingUtilCardsProps {
   suggestions: ContentSuggestion[];
@@ -56,8 +56,6 @@ export function FloatingUtilCards({ suggestions, utils, content, onUtilSelect }:
 
           const isHovered = hoveredUtil === suggestion.toolId;
           const confidence = Math.round(suggestion.confidence * 100);
-          const canInstant = canShowInstantResult(suggestion.toolId, suggestion.action);
-
           return (
             <div key={`${suggestion.toolId}-${index}`} className="space-y-3">
               {/* Util Card */}
@@ -127,7 +125,6 @@ export function FloatingUtilCards({ suggestions, utils, content, onUtilSelect }:
                     <div className="absolute inset-0 bg-gradient-to-r from-dev-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   </CardContent>
                 </Card>
-              )}
             </div>
           );
         })}

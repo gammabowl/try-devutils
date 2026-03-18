@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -99,44 +98,32 @@ export function Layout() {
                     <DialogTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                       Why Choose TryDevUtils?
                     </DialogTitle>
-                    <DialogDescription className="text-sm text-muted-foreground mt-2">
-                      Clean, fast, and privacy-focused developer utilities — available on the web and as a desktop app for macOS, Windows, and Linux
-                    </DialogDescription>
                   </DialogHeader>
 
                   <div className="space-y-6">
                     <div className="rounded-lg bg-muted/50 p-4 border border-border/50">
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        Most developer utils websites are bloated with ads, trackers, and unnecessary scripts.
-                        TryDevUtils delivers essential utils in a clean, distraction-free interface — use it in your browser or download the native desktop app for macOS, Windows, and Linux.
+                        TryDevUtils is a clean, fast, and privacy-focused collection of developer utilities available on the web and as a native desktop app for macOS, Windows, and Linux. Instead of bloated utility sites filled with ads, trackers, and unnecessary scripts, it gives you essential tools in a distraction-free interface.
                       </p>
                     </div>
 
                     <div className="space-y-3">
                       <h4 className="font-semibold text-foreground flex items-center gap-2">
                         <Shield className="h-4 w-4 text-green-600" />
-                        Privacy First Approach
+                        Privacy First
                       </h4>
                       <div className="grid gap-2 text-sm">
                         <div className="flex items-center gap-2">
                           <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                          <span>All processing happens locally in your browser</span>
+                          <span>Your data stays on your device while tools run locally</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                          <span>No external fonts or tracking scripts</span>
+                          <span>No ads, analytics, trackers, or third-party scripts</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                          <span>No analytics or usage tracking</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                          <span>No ads or third-party services</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                          <span>Only localStorage for your preferences</span>
+                          <span>Only basic local storage is used for your preferences</span>
                         </div>
                       </div>
                     </div>
